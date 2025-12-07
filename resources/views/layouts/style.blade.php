@@ -358,7 +358,7 @@
     #datatable tbody td {
         padding: 5px 12px;
         border: 1px solid #5a5f68;
-        vertical-align: middle;
+        verticheaderl-align: middle;
     }
 
 

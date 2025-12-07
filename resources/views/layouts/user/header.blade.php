@@ -6,11 +6,11 @@
         use App\Models\Configuration;
         $config = Configuration::first();
     @endphp
-    @if (!empty($config->logo))
+    @if (empty($config->logo))
+        <h5 class="mb-0">My Company</h5>
+    @else
         <img src="{{ asset($config->logo) }}" width="190" height="100" style="border:1px solid #000;border-radius:0px;"
             alt="Company Logo" class="img-thumbnail">
-    @else
-        <h5 class="mb-0">My Company</h5>
     @endif
 
 

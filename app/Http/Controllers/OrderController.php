@@ -309,17 +309,17 @@ class OrderController extends Controller
                             </li>';
 
 
-                    if ($row->get_payment && strtolower($row->get_payment->payment_gateway) == 'cash_on_delivery') {
+                    // if ($row->get_payment && strtolower($row->get_payment->payment_gateway) == 'cash_on_delivery') {
 
-                        if (strtolower($row->delivery_status) == 'delivered') {
+                    //     if (strtolower($row->delivery_status) == 'delivered') {
 
-                        } else {
-                            $actions .= '
-                            <li>
-                                <a href="javascript:void(0)" class="AddPaymentRow dropdown-item" data-id="' . $row->id . '">Payment Update</a>
-                            </li>';
-                        }
-                    }
+                    //     } else {
+                    //         $actions .= '
+                    //         <li>
+                    //             <a href="javascript:void(0)" class="AddPaymentRow dropdown-item" data-id="' . $row->id . '">Payment Update</a>
+                    //         </li>';
+                    //     }
+                    // }
                     $actions .= '
 
                         </ul>

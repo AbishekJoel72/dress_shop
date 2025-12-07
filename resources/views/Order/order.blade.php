@@ -137,7 +137,7 @@
 
                         <div class="col-2">
                             <label for="city_id">State</label>
-                            <select name="state_id" id="state_id" required class="form-select">
+                            <select name="state_id" id="state_id" required class="form-select select2">
                                 <option value="" selected disabled>Select State</option>
                                 @foreach ($state as $s)
                                     <option value="{{ $s->id }}">{{ $s->state_name }}</option>
@@ -145,9 +145,9 @@
                             </select>
                         </div>
 
-                        <div class="col-2">
+                        <div class="col-2">f
                             <label for="city_id">City</label>
-                            <select name="city_id" id="city_id" required class="form-select">
+                            <select name="city_id" id="city_id" required class="form-select select2">
                             </select>
                         </div>
 
@@ -241,6 +241,12 @@
 @section('script')
     @include('layouts.datatable')
     <script>
+        $(document).ready(function() {
+            $('.select2').select2({
+                placeholder: "Select an option",
+            });
+        });
+
         function addcalculation() {
             let price = parseFloat(document.getElementById("price").value) || 0;
             let discount = parseFloat(document.getElementById("discount").value) || 0;
@@ -315,20 +321,20 @@
                         ${
                             gateway === "card"
                             ? `
-                                            <tr>
-                                                <th>Card Type</th>
-                                                <td>
-                                                    <div class="form-check form-check-inline">
-                                                        <input type="radio" name="card_type" id="debit_card" value="debit_card" class="form-check-input" required>
-                                                        <label for="debit_card" class="form-check-label">Debit Card</label>
-                                                    </div>
-                                                    <div class="form-check form-check-inline">
-                                                        <input type="radio" name="card_type" id="credit_card" value="credit_card" class="form-check-input" required>
-                                                        <label for="credit_card" class="form-check-label">Credit Card</label>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                            `
+                                                <tr>
+                                                    <th>Card Type</th>
+                                                    <td>
+                                                        <div class="form-check form-check-inline">
+                                                            <input type="radio" name="card_type" id="debit_card" value="debit_card" class="form-check-input" required>
+                                                            <label for="debit_card" class="form-check-label">Debit Card</label>
+                                                        </div>
+                                                        <div class="form-check form-check-inline">
+                                                            <input type="radio" name="card_type" id="credit_card" value="credit_card" class="form-check-input" required>
+                                                            <label for="credit_card" class="form-check-label">Credit Card</label>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                `
                             : ""
                         }
                     </table>
