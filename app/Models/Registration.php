@@ -1,0 +1,13 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+
+class Registration extends Model
+{
+    protected $table = "registration";
+    protected  $fillable = [
+        'first_name', 'last_name' ,'phone', 'email', 'password', 'confirmation_password' , 'role'
+    ];
+}
