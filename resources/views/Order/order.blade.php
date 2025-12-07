@@ -160,7 +160,7 @@
 
                     <div class="row mt-3">
 
-                        <div class="col-8">
+                        <div class="col-4">
                             <label class="form-label d-block">Payment </label>
                             <div class="d-flex align-items-center gap-5 form-control">
                                 <div class="form-check ">
@@ -179,23 +179,23 @@
                                     <label for="paytm" class="form-check-label"> Pay TM</label>
                                 </div>
 
-                                <div class="form-check">
+                                {{-- <div class="form-check">
                                     <input type="radio" name="payment_gateway" id="netbanking" value="netbanking"
                                         class="form-check-input" required>
                                     <label for="netbanking" class="form-check-label"> Net Banking</label>
-                                </div>
+                                </div> --}}
 
-                                <div class="form-check">
+                                {{-- <div class="form-check">
                                     <input type="radio" name="payment_gateway" id="card" value="card"
                                         class="form-check-input" required>
                                     <label for="card" class="form-check-label">Cards</label>
-                                </div>
+                                </div> --}}
 
-                                <div class="form-check">
+                                {{-- <div class="form-check">
                                     <input type="radio" name="payment_gateway" id="cash_on_delivery"
                                         value="cash_on_delivery" class="form-check-input" required>
                                     <label for="cash_on_delivery" class="form-check-label"> Cash On Delivery</label>
-                                </div>
+                                </div> --}}
                             </div>
                         </div>
                     </div>
@@ -339,7 +339,7 @@
                 var myModal = new bootstrap.Modal(document.getElementById('paymentModal'));
                 myModal.show();
             });
-            
+
 
         });
     </script>

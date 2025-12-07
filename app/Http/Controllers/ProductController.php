@@ -158,6 +158,17 @@ class ProductController extends Controller
 
     public function ProductList(Request $request)
     {
+
+        $gender = session('user_gender'); // m or f
+
+        $categoryId = null;
+        if ($gender === 'm') {
+            $categoryId = Category::where('name', 'Men')->value('id');
+        } elseif ($gender === 'f') {
+            $categoryId = Category::where('name', 'Women')->value('id');
+        }
+
+        
         if ($request->ajax()) {
             $query = $request->get('q');
             $products = Product::query()
@@ -170,7 +181,7 @@ class ProductController extends Controller
             return response()->json($products);
         }
 
-        $data['products'] = Product::where('status', "1")->get();
+        $data['products'] = Product::where('status', "1")->where('category_id', $categoryId)->get();
         return view('product.Product_list')->with($data);
     }
 }

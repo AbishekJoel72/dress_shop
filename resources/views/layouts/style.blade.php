@@ -363,3 +363,56 @@
 
 
 </style>
+
+<style>
+/* Select2 container */
+.select2-container .select2-selection--single {
+    height: 38px !important;
+    padding: 6px 12px;
+    border: 1px solid #ced4da !important;
+    border-radius: 6px !important;
+    display: flex;
+    align-items: center;
+}
+
+/* Selected text */
+.select2-container--default .select2-selection--single .select2-selection__rendered {
+    color: #212529;
+    line-height: 38px;
+    padding-left: 2px;
+}
+
+/* Dropdown arrow */
+.select2-container--default .select2-selection--single .select2-selection__arrow {
+    height: 38px;
+    right: 8px;
+}
+
+/* Dropdown box */
+.select2-container--default .select2-results > .select2-results__options {
+    max-height: 220px;
+}
+
+/* Hover effect */
+.select2-results__option--highlighted {
+    background-color: #0d6efd !important;
+    color: white !important;
+}
+
+/* When opened */
+.select2-container--open .select2-selection--single {
+    border-color: #0d6efd !important;
+    box-shadow: 0 0 0 0.15rem rgba(13, 110, 253, .25);
+}
+
+/* Placeholder color */
+.select2-container .select2-selection--single .select2-selection__placeholder {
+    color: #6c757d;
+}
+
+/* Remove blue outline on focus */
+.select2-container--default .select2-selection--single:focus {
+    outline: none !important;
+}
+</style>
+

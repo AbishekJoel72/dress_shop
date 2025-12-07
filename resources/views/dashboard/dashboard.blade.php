@@ -107,7 +107,21 @@
                     </div>
 
 
-                    <div class="col-3">
+                        <div class="col-3">
+                            <div class="card text-bg-danger mb-3" style="height:130px">
+                                <div class="card-header bg-transparent text-center">
+                                    <h6>Payment</h6>
+                                </div>
+                                <div class="card-body text-center">
+                                    <label for="">Count</label>
+                                    <a href="">{{ $payment }}</a></p>
+                                </div>
+                            </div>
+                        </div>
+
+
+
+                    {{-- <div class="col-3">
                         <div class="card text-bg-danger mb-3" style="height:130px">
                             <div class="card-header bg-transparent text-center">
                                 <h6>Return</h6>
@@ -126,7 +140,7 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </div> --}}
 
 
                     <div class="col-3">
@@ -142,19 +156,7 @@
                     </div>
                 </div>
 
-                <div class="row">
-                    <div class="col-3">
-                        <div class="card text-bg-primary mb-3" style="height:130px">
-                            <div class="card-header bg-transparent text-center">
-                                <h6>Payment</h6>
-                            </div>
-                            <div class="card-body text-center">
-                                <label for="">Count</label>
-                                <a href="">{{ $payment }}</a></p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+
 
 
 
@@ -169,7 +171,5 @@
     @endsection
 
     @section('script')
-        <script>
-
-        </script>
+        <script></script>
     @endsection

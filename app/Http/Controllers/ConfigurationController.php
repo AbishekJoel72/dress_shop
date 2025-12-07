@@ -81,11 +81,10 @@ class ConfigurationController extends Controller
 
         $data['state'] = State::all();
         $data['city'] = City::all();
-        // $data['config'] = new Configuration();
-        // if (!empty($data['config'] )) {
-        //     # code...
-            $data['config'] = Configuration::first();
-        // }
+
+        $data['config'] = Configuration::first() ?? new Configuration();
+
+
 
         return view('Configuration.configuration')->with($data);
     }

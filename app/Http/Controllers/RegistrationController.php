@@ -25,7 +25,8 @@ class RegistrationController extends Controller
                             'user_id' => $user->id,
                             'user_role' => $user->role,
                             'user_email' => $user->email,
-                            'user_phone' => $user->phone
+                            'user_phone' => $user->phone,
+                            'user_gender' => $user->gender,
                         ]);
                         if ($user->role === 'admin') {
                             session()->flash('success', 'Welcome Admin!');
