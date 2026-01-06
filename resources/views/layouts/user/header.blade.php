@@ -37,7 +37,7 @@
             </a>
         </li>
         <li class="nav-item">
-            <a href="#" class="nav-link text-light ">
+            <a href="{{ route('contact') }}" class="nav-link text-light ">
                 <i class="fa-solid fa-envelope"></i> Contact
             </a>
         </li>
