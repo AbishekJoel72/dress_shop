@@ -159,7 +159,7 @@ class ProductController extends Controller
     public function ProductList(Request $request)
     {
 
-        $gender = session('user_gender'); // m or f
+        $gender = session('user_gender');
 
         $categoryId = null;
         if ($gender === 'm') {
@@ -168,7 +168,7 @@ class ProductController extends Controller
             $categoryId = Category::where('name', 'Women')->value('id');
         }
 
-        
+
         if ($request->ajax()) {
             $query = $request->get('q');
             $products = Product::query()
