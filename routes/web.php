@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ConfigurationController;
+use App\Http\Controllers\ContactController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\FeedbackController;
 use App\Http\Controllers\RegistrationController;
@@ -34,6 +35,7 @@ Route::middleware([AdminMiddleware::class])->prefix('admin')->group(function () 
 
     Route::any('user_list_details', [RegistrationController::class, 'UserList'])->name('user_list_details');
     Route::any('feedback_list', [FeedbackController::class, "FeedbackList"])->name('feedback_list');
+     Route::any('contact_list', [ContactController::class, "ContactList"])->name('contact_list');
 
 });
 
@@ -45,5 +47,6 @@ Route::middleware([UserMiddleware::class])->prefix('customer')->group(function (
     Route::any('order_placed', [OrderController::class, "OrderPlaced"])->name('order_placed');
 
     Route::any('feedback', [FeedbackController::class, "Feedback"])->name('feedback');
+    Route::any('contact', [ContactController::class, "Contact"])->name('contact');
 
 });
