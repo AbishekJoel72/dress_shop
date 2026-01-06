@@ -39,7 +39,7 @@
             <input type="hidden" name="feedbacks" value="true">
             <input type="hidden" name="id" value="{{ $feedback_list->id }}">
             <div class="card shadow-sm">
-                <div class="card-header bg-primary text-white ">
+                <div class="card-header  bg-transparent ">
                     <h5 class="mb-0"> Feedback</h5>
                 </div>
                 <div class="card-body">
@@ -79,7 +79,8 @@
                     {{-- Comment --}}
                     <div class="mb-3">
                         <label for="comment" class="form-label">Comment</label>
-                        <textarea name="comment" id="comment" rows="4" class="form-control" placeholder="Write your feedback here..."
+                        <textarea name="comment" id="comment" cols="6"
+                            class="form-control" placeholder="Write your feedback here..."
                             required>{{ $feedback_list->comment }}</textarea>
                     </div>
                 </div>
