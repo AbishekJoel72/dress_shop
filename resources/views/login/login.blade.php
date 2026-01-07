@@ -1,18 +1,23 @@
+<!DOCTYPE html>
 <html>
 @include('layouts.head')
 
 <style>
     body {
         background-color: #0092ca;
-        font-family: Arial, sans-serif;
+        font-family: 'Poppins', sans-serif;
+        margin: 0;
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
     }
 
     .container {
-        margin-top: 120px;
+         width: 95%;
         max-width: 400px;
         background: #fff;
         padding: 40px;
-        box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.2);
     }
 
     label {
@@ -43,6 +48,20 @@
     .forgot {
         columns: #0092ca;
         text-decoration: none;
+    }
+
+    @media (max-width: 480px) {
+        .container {
+            padding: 20px 15px;
+        }
+
+        h3 {
+            font-size: 18px;
+        }
+
+        button {
+            font-size: 14px;
+        }
     }
 </style>
 
