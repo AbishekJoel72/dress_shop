@@ -1,18 +1,27 @@
+<!DOCTYPE html>
 <html>
 @include('layouts.head')
 
 <style>
     body {
-        background-color: #0092ca;
-        font-family: Arial, sans-serif;
+           background:#0092ca;
+        font-family: 'Poppins', sans-serif;
+        margin:0;
+        padding:0;
+        min-height:100vh;
+        display:flex;
+        justify-content:center;
+        align-items:center;
+        overflow-x:hidden;
     }
 
     .container {
-        margin-top: 120px;
-        max-width: 400px;
-        background: #fff;
-        padding: 40px;
-        box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.2);
+          max-width:420px;
+        width:92%;
+        background:#fff;
+        padding:40px ;
+        border-radius:10px;
+        box-shadow:0 10px 25px rgba(0,0,0,0.25);
     }
 
     label {
@@ -40,10 +49,22 @@
         background: linear-gradient(90deg, #0092ca, #ec107a);
     }
 
-    .forgot {
-        columns: #0092ca;
-        text-decoration: none;
+        @media(max-width:768px){
+        .container{
+            margin:25px auto;
+            padding:20px 15px;
+        }
+
+        h3{
+            font-size:20px;
+            text-align:center;
+        }
+
+        button{
+            font-size:15px;
+        }
     }
+
 </style>
 
 
