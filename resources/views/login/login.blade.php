@@ -18,6 +18,7 @@
         max-width: 400px;
         background: #fff;
         padding: 40px;
+        border-radius: 10px;
     }
 
     label {

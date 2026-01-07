@@ -1,17 +1,23 @@
+<!DOCTYPE html>
 <html>
 @include('layouts.head')
 <style>
     body {
         background-color: #0092ca;
-        font-family: Arial, sans-serif;
+        font-family: 'Poppins', sans-serif;
+        margin: 0;
+        padding: 0;
+        overflow-x: hidden;
     }
 
     .container {
-        margin-top: 30px;
-        max-width: 50%;
+        margin: 30px auto;
+        max-width: 600px;
+        width: 90%;
         background: #fff;
-        padding: 40px;
-        box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.2);
+       padding: 40px;
+        border-radius: 10px;
+
     }
 
     label {
@@ -39,9 +45,20 @@
         background: linear-gradient(90deg, #0092ca, #ec107a);
     }
 
-    .forgot {
-        columns: #0092ca;
-        text-decoration: none;
+
+
+    @media(max-width:768px) {
+        .row {
+            display: block;
+        }
+
+        .col {
+            width: 100%;
+        }
+
+        .container {
+            padding: 18px;
+        }
     }
 </style>
 
@@ -76,7 +93,7 @@
                     <div class=" d-flex align-items-center gap-3">
                         <div class="form-check">
                             <input type="radio" name="gender" id="gender_m" value="m" class="form-check-input"
-                                required>
+                                required checked>
                             <label for="gender_m" class="form-check-label">Male</label>
                         </div>
 
