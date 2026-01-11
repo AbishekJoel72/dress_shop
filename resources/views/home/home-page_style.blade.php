@@ -42,20 +42,36 @@ body {
     border-radius: 20px;
 }
 
-.hero {
-    height: 90vh;
-    background: url('https://images.unsplash.com/photo-1490481651871-ab68de25d43d') center/cover;
+.hero-slide{
+    height:100vh;
+    object-fit:cover;
 }
 
-.hero-overlay {
-    height: 100%;
+.carousel-caption{
     background: rgba(0,0,0,0.5);
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    color: #fff;
+    padding: 20px;
+    border-radius: 10px;
 }
+
+
+#about-full {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+}
+
+#about-full img{
+    height: 80vh;
+    width: 100%;
+    object-fit: cover;
+    border-radius: 15px;
+}
+
+#products{
+    min-height: 100vh;
+    padding-top: 120px; /* heading visible below navbar */
+}
+
 
 .product-card {
     border: none;
@@ -65,9 +81,10 @@ body {
 }
 
 .product-card img {
-    height: 280px;
+    height: 350px;
     width: 100%;
     object-fit: cover;
+        transition: .4s;
 }
 
 .product-card:hover img {
@@ -78,112 +95,141 @@ body {
     transform: translateY(-8px);
 }
 
-#contact {
-    background: #f9f9f9;
-    border-radius: 25px;
+/* avoid navbar overlap */
+#contact-section{
+    padding-top:100px;
+    padding-bottom:60px;
+    background: linear-gradient(135deg,#f8fafc,#e9f0ff);
 }
+
+/* full width container */
+.contact-wrapper{
+    width:100%;
+    padding-left:60px;
+    padding-right:60px;
+}
+
+/* main white frame */
+.contact-box{
+    width:100%;
+    background:#fff;
+    border-radius:22px;
+    box-shadow:0 15px 40px rgba(0,0,0,.12);
+    padding:40px 30px;
+}
+
+/* headings */
+.title{
+    font-weight:800;
+    margin-bottom:10px;
+}
+
+.subtitle{
+    color:#666;
+    margin-bottom:15px;
+}
+
+/* dashed divider */
+.contact-left{
+    border-right:2px dashed #ddd;
+    padding-right:25px;
+}
+
+.map{
+    width:100%;
+    height:250px;
+    border-radius:15px;
+    border:0;
+    margin-top:15px;
+}
+
+/* form boxes */
+.contact-right .form-control{
+    border-radius:12px;
+    border:1px solid #ccc;
+}
+
+.contact-right textarea{
+    border-radius:12px;
+}
+
+/* button */
+.submit-btn{
+    background:black;
+    color:white;
+    padding:12px 34px;
+    border-radius:30px;
+    font-weight:600;
+}
+
+
+
 
 .border-divider {
     border-right: 1px solid #ddd;
 }
 
-footer {
-    background: #111;
-    color: #fff;
-    padding: 40px 0;
+footer{
+    background:#0c0c0c;
+    color:#eee;
+    padding:50px 0 20px 0;
 }
 
-footer a {
-    color: #aaa;
-    text-decoration: none;
-}
-footer a:hover {
-    color: #fff;
+footer .brand{
+    font-weight:800;
+    font-size:22px;
 }
 
-
-/* MOBILE RESPONSIVE FIX */
-@media (max-width: 768px) {
-
-    /* Navbar mobile layout */
-    #header {
-        padding: 10px 15px;
-    }
-
-    .nav-links {
-        position: fixed;
-        top: 70px;
-        right: 0;
-        background: var(--primary);
-        width: 100%;
-        flex-direction: column;
-        text-align: center;
-        gap: 15px;
-        padding: 20px 0;
-        display: none;
-    }
-
-    .nav-links.show {
-        display: flex;
-    }
-
-    /* Navbar items clickable, full width */
-    .nav-links li {
-        width: 100%;
-    }
-
-    /* Add hamburger */
-    .menu-toggle {
-        display: block;
-        font-size: 28px;
-        color: #fff;
-        cursor: pointer;
-    }
-
-    /* Hide desktop nav */
-    #header img, #header h5 {
-        max-width: 140px;
-    }
-
-    /* Hero section fix */
-    .hero {
-        height: 60vh;
-        background-position: center;
-    }
-
-    .hero-overlay h1 {
-        font-size: 24px;
-    }
-
-    .hero-overlay p {
-        font-size: 14px;
-    }
-
-    /* About section mobile */
-    #about .row {
-        flex-direction: column-reverse;
-    }
-
-    #about img {
-        width: 100%;
-        height: auto;
-    }
-
-    /* Product card height auto */
-    .product-card img {
-        height: 200px;
-    }
-
-    /* Contact box column layout */
-    .border-divider {
-        border-right: none;
-        border-bottom: 1px solid #ddd;
-        margin-bottom: 15px;
-        padding-bottom: 10px;
-    }
+footer p{
+    margin-bottom:8px;
 }
 
-/* Hamburger hidden on desktop */
+.footer-links{
+    list-style:none;
+    padding-left:0;
+}
+
+.footer-links li{
+    margin-bottom:6px;
+}
+
+footer a{
+    color:#bbb;
+    text-decoration:none;
+}
+
+footer a:hover{
+    color:#fff;
+}
+
+/* icons */
+.social-icons a{
+    display:inline-block;
+    margin-right:10px;
+    font-size:18px;
+    width:35px;
+    height:35px;
+    line-height:35px;
+    text-align:center;
+    border-radius:50%;
+    background:#222;
+}
+
+.social-icons a:hover{
+    background:#fff;
+    color:#000;
+}
+
+.copy{
+    font-size:14px;
+    opacity:.8;
+}
+
+
+
+
+
+
 .menu-toggle{
     display:none;
     color:white;
