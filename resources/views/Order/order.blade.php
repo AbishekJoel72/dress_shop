@@ -145,7 +145,7 @@
                             </select>
                         </div>
 
-                        <div class="col-2">f
+                        <div class="col-2">
                             <label for="city_id">City</label>
                             <select name="city_id" id="city_id" required class="form-select select2">
                             </select>

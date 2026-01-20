@@ -58,9 +58,16 @@
 
 
     .side-bar.collapsed ul li a {
-         font-size: 20px;
-            min-width: 26px;
-        justify-content: center;
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        color: #fff;
+        text-decoration: none;
+        padding: 15px 10px;
+        border-radius: 6px;
+        white-space: nowrap;
+transition: all 0.2s ease-in-out;
+        height: 55px;
     }
 
     .side-bar ul li a i {
@@ -71,19 +78,19 @@
 
 
 
-    /* Sidebar title */
+
     .sidebar-title {
         color: #fff;
         font-size: 45px;
 
     }
 
-    /* Default state */
+
     .sidebar-title .short-text {
         display: none;
     }
 
-    /* Collapsed sidebar */
+
     .side-bar.collapsed .sidebar-title .full-text {
         display: none;
     }
@@ -94,7 +101,7 @@
         text-align: center;
     }
 
-    /* Center T when collapsed */
+
     .side-bar.collapsed .sidebar-title {
         text-align: center;
     }
@@ -107,7 +114,7 @@
     .header {
         position: fixed;
         top: 0;
-       left: 270px;
+        left: 270px;
         right: 0;
         background: #fff;
         padding: 10px 15px;
