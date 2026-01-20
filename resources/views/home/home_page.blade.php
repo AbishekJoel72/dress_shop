@@ -42,37 +42,37 @@
 
 
     <!-- HERO -->
-    <section id="heroCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="2000">
+    <section id="heroCarousel" class="carousel slide carousel-fade" data-bs-ride="carousel" data-bs-interval="2000">
 
         <div class="carousel-inner">
 
-            <!-- MEN FASHION -->
+            <!-- Slide 1 -->
             <div class="carousel-item active">
-                <img src="https://images.unsplash.com/photo-1521572163474-6864f9cf17ab"
-                    class="d-block w-100 hero-slide">
-                <div class="carousel-caption">
+                <img src="https://images.unsplash.com/photo-1521572163474-6864f9cf17ab" class="d-block w-100 hero-slide"
+                    alt="Men Fashion">
+                <div class="carousel-caption hero-content">
                     <h1>Premium Men’s Fashion</h1>
                     <p>Shirts • T-Shirts • Jackets • Formals</p>
                     <a href="#products" class="btn btn-light btn-lg">Shop Men</a>
                 </div>
             </div>
 
-            <!-- WOMEN FASHION -->
+            <!-- Slide 2 -->
             <div class="carousel-item">
-                <img src="https://images.unsplash.com/photo-1503342217505-b0a15ec3261c"
-                    class="d-block w-100 hero-slide">
-                <div class="carousel-caption">
+                <img src="https://images.unsplash.com/photo-1503342217505-b0a15ec3261c" class="d-block w-100 hero-slide"
+                    alt="Women Fashion">
+                <div class="carousel-caption hero-content">
                     <h1>Trendy Women’s Collection</h1>
                     <p>Dresses • Kurtis • Western Wear</p>
                     <a href="#products" class="btn btn-light btn-lg">Shop Women</a>
                 </div>
             </div>
 
-            <!-- MEN + WOMEN LOOKBOOK -->
+            <!-- Slide 3 -->
             <div class="carousel-item">
-                <img src="https://images.unsplash.com/photo-1503341455253-b2e723bb3dbb"
-                    class="d-block w-100 hero-slide">
-                <div class="carousel-caption">
+                <img src="https://images.unsplash.com/photo-1503341455253-b2e723bb3dbb" class="d-block w-100 hero-slide"
+                    alt="Lookbook">
+                <div class="carousel-caption hero-content">
                     <h1>Style For Every Story</h1>
                     <p>Latest Trends • Best Prices</p>
                     <a href="#products" class="btn btn-light btn-lg">Explore Collection</a>
@@ -81,7 +81,17 @@
 
         </div>
 
+        <!-- Controls -->
+        <button class="carousel-control-prev" type="button" data-bs-target="#heroCarousel" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon"></span>
+        </button>
+
+        <button class="carousel-control-next" type="button" data-bs-target="#heroCarousel" data-bs-slide="next">
+            <span class="carousel-control-next-icon"></span>
+        </button>
+
     </section>
+
 
 
 
@@ -93,43 +103,48 @@
 
 
     <!-- ABOUT -->
-    <section class="container" id="about-full">
+    <section id="about-full">
+        <div class="container h-100">
+            <div class="row align-items-center h-100">
 
-        <div class="row align-items-center">
+                <!-- LEFT CONTENT -->
+                <div class="col-lg-6">
+                    <h2>About Trendora</h2>
 
-            <div class="col-lg-6 mb-4">
-                <h2>About Trendora</h2>
-                <p>
-                    Trendora is more than just an online clothing store — it is a celebration of style,
-                    individuality, and modern living. We are dedicated to bringing you the latest fashion curated
-                    from trendy collections across men’s and women’s wear. From comfortable everyday basics to
-                    statement pieces for special occasions, Trendora offers styles that help you express yourself
-                    confidently.
-                </p>
-                <p>
-                    Every product at Trendora is selected with attention to fabric quality, comfort, and design detail.
-                    We believe great fashion should feel good, last long, and suit every mood — whether it is a casual
-                    day out, an office meeting, a festive celebration, or an evening party.
-                </p>
-                <p>
-                    Our vision is to make premium fashion accessible to everyone without compromising on elegance. With
-                    Trendora, dressing well becomes simple — discover outfits that match your personality, elevate your
-                    confidence, and tell your story through style.
-                </p>
-                <p>
-                    Because style is not only about clothing — it is about comfort, confidence, and the way you carry
-                    yourself.
-                </p>
+                    <p>
+                        Trendora is more than just an online clothing store — it is a celebration of style,
+                        individuality, and modern living. We are dedicated to bringing you the latest fashion curated
+                        from trendy collections across men’s and women’s wear.
+                    </p>
+
+                    <p>
+                        Every product at Trendora is selected with attention to fabric quality, comfort, and design
+                        detail.
+                        We believe great fashion should feel good, last long, and suit every mood.
+                    </p>
+
+                    <p>
+                        Our vision is to make premium fashion accessible to everyone without compromising on elegance.
+                        With Trendora, dressing well becomes simple.
+                    </p>
+
+                    <p>
+                        Because style is not only about clothing — it is about comfort, confidence, and the way you
+                        carry
+                        yourself.
+                    </p>
+                </div>
+
+                <!-- RIGHT IMAGE -->
+                <div class="col-lg-6">
+                    <img src="https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&w=1200&q=80"
+                        class="about-img">
+                </div>
+
             </div>
-
-            <div class="col-lg-6 text-center">
-                <img src="https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&w=1200&q=80"
-                    class="img-fluid shadow">
-            </div>
-
         </div>
-
     </section>
+
 
 
 
