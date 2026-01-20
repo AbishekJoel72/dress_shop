@@ -16,6 +16,7 @@ body {
     padding: 14px 30px;
     position: fixed;
     width: 100%;
+     height: 80px;
     top: 0;
     display: flex;
     justify-content: space-between;
@@ -42,29 +43,71 @@ body {
     border-radius: 20px;
 }
 
-.hero-slide{
-    height:100vh;
-    object-fit:cover;
+#heroCarousel {
+    height: 100vh;
 }
 
-.carousel-caption{
-    background: rgba(0,0,0,0.5);
-    padding: 20px;
-    border-radius: 10px;
+#heroCarousel .carousel-inner,
+#heroCarousel .carousel-item {
+    height: 100vh;
 }
+
+/* Image full cover */
+.hero-slide {
+    height: 100vh;
+    object-fit: cover;
+    filter: brightness(70%);
+}
+
+/* Center content */
+.hero-content {
+    bottom: 50%;
+    transform: translateY(50%);
+    text-align: center;
+}
+
+.hero-content h1 {
+    font-size: 3rem;
+    font-weight: bold;
+}
+
+.hero-content p {
+    font-size: 1.2rem;
+    margin-bottom: 20px;
+}
+
+
+
+
+
 
 
 #about-full {
     min-height: 100vh;
     display: flex;
     align-items: center;
+    padding: 60px 0;
 }
 
-#about-full img{
-    height: 80vh;
+/* image full height */
+.about-img {
     width: 100%;
+    height: 80vh;
     object-fit: cover;
-    border-radius: 15px;
+    border-radius: 18px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+}
+
+/* text styling */
+#about-full h2 {
+    font-size: 2.8rem;
+    margin-bottom: 20px;
+}
+
+#about-full p {
+    font-size: 1.05rem;
+    line-height: 1.7;
+    color: #555;
 }
 
 #products{
