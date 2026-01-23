@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
 @include('layouts.head')
+@include('layouts.script')
 
 <style>
     body {
@@ -14,7 +15,7 @@
     }
 
     .container {
-         width: 95%;
+        width: 95%;
         max-width: 400px;
         background: #fff;
         padding: 40px;
@@ -111,11 +112,11 @@
         var email = $("#email").val().trim();
 
         if (!email) {
-            alert("Please enter your email .");
+            $("#modalMessage").text("Please enter your email address.");
+            var modal = new bootstrap.Modal(document.getElementById('sessionModal'));
+            modal.show();
             return false;
         }
-
-        // If email is entered → continue
         $.ajax({
             url: "{{ route('ajax_reset_password') }}",
             type: "GET",
