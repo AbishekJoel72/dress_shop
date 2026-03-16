@@ -48,34 +48,34 @@
 
             <!-- Slide 1 -->
             <div class="carousel-item active">
-                <img src="https://images.unsplash.com/photo-1521572163474-6864f9cf17ab" class="d-block w-100 hero-slide"
-                    alt="Men Fashion">
+                <img src="https://images.unsplash.com/photo-1534030347209-467a5b0ad3e6?auto=format&fit=crop&w=1200&q=80"
+                    class="d-block w-100 hero-slide" alt="Men Fashion">
                 <div class="carousel-caption hero-content">
                     <h1>Premium Men’s Fashion</h1>
                     <p>Shirts • T-Shirts • Jackets • Formals</p>
-                    <a href="#products" class="btn btn-light btn-lg">Shop Men</a>
+                    {{-- <a href="#products" class="btn btn-light btn-lg">Shop Men</a> --}}
                 </div>
             </div>
 
             <!-- Slide 2 -->
             <div class="carousel-item">
-                <img src="https://images.unsplash.com/photo-1503342217505-b0a15ec3261c" class="d-block w-100 hero-slide"
-                    alt="Women Fashion">
+                <img src="https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&w=1200&q=80"
+                    class="d-block w-100 hero-slide" alt="Women Fashion">
                 <div class="carousel-caption hero-content">
                     <h1>Trendy Women’s Collection</h1>
                     <p>Dresses • Kurtis • Western Wear</p>
-                    <a href="#products" class="btn btn-light btn-lg">Shop Women</a>
+                    {{-- <a href="#products" class="btn btn-light btn-lg">Shop Women</a> --}}
                 </div>
             </div>
 
             <!-- Slide 3 -->
             <div class="carousel-item">
-                <img src="https://images.unsplash.com/photo-1503341455253-b2e723bb3dbb" class="d-block w-100 hero-slide"
-                    alt="Lookbook">
+                <img src="https://images.unsplash.com/photo-1622290291468-a28f7a7dc6a8?auto=format&fit=crop&w=1200&q=80"
+                    class="d-block w-100 hero-slide" alt="Kids Fashion">
                 <div class="carousel-caption hero-content">
-                    <h1>Style For Every Story</h1>
-                    <p>Latest Trends • Best Prices</p>
-                    <a href="#products" class="btn btn-light btn-lg">Explore Collection</a>
+                    <h1>Adorable Kids Collection</h1>
+                    <p>Baby Dresses • T-Shirts • Party Wear • Comfy Styles</p>
+                    {{-- <a href="#products" class="btn btn-light btn-lg">Shop Kids</a> --}}
                 </div>
             </div>
 
@@ -103,47 +103,56 @@
 
 
     <!-- ABOUT -->
-    <section id="about-full">
-        <div class="container h-100">
-            <div class="row align-items-center h-100">
+  <section id="about-full">
+    <div class="container h-100">
+        <div class="row align-items-center h-100">
 
-                <!-- LEFT CONTENT -->
-                <div class="col-lg-6">
-                    <h2>About Trendora</h2>
+            <!-- LEFT CONTENT - ABOUT TEXT -->
+            <div class="col-lg-6">
+                <h2>About Trendora</h2>
 
-                    <p>
-                        Trendora is more than just an online clothing store — it is a celebration of style,
-                        individuality, and modern living. We are dedicated to bringing you the latest fashion curated
-                        from trendy collections across men’s and women’s wear.
-                    </p>
+                <p>
+                    <strong>For Men:</strong> Trendora brings you the latest in men's fashion – from formal shirts to casual tees,
+                    blazers to streetwear. We focus on perfect fit, premium fabrics, and timeless style.
+                </p>
 
-                    <p>
-                        Every product at Trendora is selected with attention to fabric quality, comfort, and design
-                        detail.
-                        We believe great fashion should feel good, last long, and suit every mood.
-                    </p>
+                <p>
+                    <strong> For Women:</strong> Discover elegance with our women's collection – chic dresses, traditional kurtis,
+                    western wear, and party gowns. Designed to celebrate your individuality.
+                </p>
 
-                    <p>
-                        Our vision is to make premium fashion accessible to everyone without compromising on elegance.
-                        With Trendora, dressing well becomes simple.
-                    </p>
+                <p>
+                    <strong> For Kids:</strong> Our kids' range is all about comfort and cuteness. Soft fabrics, playful prints,
+                    and durable outfits for your little ones. From baby dresses to trendy teen wear.
+                </p>
 
-                    <p>
-                        Because style is not only about clothing — it is about comfort, confidence, and the way you
-                        carry
-                        yourself.
-                    </p>
-                </div>
-
-                <!-- RIGHT IMAGE -->
-                <div class="col-lg-6">
-                    <img src="https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&w=1200&q=80"
-                        class="about-img">
-                </div>
-
+                <p>
+                    <strong> Our Promise:</strong> Quality fabrics, affordable prices, and styles that last.
+                    Trendora is fashion for every member of your family.
+                </p>
             </div>
+
+            <!-- RIGHT IMAGE - FIXED SIZE SLIDESHOW -->
+            <div class="col-lg-6">
+                <div class="about-slideshow">
+                    <img src="https://images.unsplash.com/photo-1534030347209-467a5b0ad3e6?auto=format&fit=crop&w=1200&q=80"
+                         class="about-img active" alt="Men Fashion">
+                    <img src="https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&w=1200&q=80"
+                         class="about-img" alt="Women Fashion">
+                    <img src="https://images.unsplash.com/photo-1622290291468-a28f7a7dc6a8?auto=format&fit=crop&w=1200&q=80"
+                         class="about-img" alt="Kids Fashion">
+                </div>
+            </div>
+
         </div>
-    </section>
+    </div>
+</section>
+
+
+
+
+
+
 
 
 
@@ -158,51 +167,51 @@
 
         <div class="row g-4">
 
-            <div class="col-md-3">
+
+            <div class="col-md-4">
                 <div class="card product-card">
-                    <img src="https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&w=800&q=80"
-                        class="card-img-top img-fluid" alt="Women Dress">
+                    <div class="carousel-slides">
+                        <img src="https://images.unsplash.com/photo-1469334031218-e382a71b716b?auto=format&fit=crop&w=800&q=80"
+                            class="card-img-top img-fluid" alt="Women Dress ">
+                    </div>
                     <div class="card-body text-center">
                         <h6>Women Dress</h6>
-                        <p>₹1,299</p>
+                        <p class="price">₹1,299</p>
                     </div>
                 </div>
             </div>
 
-            <div class="col-md-3">
-                <div class="card product-card">
-                    <img src="https://images.unsplash.com/photo-1520974742243-74d1bb13b3a1?auto=format&fit=crop&w=800&q=80"
-                        class="card-img-top img-fluid" alt="Men Shirt">
 
+            <div class="col-md-4">
+                <div class="card product-card">
+                    <div class="carousel-slides">
+
+                        <img src="https://images.unsplash.com/photo-1621072156002-e2fccdc0b176?auto=format&fit=crop&w=800&q=80"
+                            class="card-img-top img-fluid" alt="Men Shirt ">
+                    </div>
                     <div class="card-body text-center">
                         <h6>Men Shirt</h6>
-                        <p>₹999</p>
+                        <p class="price">₹999</p>
                     </div>
                 </div>
             </div>
 
-            <div class="col-md-3">
+
+
+            <div class="col-md-4">
                 <div class="card product-card">
-                    <img src="https://images.unsplash.com/photo-1512436991641-6745cdb1723f?auto=format&fit=crop&w=800&q=80"
-                        class="card-img-top img-fluid" alt="Party Wear">
+                    <div class="carousel-slides">
+                        <img src="https://images.unsplash.com/photo-1622290291468-a28f7a7dc6a8?auto=format&fit=crop&w=1200&q=80"
+                            class="card-img-top img-fluid" alt="Party Wear 3">
+                    </div>
                     <div class="card-body text-center">
-                        <h6>Party Wear</h6>
-                        <p>₹1,899</p>
+                        <h6>Kids Wear</h6>
+                        <p class="price">₹1,899</p>
                     </div>
                 </div>
             </div>
 
-            <div class="col-md-3">
-                <div class="card product-card">
-                    <img src="https://images.unsplash.com/photo-1520975432074-3e5f6e0a4a1a?auto=format&fit=crop&w=800&q=80"
-                        class="card-img-top img-fluid" alt="Casual Dress">
-
-                    <div class="card-body text-center">
-                        <h6>Casual Dress</h6>
-                        <p>₹1,099</p>
-                    </div>
-                </div>
-            </div>
+        </div>
 
         </div>
 
@@ -336,6 +345,49 @@
         } else {
             header.classList.remove("scrolled");
         }
+    });
+
+
+
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const aboutImages = document.querySelectorAll('.about-slideshow .about-img');
+
+        if (aboutImages.length > 0) {
+            let currentIndex = 0;
+            aboutImages[0].classList.add('active');
+
+            setInterval(() => {
+                aboutImages[currentIndex].classList.remove('active');
+                currentIndex = (currentIndex + 1) % aboutImages.length;
+                aboutImages[currentIndex].classList.add('active');
+            }, 3000);
+        }
+    });
+
+
+
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const productCards = document.querySelectorAll('.product-card');
+
+        productCards.forEach((card, index) => {
+            const slides = card.querySelectorAll('.carousel-slides img');
+
+            if (slides.length > 0) {
+                slides.forEach(s => s.classList.remove('active'));
+                slides[0].classList.add('active');
+                if (slides.length > 1) {
+                    let current = 0;
+
+                    setInterval(() => {
+                        slides[current].classList.remove('active');
+                        current = (current + 1) % slides.length;
+                        slides[current].classList.add('active');
+                    }, 2000);
+                }
+            }
+        });
     });
 </script>
 
