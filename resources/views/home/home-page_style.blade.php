@@ -828,6 +828,7 @@
         backdrop-filter: blur(10px);
         -webkit-backdrop-filter: blur(10px);
         /* border-radius: 40px; */
+        
         box-shadow: 0 30px 60px -20px rgba(0, 0, 0, 0.2), 0 0 0 1px rgba(255, 255, 255, 0.8) inset;
         padding: 20px 0px;
         border: 1px solid rgba(255, 255, 255, 0.6);
@@ -961,7 +962,7 @@
     }
 
 
-   
+
 
     /* Floating animation for form */
     @keyframes gentleFloat {
