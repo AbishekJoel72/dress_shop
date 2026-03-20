@@ -5,7 +5,7 @@
 
 <style>
     body {
-        background-color: #0092ca;
+        background: linear-gradient(90deg, #e62a49 0%, #9b87f2 100%);
         font-family: 'Poppins', sans-serif;
         margin: 0;
         min-height: 100vh;
@@ -34,6 +34,20 @@
         border: 1px solid #ccc;
         width: 100%;
         margin-bottom: 20px;
+        transition: all 0.3s ease;
+    }
+
+
+    .form-control:focus,
+    .form-control:hover {
+        border-color: #e62a49;
+        box-shadow: 0 0 5px rgba(230, 42, 73, 0.5);
+        outline: none;
+        transform: scale(1.02);
+    }
+
+    .form-control:focus+label {
+        color: #e62a49;
     }
 
     button {
@@ -44,12 +58,37 @@
         font-weight: bold;
         color: #fff;
         cursor: pointer;
-        background: linear-gradient(90deg, #0092ca, #ec107a);
+        background: linear-gradient(145deg, #e62a49, #b11e36);
+
+    }
+
+    button:hover {
+        opacity: 0.9;
     }
 
     .forgot {
-        columns: #0092ca;
+        color: #0092ca;
         text-decoration: none;
+        font-size: 14px;
+        display: inline-block;
+        margin-top: 5px;
+        transition: color 0.3s ease;
+    }
+
+    .forgot:hover {
+        color: #e62a49;
+        text-decoration: underline;
+    }
+
+
+    .login {
+        text-decoration: none;
+        color: #0092ca
+    }
+
+    .login:hover {
+        text-decoration: none;
+        color: #e62a49
     }
 
     @media (max-width: 480px) {
@@ -75,7 +114,7 @@
         <form action="{{ route('login') }}" method="GET" autocomplete="off">
             @csrf
             <input type="hidden" name="login_method" value="true">
-            <h3>Login</h3>
+            <h3> Fashion Login</h3>
             <div class="row">
 
                 <div class="col-12 mt-3">
@@ -84,7 +123,7 @@
                         class="form-control">
                 </div>
 
-                <div class="col-12">
+                <div class="col-12 mt-2">
                     <label for="password">Password</label>
                     <input type="password" name="password" id="password" placeholder=" Password" required
                         class="form-control">
@@ -97,8 +136,9 @@
                     <button type="submit">Login</button>
                 </div>
 
-                <p class="mt-3">Don't have an Account? <a href="{{ route('registration') }}"
-                        style="text-decoration: none ; color:#0092ca"> Sign In </a></p>
+                <p class="mt-3 text-center">New to Fashion? <a href="{{ route('registration') }}" class="login"> Join the
+                        Style Club
+                    </a></p>
             </div>
         </form>
     </div>
