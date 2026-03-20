@@ -9,8 +9,7 @@
     @if (empty($config->logo))
         <h5 class="mb-0">My Company</h5>
     @else
-        <img src="{{ asset($config->logo) }}" width="190" height="100"
-            alt="Company Logo" class="img-thumbnail">
+        <img src="{{ asset($config->logo) }}" width="190" height="100" alt="Company Logo" class="img-thumbnail">
     @endif
 
 
@@ -19,6 +18,9 @@
         <input type="search" name="search_items" id="search_items" placeholder="Search..." class="form-control w-50">
     </div>
 
+    <style>
+
+    </style>
     {{-- Navigation Menu --}}
     <ul class="nav me-3 ">
         <li class="nav-item">
@@ -44,7 +46,7 @@
     </ul>
 
     {{-- Admin Dropdown --}}
-    <nav class="bg-light p-3" style="color: #9b87f2">
+    <nav class="bg-light p-3" style="color: #9b87f2; border-radius:5px;">
 
         @php
             use App\Models\Registration;
