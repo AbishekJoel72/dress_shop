@@ -1,15 +1,18 @@
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
 
-
-    body {
-        font-family: 'Poppins', sans-serif;
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
     }
 
-
-
-
-
+    body {
+        padding: 0;
+        font-family: 'Poppins', sans-serif;
+        overflow-x: hidden;
+        width: 100%;
+    }
 
 
     /*---------------------- Home ----------------------*/
@@ -17,14 +20,14 @@
     #header {
         position: fixed;
         top: 0;
+        left: 0;
         width: 100%;
-        height: 85px;
-        padding: 15px 60px;
+        height: 70px;
+        padding: 0 15px;
         display: flex;
-        justify-content: space-between;
         align-items: center;
+        justify-content: space-between;
         z-index: 1000;
-        transition: all 0.1s ease;
 
     }
 
@@ -109,13 +112,15 @@
         box-shadow: 0 10px 20px rgba(155, 135, 242, 0.3);
     }
 
-
+    .menu-toggle {
+        display: none;
+    }
 
 
     @media (max-width: 768px) {
 
         #header {
-            padding: 10px 20px;
+            padding: 0 15px;
             height: 70px;
         }
 
@@ -147,11 +152,15 @@
         }
 
         .menu-toggle {
-            right: 100px;
             display: block;
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
             font-size: 1.8rem;
             color: #fff;
             cursor: pointer;
+            z-index: 1001;
         }
 
     }
@@ -159,11 +168,7 @@
 
 
 
-
-
-
-
-    /* ===== HERO CAROUSEL ===== */
+    /* ----------------------------------- Home Section  ---------------------*/
     #heroCarousel {
         height: 100vh;
         position: relative;
@@ -719,7 +724,7 @@
         box-shadow: 0 30px 45px -12px rgba(230, 42, 73, 0.25);
     }
 
-    /* Carousel container */
+
     .carousel-slides {
         position: relative;
         width: 100%;
@@ -908,8 +913,7 @@
 
     .contact-wrapper {
         width: 100%;
-        padding-left: 100px;
-        padding-right: 60px;
+        padding: 0 80px;
         position: relative;
         z-index: 2;
     }
@@ -1090,8 +1094,104 @@
         }
     }
 
+    /* ================= MOBILE RESPONSIVE ================= */
 
+    /* Tablet */
+    @media (max-width: 992px) {
+        .contact-wrapper {
+            padding: 0 10px;
+        }
 
+        .contact-left {
+            border-right: none;
+            border-bottom: 1px solid rgba(230, 42, 73, 0.15);
+            padding-right: 0;
+            padding-bottom: 25px;
+            margin-bottom: 25px;
+        }
+
+        .contact-left .title {
+            font-size: 2.2rem;
+        }
+
+        .contact-right .title {
+            font-size: 1.8rem;
+        }
+    }
+
+    /* Mobile */
+    @media (max-width: 576px) {
+
+        #contact-section {
+            padding-top: 60px;
+            padding-bottom: 50px;
+        }
+
+        .contact-wrapper {
+            padding-left: 15px;
+            padding-right: 15px;
+        }
+
+        .contact-box {
+            padding: 15px;
+            border-radius: 20px;
+        }
+
+        .contact-left,
+        .contact-right {
+            padding: 0;
+        }
+
+        .contact-left .title {
+            font-size: 1.8rem;
+        }
+
+        .contact-right .title {
+            font-size: 1.5rem;
+            margin-top: 20px;
+        }
+
+        .contact-left p {
+            font-size: 0.9rem;
+        }
+
+        .contact-left p strong {
+            display: block;
+            margin-bottom: 3px;
+        }
+
+        .map {
+            height: 180px;
+            margin-top: 15px;
+        }
+
+        .contact-right .form-control {
+            padding: 12px 15px;
+            font-size: 0.9rem;
+        }
+
+        .contact-right textarea {
+            min-height: 120px;
+        }
+
+        .submit-btn {
+            padding: 12px;
+            font-size: 1rem;
+        }
+    }
+
+    @media (max-width: 768px) {
+
+        .contact-box {
+            border-radius: 15px;
+            width: 100%;
+        }
+
+        .contact-left,
+        .contact-right {
+            padding: 15px;
+        }
+    }
 
 
 

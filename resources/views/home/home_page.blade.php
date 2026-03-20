@@ -256,7 +256,7 @@
 
                     <h3 class="title">Send Message</h3>
 
-                    <form method="POST">
+                    <form method="POST" autocomplete="off">
                         @csrf
                         <input type="hidden" name="contact_ss" value="true">
                         <input class="form-control mb-3" type="email" name="email" placeholder="Email" required>
@@ -424,9 +424,15 @@
 
 
 <script>
-    function toggleMenu() {
-        document.getElementById("mobileMenu").classList.toggle("active");
-    }
+
+   function toggleMenu(el) {
+    const menu = document.getElementById("mobileMenu");
+    menu.classList.toggle("active");
+
+    const icon = el.querySelector("i");
+    icon.classList.toggle("fa-bars");
+    icon.classList.toggle("fa-xmark");
+}
 
 
 

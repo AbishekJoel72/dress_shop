@@ -3,7 +3,7 @@
 @include('layouts.head')
 <style>
     body {
-        background-color: #0092ca;
+        background: linear-gradient(90deg, #e62a49 0%, #9b87f2 100%);
         font-family: 'Poppins', sans-serif;
         margin: 0;
         padding: 0;
@@ -15,7 +15,7 @@
         max-width: 600px;
         width: 90%;
         background: #fff;
-       padding: 40px;
+        padding: 40px;
         border-radius: 10px;
 
     }
@@ -32,6 +32,24 @@
         border: 1px solid #ccc;
         width: 100%;
         margin-bottom: 20px;
+        transition: all 0.3s ease;
+    }
+
+    .form-control:focus,
+    .form-control:hover {
+        border-color: #e62a49;
+        box-shadow: 0 0 5px rgba(230, 42, 73, 0.5);
+        outline: none;
+        transform: scale(1.02);
+    }
+
+    .form-check-input:checked {
+        background-color: #e62a49;
+        border-color: #e62a49;
+    }
+
+    .form-control:focus+label {
+        color: #e62a49;
     }
 
     button {
@@ -42,9 +60,19 @@
         font-weight: bold;
         color: #fff;
         cursor: pointer;
-        background: linear-gradient(90deg, #0092ca, #ec107a);
+         background: linear-gradient(145deg, #e62a49, #b11e36);
     }
 
+
+    .login {
+        text-decoration: none;
+        color: #0092ca
+    }
+
+    .login:hover {
+        text-decoration: none;
+        color: #e62a49
+    }
 
 
     @media(max-width:768px) {
@@ -139,11 +167,10 @@
             </div>
 
             <div class="col-12 mt-4">
-                <button type="submit">Registration</button>
+                <button type="submit">Create Account</button>
             </div>
 
-            <p class="mt-3">You have an Account? <a href="{{ route('login') }}"
-                    style="text-decoration: none ; color:#0092ca"> Log In </a></p>
+            <p class="mt-3 text-center">Already have an Account? <a href="{{ route('login') }}" class="login"> Sign In </a></p>
 
 
         </form>
