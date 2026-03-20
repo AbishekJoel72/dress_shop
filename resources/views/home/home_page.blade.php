@@ -23,7 +23,7 @@
         @endif
 
 
-        <span class="menu-toggle" onclick="toggleMenu()">
+        <span class="menu-toggle" onclick="toggleMenu(this)">
             <i class="fa-solid fa-bars"></i>
         </span>
 
@@ -150,14 +150,6 @@
             </div>
         </div>
     </section>
-
-
-
-
-
-
-
-
 
 
 
@@ -424,29 +416,30 @@
 
 
 <script>
+    function toggleMenu(el) {
+        const menu = document.getElementById("mobileMenu");
+        menu.classList.toggle("active");
 
-   function toggleMenu(el) {
-    const menu = document.getElementById("mobileMenu");
-    menu.classList.toggle("active");
+        const icon = el.querySelector("i");
+        icon.classList.toggle("fa-bars");
+        icon.classList.toggle("fa-xmark");
+    }
+    document.querySelectorAll("#mobileMenu a").forEach(link => {
+        link.addEventListener("click", function() {
 
-    const icon = el.querySelector("i");
-    icon.classList.toggle("fa-bars");
-    icon.classList.toggle("fa-xmark");
-}
-
-
-
-    window.addEventListener("scroll", function() {
-        const header = document.getElementById("header");
-        if (window.scrollY > 80) {
-            header.classList.add("scrolled");
-        } else {
-            header.classList.remove("scrolled");
-        }
+            const menu = document.getElementById("mobileMenu");
+            const toggleBtn = document.querySelector(".menu-toggle i");
+            menu.classList.remove("active");
+            toggleBtn.classList.remove("fa-xmark");
+            toggleBtn.classList.add("fa-bars");
+        });
     });
 
-
-
+    
+    window.addEventListener("scroll", function() {
+        const header = document.getElementById("header");
+        header.classList.toggle("scrolled", window.scrollY > 50);
+    });
 
     document.addEventListener('DOMContentLoaded', function() {
         const aboutImages = document.querySelectorAll('.about-slideshow .about-img');

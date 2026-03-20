@@ -18,6 +18,8 @@
         bottom: 0;
         width: 270px;
         background: #0092ca;
+        /* background: #0092ca; */
+         /* background: linear-gradient(90deg, #e62a49 0%, #9b87f2 100%); */
         color: #fff;
         padding: 20px;
         overflow-y: auto;
@@ -138,7 +140,32 @@
 
     }
 
- 
+
+    .search input {
+        width: 50%;
+        max-width: 400px;
+        padding: 12px 20px;
+        border-radius: 20px;
+        border: 1px solid rgba(0, 0, 0, 0.1);
+        outline: none;
+        font-size: 0.95rem;
+        background: #fff;
+        backdrop-filter: blur(10px);
+        transition: all 0.3s ease;
+    }
+
+    .search input::placeholder {
+        color: #999;
+    }
+    .search input:focus {
+        width: 100%;
+        border-color: #e62a49;
+        box-shadow: 0 0 10px rgba(230, 42, 73, 0.2);
+        background: #fff;
+    }
+    .search input:hover {
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+    }
 
     .footer {
         position: fixed;
@@ -216,9 +243,18 @@
 
 
 
+
+
+
+
+
+
+
+/* --------------------------Button color size Adjust------------------------------------ */
+
     .text-bg-primary {
         background-color: #0092ca;
-        border-radius: 0;
+        border-radius: 2;
     }
 
     .text-bg-secondary {
@@ -305,9 +341,8 @@
     .btn-primary {
         background-color: #0092ca;
         color: white;
-        border-radius: 0;
-        padding: 5px 10px;
-        font-size: 14px;
+        border-radius: 2;
+
 
     }
 
@@ -319,9 +354,8 @@
     .btn-secondary {
         background-color: #5a5f68;
         color: white;
-        border-radius: 0;
-        padding: 5px 10px;
-        font-size: 14px;
+        border-radius: 2;
+
 
     }
 
@@ -333,9 +367,8 @@
     .btn-info {
         background-color: #66bfbf;
         color: white;
-        border-radius: 0;
-        padding: 5px 10px;
-        font-size: 14px;
+        border-radius: 2;
+
 
     }
 
@@ -346,9 +379,8 @@
     .btn-success {
         background-color: #4c9173;
         color: white;
-        border-radius: 0;
-        padding: 5px 10px;
-        font-size: 14px;
+        border-radius: 2;
+
 
     }
 
@@ -359,9 +391,8 @@
     .btn-danger {
         background-color: #a93333;
         color: white;
-        border-radius: 0;
-        padding: 5px 10px;
-        font-size: 14px;
+        border-radius: 2;
+
 
     }
 
@@ -373,9 +404,8 @@
     .btn-light {
         background-color: #fbf8f8;
         color: black;
-        border-radius: 0;
-        padding: 5px 10px;
-        font-size: 14px;
+        border-radius: 2;
+
 
     }
 
@@ -386,9 +416,8 @@
     .btn-dark {
         background-color: #222831;
         color: white;
-        border-radius: 0;
-        padding: 5px 10px;
-        font-size: 14px;
+        border-radius: 2;
+
 
     }
 
@@ -399,12 +428,10 @@
     .btn-warning {
         background-color: #f96d00;
         color: white;
-        border-radius: 0;
-        padding: 5px 10px;
-        font-size: 14px;
+        border-radius: 2;
+
 
     }
-
     .btn-warning:hover {
         background-color: #f96d00;
     }
@@ -436,7 +463,7 @@
 
 
 
-
+/* --------------------------DataTable------------------------------------ */
     #datatable {
         width: 100% !important;
         border-collapse: collapse !important;
@@ -461,7 +488,7 @@
     }
 
 
-    /* Select2 container */
+    /* --------------------------Select2------------------------------------ */
     .select2-container .select2-selection--single {
         height: 45px !important;
         padding: 6px 12px;
@@ -470,43 +497,31 @@
         display: flex;
         align-items: center;
     }
-
-    /* Selected text */
     .select2-container--default .select2-selection--single .select2-selection__rendered {
         color: #212529;
         line-height: 38px;
         padding-left: 2px;
     }
 
-    /* Dropdown arrow */
     .select2-container--default .select2-selection--single .select2-selection__arrow {
         height: 38px;
         right: 8px;
     }
-
-    /* Dropdown box */
     .select2-container--default .select2-results>.select2-results__options {
         max-height: 220px;
     }
-
-    /* Hover effect */
     .select2-results__option--highlighted {
         background-color: #0d6efd !important;
         color: white !important;
     }
-
-    /* When opened */
     .select2-container--open .select2-selection--single {
         border-color: #0d6efd !important;
         box-shadow: 0 0 0 0.15rem rgba(13, 110, 253, .25);
     }
 
-    /* Placeholder color */
     .select2-container .select2-selection--single .select2-selection__placeholder {
         color: #6c757d;
     }
-
-    /* Remove blue outline on focus */
     .select2-container--default .select2-selection--single:focus {
         outline: none !important;
     }
