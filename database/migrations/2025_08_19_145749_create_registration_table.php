@@ -15,8 +15,11 @@ return new class extends Migration
             $table->bigIncrements("id");
             $table->string("first_name");
             $table->string("last_name")->nullable();
-            $table->enum('gender', ['m', 'f']);
-            $table->string("phone");
+            $table->enum('gender', ['m', 'f', 'o'])->nullable();
+            $table->date("date_of_birth")->nullable();
+            $table->integer("age")->nullable();
+            $table->string('profile_image')->nullable();
+            $table->string("phone_no")->unique();
             $table->string("email")->unique();
             $table->string("password");
             $table->string("confirmation_password");

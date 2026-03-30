@@ -55,22 +55,26 @@ class RegistrationController extends Controller
                 try {
                     $validation  = $request->validate([
                         "first_name" => "required",
+                        "date_of_birth" => "required",
                         "phone" => "required",
                         "email" => "required",
                         "password" => "required",
                         "confirmation_password" => "required",
 
-                    ]);
-                    if ($validation) {
-                        $reg = new Registration();
-                        $reg->first_name = $request->first_name;
-                        $reg->last_name = $request->last_name ?? null;
-                        $reg->gender = $request->gender;
-                        $reg->phone = $request->phone;
-                        $reg->email = $request->email;
-                        $reg->password = Hash::make($request->password);
-                        $reg->confirmation_password = Hash::make($request->confirmation_password);
-                        $reg->save();
+                        ]);
+                        if ($validation) {
+                            $reg = new Registration();
+                            $reg->first_name = $request->first_name;
+                            $reg->last_name = $request->last_name ?? null;
+                            $reg->gender = $request->gender;
+                            $reg->date_of_birth = $request->date_of_birth;
+                            $reg->age = $request->age;
+                            $reg->phone = $request->phone;
+                            $reg->email = $request->email;
+                            $reg->password = Hash::make($request->password);
+                            $reg->confirmation_password = Hash::make($request->confirmation_password);
+                            $reg->save();
+                            // dd( $request);
                         session()->flash("success", "Register Successfully");
                         return redirect()->route("login");
                     }
