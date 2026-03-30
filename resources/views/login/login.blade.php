@@ -6,8 +6,8 @@
 <style>
     body {
         background: linear-gradient(90deg, #e62a49 0%, #9b87f2 100%);
-        font-family: 'Poppins', sans-serif;
-        margin: 0;
+        font-family: 'Poppins'
+            margin: 0;
         min-height: 100vh;
         display: flex;
         justify-content: center;
@@ -23,31 +23,42 @@
     }
 
     label {
-        font-weight: 600;
-        margin-bottom: 5px;
+        font-weight: 500;
+        font-size: 14px;
         display: block;
+        color: #333;
+        padding-left: 2px;
     }
 
     .form-control {
-        border-radius: 8px;
-        padding: 10px;
-        border: 1px solid #ccc;
+        border: none;
+        border-bottom: 2px solid #ccc;
+        border-radius: 0;
+        padding: 10px 5px;
         width: 100%;
         margin-bottom: 20px;
+        background: transparent;
         transition: all 0.3s ease;
     }
 
 
-    .form-control:focus,
-    .form-control:hover {
-        border-color: #e62a49;
-        box-shadow: 0 0 5px rgba(230, 42, 73, 0.5);
+    .form-control:focus {
+        border-bottom: 2px solid #e62a49;
+        box-shadow: none;
         outline: none;
-        transform: scale(1.02);
+    }
+
+    .form-control:hover {
+        border-bottom: 2px solid #e62a49;
     }
 
     .form-control:focus+label {
         color: #e62a49;
+    }
+
+    ::placeholder {
+        font-size: 13px;
+        color: #aaa;
     }
 
     button {
@@ -91,6 +102,20 @@
         color: #e62a49
     }
 
+
+    .input-icon {
+        position: absolute;
+        right: 10px;
+        top: 38px;
+        color: #999;
+        font-size: 16px;
+        cursor: pointer;
+    }
+
+    .input-icon:hover {
+        color: #e62a49;
+    }
+
     @media (max-width: 480px) {
         .container {
             padding: 20px 15px;
@@ -116,17 +141,18 @@
             <input type="hidden" name="login_method" value="true">
             <h3> Fashion Login</h3>
             <div class="row">
-
-                <div class="col-12 mt-3">
+                <div class="col-12 mt-3 position-relative">
                     <label for="email">Email</label>
                     <input type="email" name="email" id="email" placeholder="Email" required
-                        class="form-control">
+                        class="form-control pe-5">
+                    <i class="fa fa-envelope input-icon"></i>
                 </div>
 
-                <div class="col-12 mt-2">
+                <div class="col-12 mt-2 position-relative">
                     <label for="password">Password</label>
-                    <input type="password" name="password" id="password" placeholder=" Password" required
-                        class="form-control">
+                    <input type="password" name="password" id="password" placeholder="Password" required
+                        class="form-control pe-5">
+                    <i class="fa fa-eye-slash input-icon" id="togglePassword"></i>
                 </div>
 
 
@@ -136,7 +162,8 @@
                     <button type="submit">Login</button>
                 </div>
 
-                <p class="mt-3 text-center">New to Fashion? <a href="{{ route('registration') }}" class="login"> Join the
+                <p class="mt-3 text-center">New to Fashion? <a href="{{ route('registration') }}" class="login"> Join
+                        the
                         Style Club
                     </a></p>
             </div>
@@ -172,6 +199,22 @@
                 alert("Something went wrong. Please try again.");
             }
         });
+    });
+
+    document.getElementById("togglePassword").addEventListener("click", function() {
+
+        let pwd = document.getElementById("password");
+
+        if (pwd.type === "password") {
+            pwd.type = "text";
+            this.classList.remove("fa-eye-slash");
+            this.classList.add("fa-eye");
+        } else {
+            pwd.type = "password";
+            this.classList.remove("fa-eye");
+            this.classList.add("fa-eye-slash");
+        }
+
     });
 </script>
 

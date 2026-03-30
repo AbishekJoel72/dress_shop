@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
 @include('layouts.head')
+
 <style>
     body {
         background: linear-gradient(90deg, #e62a49 0%, #9b87f2 100%);
@@ -117,6 +118,19 @@
     }
 
 
+    .input-icon {
+        position: absolute;
+        right: 10px;
+        top: 38px;
+        color: #999;
+        font-size: 16px;
+        cursor: pointer;
+    }
+
+    .input-icon:hover {
+        color: #e62a49;
+    }
+
     /* Calendar box */
     .datepicker {
         border-radius: 12px;
@@ -156,7 +170,7 @@
     /* Selected date */
     .datepicker table tr td.active,
     .datepicker table tr td.active:hover {
-        background:  #9b87f2;
+        background: #9b87f2;
         color: #fff;
         border-radius: 8px;
     }
@@ -188,7 +202,7 @@
     /* Active month/year */
     .datepicker .month.active,
     .datepicker .year.active {
-        background:  #9b87f2;
+        background: #9b87f2;
         color: #fff;
     }
 
@@ -217,14 +231,13 @@
             <div class="row mt-5">
                 <div class="col">
                     <label for="first_name">First Name <span class="text-danger">*</span></label>
-                    <input type="first_name" name="first_name" id="first_name" placeholder="First Name" required
+                    <input type="text" name="first_name" id="first_name" placeholder="First Name" required
                         class="form-control">
                     <small class="error" id="error_first_name"></small>
                 </div>
                 <div class="col">
                     <label for="last_name">Last Name</label>
-                    <input type="last_name" name="last_name" id="last_name" placeholder="Last Name"
-                        class="form-control">
+                    <input type="text" name="last_name" id="last_name" placeholder="Last Name" class="form-control">
                     <small class="error" id="error_last_name"></small>
                 </div>
             </div>
@@ -259,7 +272,7 @@
                 <div class="col">
                     <label for="age">Age</label>
                     <input type="text" name="age" id="age" placeholder="Age" required class="form-control"
-                        textarea>
+                        readonly>
                 </div>
             </div>
 
@@ -278,17 +291,19 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col">
+                <div class="col position-relative">
                     <label for="password">Password <span class="text-danger">*</span></label>
                     <input type="password" name="password" id="password" placeholder="Password" required
-                        class="form-control">
+                        class="form-control pe-5">
+                        <i class="fa fa-eye-slash input-icon" id="togglePassword"></i>
                     <small class="error" id="error_password"></small>
                 </div>
-                <div class="col">
+                <div class="col position-relative">
                     <label for="confirmation_password">Confirmation Password <span
                             class="text-danger">*</span></label>
                     <input type="password" name="confirmation_password" id="confirmation_password"
-                        placeholder="Confirmation Password" required class="form-control">
+                        placeholder="Confirmation Password" required class="form-control pe-5">
+                        <i class="fa fa-eye-slash input-icon" id="togglePassword"></i>
                     <small class="error" id="error_confirmation_password"></small>
                 </div>
             </div>
@@ -323,7 +338,7 @@
 
         $(document).ready(function() {
             $('#date_of_birth').datepicker({
-                format: 'yyyy-mm-dd',
+                format: 'dd-mm-yyyy',
                 autoclose: true,
                 todayHighlight: true,
                 endDate: new Date(),
@@ -342,7 +357,13 @@
         });
 
         function calculateAge(dob) {
-            let birthDate = new Date(dob);
+
+            let parts = dob.split("-"); // dd-mm-yyyy
+            let day = parts[0];
+            let month = parts[1] - 1; // JS month 0-based
+            let year = parts[2];
+
+            let birthDate = new Date(year, month, day);
             let today = new Date();
 
             let age = today.getFullYear() - birthDate.getFullYear();
@@ -373,9 +394,7 @@
 
 
             if (id === "last_name") {
-                if (value.trim() === "") {
-                    setError(id, "Last name is required");
-                } else if (!isValidName(value)) {
+                if (value !== "" && !isValidName(value)) {
                     setError(id, "Only letters allowed");
                 }
             }
@@ -395,16 +414,27 @@
             }
 
             if (id === "phone") {
-                if (!/^\d+$/.test(value)) {
-                    setError(id, "Only numbers allowed");
-                } else if (value.length > 10) {
-                    setError(id, "Phone number should not exceed 10 digits");
+                if (!/^\d{10}$/.test(value)) {
+                    setError(id, "Enter valid 10 digit number");
                 }
             }
 
             if (id === "email") {
                 if (!/^\S+@\S+\.\S+$/.test(value)) {
                     setError(id, "Invalid email");
+                }
+            }
+
+            if (id === "password") {
+                if (value.length < 6) {
+                    setError(id, "Minimum 6 characters");
+                }
+            }
+
+            if (id === "confirmation_password") {
+                let pwd = document.getElementById("password").value;
+                if (value !== pwd) {
+                    setError(id, "Passwords do not match");
                 }
             }
 
@@ -439,6 +469,23 @@
             if (!valid) {
                 e.preventDefault();
             }
+        });
+
+
+        document.getElementById("togglePassword").addEventListener("click", function() {
+
+            let pwd = document.getElementById("password");
+
+            if (pwd.type === "password") {
+                pwd.type = "text";
+                this.classList.remove("fa-eye-slash");
+                this.classList.add("fa-eye");
+            } else {
+                pwd.type = "password";
+                this.classList.remove("fa-eye");
+                this.classList.add("fa-eye-slash");
+            }
+
         });
     </script>
 </body>

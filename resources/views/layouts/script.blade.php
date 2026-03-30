@@ -38,6 +38,7 @@
     const main    = document.querySelector('.main-container');
 
     // Collapse
+    
     menuOpen.addEventListener('click', () => {
         sidebar.classList.add('collapsed');
         header.classList.add('collapsed');
