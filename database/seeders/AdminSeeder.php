@@ -16,9 +16,7 @@ class AdminSeeder extends Seeder
     {
         $user = [
             "first_name" => "Admintration",
-            "last_name" => "Admin",
-            "gender" => "m",
-            "phone" => "9632587410",
+            "phone_no" => "9632587410",
             "email" => "admin@trendora.com",
             "password" => Hash::make("123456"),
             "confirmation_password" => Hash::make("123456"),
