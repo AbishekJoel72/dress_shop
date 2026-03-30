@@ -1,7 +1,7 @@
 @extends('layouts.user.default')
 
 @section('content')
-    <div class="container">
+    <div class="f">
 
 
         <div class="row">

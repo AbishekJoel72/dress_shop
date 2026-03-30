@@ -19,7 +19,7 @@
         width: 270px;
         background: #0092ca;
         /* background: #0092ca; */
-         /* background: linear-gradient(90deg, #e62a49 0%, #9b87f2 100%); */
+        /* background: linear-gradient(90deg, #e62a49 0%, #9b87f2 100%); */
         color: #fff;
         padding: 20px;
         overflow-y: auto;
@@ -157,15 +157,81 @@
     .search input::placeholder {
         color: #999;
     }
+
     .search input:focus {
         width: 100%;
         border-color: #e62a49;
         box-shadow: 0 0 10px rgba(230, 42, 73, 0.2);
         background: #fff;
     }
+
     .search input:hover {
         box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
     }
+
+
+    .user-box {
+        border-radius: 6px;
+    }
+
+    /* ===== MOBILE VIEW ===== */
+    @media (max-width: 768px) {
+
+        #header {
+            flex-direction: column;
+            align-items: stretch;
+            padding: 10px;
+        }
+
+        /* Logo */
+        #header img {
+            width: 140px;
+            height: auto;
+            margin-bottom: 8px;
+        }
+
+        /* Search Full Width */
+        .search {
+            width: 100%;
+            padding: 5px 0;
+        }
+
+        .search input {
+            width: 100% !important;
+            max-width: 100%;
+            border-radius: 10px;
+        }
+
+        /* Nav Menu */
+        #header .nav {
+            width: 100%;
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            margin-top: 8px;
+        }
+
+        #header .nav-link {
+            font-size: 13px;
+            padding: 6px;
+        }
+
+        /* Admin Dropdown */
+        #header nav.bg-light {
+            width: 100%;
+            margin-top: 10px;
+            padding: 10px;
+            border-radius: 8px;
+        }
+
+        #adminDropdown span {
+            font-size: 12px;
+        }
+
+
+    }
+
+    
 
     .footer {
         position: fixed;
@@ -250,7 +316,7 @@
 
 
 
-/* --------------------------Button color size Adjust------------------------------------ */
+    /* --------------------------Button color size Adjust------------------------------------ */
 
     .text-bg-primary {
         background-color: #0092ca;
@@ -432,6 +498,7 @@
 
 
     }
+
     .btn-warning:hover {
         background-color: #f96d00;
     }
@@ -463,7 +530,7 @@
 
 
 
-/* --------------------------DataTable------------------------------------ */
+    /* --------------------------DataTable------------------------------------ */
     #datatable {
         width: 100% !important;
         border-collapse: collapse !important;
@@ -497,6 +564,7 @@
         display: flex;
         align-items: center;
     }
+
     .select2-container--default .select2-selection--single .select2-selection__rendered {
         color: #212529;
         line-height: 38px;
@@ -507,13 +575,16 @@
         height: 38px;
         right: 8px;
     }
+
     .select2-container--default .select2-results>.select2-results__options {
         max-height: 220px;
     }
+
     .select2-results__option--highlighted {
         background-color: #0d6efd !important;
         color: white !important;
     }
+
     .select2-container--open .select2-selection--single {
         border-color: #0d6efd !important;
         box-shadow: 0 0 0 0.15rem rgba(13, 110, 253, .25);
@@ -522,6 +593,7 @@
     .select2-container .select2-selection--single .select2-selection__placeholder {
         color: #6c757d;
     }
+
     .select2-container--default .select2-selection--single:focus {
         outline: none !important;
     }
