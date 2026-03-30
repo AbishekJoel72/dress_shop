@@ -69,7 +69,7 @@ class RegistrationController extends Controller
                             $reg->gender = $request->gender;
                             $reg->date_of_birth = $request->date_of_birth;
                             $reg->age = $request->age;
-                            $reg->phone = $request->phone;
+                            $reg->phone_no  = $request->phone;
                             $reg->email = $request->email;
                             $reg->password = Hash::make($request->password);
                             $reg->confirmation_password = Hash::make($request->confirmation_password);
