@@ -5,9 +5,26 @@
         <div class="card">
             <div class="card-header bg-transparent d-flex justify-content-between align-items-center py-2">
                 <h5 class="mb-0">List Size</h5>
-                <a href="#" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#Addmodel">
-                    <i class="fa-solid fa-plus"></i> Add New
-                </a>
+                <div class="d-flex align-items-center gap-2 ms-auto">
+                    <a href="#" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#Addmodel">
+                        <i class="fa-solid fa-plus"></i> Add New
+                    </a>
+
+                    <div class="dropdown">
+                        <button class="btn btn-sm btn-warning" type="button" data-bs-toggle="dropdown">
+                            Download
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <a class="dropdown-item" href="{{ route('size.export', ['type' => 'excel']) }}">Excel
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" href="{{ route('size.export', ['type' => 'pdf']) }}"> PDF </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
             </div>
             <div class="card-body">
                 <table id="datatable" class="table table-bordered">
@@ -15,7 +32,7 @@
                         <tr>
                             <th>S.NO</th>
                             <th>Size Type</th>
-
+                            <th>Status</th>
                             <th>Action</th>
                         </tr>
                     </thead>
@@ -63,7 +80,8 @@
                 <div class="modal-content">
                     <form action="{{ route('size_type') }}" method="POST" autocomplete="off">
                         @csrf
-                        <input type="hidden" name="id" id="edit_id">
+                        {{-- <input type="hidden" name="id" id="edit_id"> --}}
+                        <input type="hidden" name="id" id="edit_size_id">
                         <input type="hidden" name="edit_size_list" value="true">
 
                         <div class="modal-header">
@@ -91,6 +109,53 @@
             </div>
         </div>
 
+        <div class="modal fade" id="editstatusmodel" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <form action="{{ route('size_type') }}" method="POST" autocomplete="off">
+                        @csrf
+                        <input type="hidden" name="id" id="edit_status_id">
+                        <input type="hidden" name="edit_status" value="true">
+
+                        <div class="modal-header">
+                            <h5 class="modal-title">Edit Status</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="row g-3">
+                                <div class="col-12">
+                                    <label class="form-label d-block">Status</label>
+
+                                    <div class="form-check form-check-inline">
+                                        <input type="radio" name="status" id="edit_status_active" value="active"
+                                            class="form-check-input" checked>
+                                        <label for="edit_status_active" class="form-check-label">
+                                            Active
+                                        </label>
+                                    </div>
+
+                                    <div class="form-check form-check-inline">
+                                        <input type="radio" name="status" id="edit_status_inactive" value="inactive"
+                                            class="form-check-input">
+                                        <label for="edit_status_inactive" class="form-check-label">
+                                            Inactive
+                                        </label>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer d-flex justify-content-center">
+                            <button type="submit" class="btn btn-primary"> <i class="fa-solid fa-pen">
+
+                                </i> Update</button>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+        </div>
 
     </div>
     @include('layouts.footer')
@@ -119,6 +184,21 @@
                         width: '20%',
                         className: 'text-center'
                     },
+                    {
+                        data: 'status',
+                        name: 'status',
+                        width: '30%',
+                        render: function(data, type, row) {
+
+                            if (data === 'active') {
+                                return '<span class="badge bg-success">Active</span>';
+                            } else {
+                                return '<span class="badge bg-secondary">Inactive</span>';
+                            }
+
+                        }
+                    },
+
 
                     {
                         data: 'action',
@@ -142,13 +222,39 @@
                         get_size: true,
                     },
                     success: function(data) {
-                        $('#edit_id').val(data.id);
+                        $('#edit_size_id').val(data.id);
                         $('#edit_size_type').val(data.size_name);
                         $('#editmodel').modal("show");
                     }
                 })
             });
 
+            
+            $(document).on('click', '.editStatusRow', function(e) {
+                let id = $(this).data('id');
+                $.ajax({
+                    url: "{{ route('size_type') }}",
+                    method: "GET",
+                    dataType: "json",
+                    data: {
+                        id: id,
+                        get_status: true,
+                    },
+                    success: function(data) {
+                        // console.log("response": data);
+
+                        $('#edit_status_id').val(data.id);
+
+                        if (data.status === 'active') {
+                            $('#edit_status_active').prop('checked', true);
+                        } else {
+                            $('#edit_status_inactive').prop('checked', true);
+                        }
+
+                        $('#editstatusmodel').modal("show");
+                    }
+                });
+            });
 
             $(document).on('click', '.deleteRow', function() {
 
@@ -174,7 +280,7 @@
                     error: function() {
                         $("#modalMessage").text("Something went wrong!");
                         var modal = new bootstrap.Modal(document.getElementById(
-                        'sessionModal'));
+                            'sessionModal'));
                         modal.show();
                     }
 
