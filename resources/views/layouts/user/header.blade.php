@@ -67,7 +67,10 @@
             </div>
             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="adminDropdown">
                 <li>
-                    <a href="{{ route('logout') }}" class="dropdown-item">
+                    <a href="" class="dropdown-item">
+                         Edit Profile
+                    </a>
+                    <a href="{{ route('logout') }}" class="dropdown-item text-danger">
                         Logout
                     </a>
                 </li>

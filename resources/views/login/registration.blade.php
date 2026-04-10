@@ -295,7 +295,7 @@
                     <label for="password">Password <span class="text-danger">*</span></label>
                     <input type="password" name="password" id="password" placeholder="Password" required
                         class="form-control pe-5">
-                        <i class="fa fa-eye-slash input-icon" id="togglePassword"></i>
+                    <i class="fa fa-eye-slash input-icon" id="togglePassword"></i>
                     <small class="error" id="error_password"></small>
                 </div>
                 <div class="col position-relative">
@@ -303,7 +303,7 @@
                             class="text-danger">*</span></label>
                     <input type="password" name="confirmation_password" id="confirmation_password"
                         placeholder="Confirmation Password" required class="form-control pe-5">
-                        <i class="fa fa-eye-slash input-icon" id="togglePassword"></i>
+                    <i class="fa fa-eye-slash input-icon" id="togglePassword"></i>
                     <small class="error" id="error_confirmation_password"></small>
                 </div>
             </div>
@@ -320,22 +320,6 @@
 
 
     <script>
-        function isValidName(name) {
-            return /^[A-Za-z ]+$/.test(name);
-        }
-
-        function setError(id, message) {
-            let errorEl = document.getElementById("error_" + id);
-            if (errorEl) errorEl.innerText = message;
-            document.getElementById(id).classList.add("input-error");
-        }
-
-        function clearError(id) {
-            let errorEl = document.getElementById("error_" + id);
-            if (errorEl) errorEl.innerText = "";
-            document.getElementById(id).classList.remove("input-error");
-        }
-
         $(document).ready(function() {
             $('#date_of_birth').datepicker({
                 format: 'dd-mm-yyyy',
@@ -349,143 +333,162 @@
                 let dob = $(this).val();
                 calculateAge(dob); // 👈 auto age call
             });
-        });
 
-        document.querySelectorAll("input, select").forEach(input => {
-            input.addEventListener("input", validateField);
-            input.addEventListener("change", validateField);
-        });
 
-        function calculateAge(dob) {
 
-            let parts = dob.split("-"); // dd-mm-yyyy
-            let day = parts[0];
-            let month = parts[1] - 1; // JS month 0-based
-            let year = parts[2];
 
-            let birthDate = new Date(year, month, day);
-            let today = new Date();
-
-            let age = today.getFullYear() - birthDate.getFullYear();
-            let m = today.getMonth() - birthDate.getMonth();
-
-            if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
-                age--;
+            function isValidName(name) {
+                return /^[A-Za-z ]+$/.test(name);
             }
 
-            $('#age').val(age);
-        }
+            function setError(id, message) {
+                let errorEl = document.getElementById("error_" + id);
+                if (errorEl) errorEl.innerText = message;
+                document.getElementById(id).classList.add("input-error");
+            }
+
+            function clearError(id) {
+                let errorEl = document.getElementById("error_" + id);
+                if (errorEl) errorEl.innerText = "";
+                document.getElementById(id).classList.remove("input-error");
+            }
 
 
+            document.querySelectorAll("input, select").forEach(input => {
+                input.addEventListener("input", validateField);
+                input.addEventListener("change", validateField);
+            });
 
-        function validateField() {
-            let id = this.id;
-            let value = this.value.trim();
 
-            clearError(id);
+            function calculateAge(dob) {
 
-            if (id === "first_name") {
-                if (value.trim() === "") {
-                    setError(id, "First name is required");
-                } else if (!isValidName(value)) {
-                    setError(id, "Only letters allowed");
+                let parts = dob.split("-");
+                let day = parts[0];
+                let month = parts[1] - 1;
+                let year = parts[2];
+
+                let birthDate = new Date(year, month, day);
+                let today = new Date();
+
+                let age = today.getFullYear() - birthDate.getFullYear();
+                let m = today.getMonth() - birthDate.getMonth();
+
+                if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+                    age--;
                 }
+
+                $('#age').val(age);
             }
 
+            function validateField() {
+                let id = this.id;
+                let value = this.value.trim();
 
-            if (id === "last_name") {
-                if (value !== "" && !isValidName(value)) {
-                    setError(id, "Only letters allowed");
-                }
-            }
+                clearError(id);
 
-            if (id === "date_of_birth") {
-                if (value === "") {
-                    setError(id, "Select DOB");
-                } else {
-                    calculateAge(value); // 👈 auto age calculate
-                }
-            }
-
-            if (id === "age") {
-                if (value === "" || !/^\d+$/.test(value) || value <= 0 || value > 120) {
-                    setError(id, "Enter valid age");
-                }
-            }
-
-            if (id === "phone") {
-                if (!/^\d{10}$/.test(value)) {
-                    setError(id, "Enter valid 10 digit number");
-                }
-            }
-
-            if (id === "email") {
-                if (!/^\S+@\S+\.\S+$/.test(value)) {
-                    setError(id, "Invalid email");
-                }
-            }
-
-            if (id === "password") {
-                if (value.length < 6) {
-                    setError(id, "Minimum 6 characters");
-                }
-            }
-
-            if (id === "confirmation_password") {
-                let pwd = document.getElementById("password").value;
-                if (value !== pwd) {
-                    setError(id, "Passwords do not match");
-                }
-            }
-
-        }
-
-
-
-        document.querySelector("form").addEventListener("submit", function(e) {
-
-            let valid = true;
-
-            let fields = [
-                "first_name", "last_name", "date_of_birth", "age", "phone", "email",
-            ];
-
-            fields.forEach(id => {
-                let el = document.getElementById(id);
-                if (el) {
-                    el.dispatchEvent(new Event("input"));
-                    if (el.classList.contains("input-error")) {
-                        valid = false;
+                if (id === "first_name") {
+                    if (value.trim() === "") {
+                        setError(id, "First name is required");
+                    } else if (!isValidName(value)) {
+                        setError(id, "Only letters allowed");
                     }
+                }
+
+
+                if (id === "last_name") {
+                    if (value !== "" && !isValidName(value)) {
+                        setError(id, "Only letters allowed");
+                    }
+                }
+
+                if (id === "date_of_birth") {
+                    if (value === "") {
+                        setError(id, "Select DOB");
+                    } else {
+                        calculateAge(value); 
+                    }
+                }
+
+                if (id === "age") {
+                    if (value === "" || !/^\d+$/.test(value) || value <= 0 || value > 120) {
+                        setError(id, "Enter valid age");
+                    }
+                }
+
+                if (id === "phone") {
+                    if (!/^\d{10}$/.test(value)) {
+                        setError(id, "Enter valid 10 digit number");
+                    }
+                }
+
+                if (id === "email") {
+                    if (!/^\S+@\S+\.\S+$/.test(value)) {
+                        setError(id, "Invalid email");
+                    }
+                }
+
+                if (id === "password") {
+                    if (value.length < 6) {
+                        setError(id, "Minimum 6 characters");
+                    }
+                }
+
+                if (id === "confirmation_password") {
+                    let pwd = document.getElementById("password").value;
+                    if (value !== pwd) {
+                        setError(id, "Passwords do not match");
+                    }
+                }
+
+            }
+
+
+
+            document.querySelector("form").addEventListener("submit", function(e) {
+
+                let valid = true;
+
+                let fields = [
+                    "first_name", "last_name", "date_of_birth", "age", "phone", "email",
+                ];
+
+                fields.forEach(id => {
+                    let el = document.getElementById(id);
+                    if (el) {
+                        el.dispatchEvent(new Event("input"));
+                        if (el.classList.contains("input-error")) {
+                            valid = false;
+                        }
+                    }
+                });
+
+                let gender = document.querySelector('input[name="gender"]:checked');
+                if (!gender) {
+                    alert("Select gender");
+                    valid = false;
+                }
+
+                if (!valid) {
+                    e.preventDefault();
                 }
             });
 
-            let gender = document.querySelector('input[name="gender"]:checked');
-            if (!gender) {
-                alert("Select gender");
-                valid = false;
-            }
 
-            if (!valid) {
-                e.preventDefault();
-            }
-        });
+            document.getElementById("togglePassword").addEventListener("click", function() {
 
+                let pwd = document.getElementById("password");
 
-        document.getElementById("togglePassword").addEventListener("click", function() {
+                if (pwd.type === "password") {
+                    pwd.type = "text";
+                    this.classList.remove("fa-eye-slash");
+                    this.classList.add("fa-eye");
+                } else {
+                    pwd.type = "password";
+                    this.classList.remove("fa-eye");
+                    this.classList.add("fa-eye-slash");
+                }
 
-            let pwd = document.getElementById("password");
-
-            if (pwd.type === "password") {
-                pwd.type = "text";
-                this.classList.remove("fa-eye-slash");
-                this.classList.add("fa-eye");
-            } else {
-                pwd.type = "password";
-                this.classList.remove("fa-eye");
-                this.classList.add("fa-eye-slash");
-            }
-
+            });
         });
     </script>
 </body>
