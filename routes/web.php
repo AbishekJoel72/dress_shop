@@ -27,7 +27,9 @@ Route::middleware([AdminMiddleware::class])->prefix('admin')->group(function () 
     Route::any('dashboard', [DashboardController::class, "Dashboard"])->name('dashboard');
     Route::any('configuration', [ConfigurationController::class, "Configuration"])->name('configuration');
     Route::any('categories', [CategoryController::class, "Categories"])->name('categories');
+    Route::get('category.export', [CategoryController::class, 'CategoryExport'])->name('category.export');
     Route::any('size_type', [SizeTypeController::class, "SizeType"])->name('size_type');
+    Route::get('size.export', [SizeTypeController::class, "SizeTypeExport"])->name('size.export');
     Route::any('product', [ProductController::class, "Product"])->name('product');
     Route::any('update_products', [ProductController::class, "UpdateProduct"])->name('update_products');
     Route::any('order_list', [OrderController::class, "OrderList"])->name('order_list');
