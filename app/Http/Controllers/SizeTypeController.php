@@ -2,8 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\SizeTypeExport;
 use App\Models\Sizetype;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
+// use Maatwebsite\Excel\Excel;
 use Yajra\DataTables\Facades\DataTables;
 
 class SizeTypeController extends Controller
@@ -47,11 +51,34 @@ class SizeTypeController extends Controller
                     return redirect()->back();
                 }
             }
+
+            if ($request->edit_status) {
+                try {
+                    $validation = $request->validate([
+                        'status' => "required"
+                    ]);
+                    if ($validation) {
+                        Sizetype::where('id', $request->id)->update([
+                            'status' => $request->status,
+                        ]);
+                        session()->flash("success", "Status Updated Successfully");
+                        return redirect()->route("size_type");
+                    }
+                } catch (\Throwable $th) {
+                    session()->flash("error", $th->getMessage());
+                    return redirect()->back();
+                }
+            }
         }
 
 
         if ($request->ajax()) {
             if ($request->get_size) {
+                $id = $request->id;
+                $s = Sizetype::where('id', $id)->first();
+                return response()->json($s);
+            }
+            if ($request->get_status) {
                 $id = $request->id;
                 $s = Sizetype::where('id', $id)->first();
                 return response()->json($s);
@@ -76,6 +103,9 @@ class SizeTypeController extends Controller
                             <a href="#" class="editRow dropdown-item" data-id="' . $row->id . '">Edit</a>
                         </li>
                         <li>
+                            <a href="#" class="editStatusRow dropdown-item" data-id="' . $row->id . '">Status</a>
+                        </li>
+                        <li>
                             <a href="#" class="deleteRow dropdown-item text-danger" data-id="' . $row->id . '">Delete</a>
                         </li>
                     </ul>
@@ -88,5 +118,20 @@ class SizeTypeController extends Controller
 
 
         return view("size.size_type");
+    }
+
+
+
+    public function SizeTypeExport(Request $request)
+    {
+        $type = $request->type;
+        if ($type == "excel") {
+            return Excel::download(new SizeTypeExport, 'size_type.xlsx');
+        }
+        if ($type == "pdf") {
+            $size_types = Sizetype::get();
+            $pdf = Pdf::loadView('size.size_type_pdf', ['size_types' => $size_types]);
+            return $pdf->download('size_types.pdf');
+        }
     }
 }
