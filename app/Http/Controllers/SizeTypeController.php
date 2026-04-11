@@ -10,6 +10,8 @@ use Maatwebsite\Excel\Facades\Excel;
 // use Maatwebsite\Excel\Excel;
 use Yajra\DataTables\Facades\DataTables;
 
+use function Symfony\Component\String\s;
+
 class SizeTypeController extends Controller
 {
     public function SizeType(Request $request)
@@ -89,8 +91,13 @@ class SizeTypeController extends Controller
                 $s = Sizetype::where('id', $id)->delete();
                 return response()->json($s);
             }
-            $data = Sizetype::get();
-            return DataTables::of($data)
+
+            $query = Sizetype::select(['id', 'size_name', 'status']);
+
+             if ($request->size_name) {
+                 $query->where('size_name', 'LIKE', '%' . $request->size_name . '%');
+            }
+            return DataTables::of($query)
                 ->addIndexColumn()
                 ->addColumn('action', function ($row) {
                     return '

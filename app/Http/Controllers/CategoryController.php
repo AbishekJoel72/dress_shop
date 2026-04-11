@@ -91,8 +91,11 @@ class CategoryController extends Controller
                 return response()->json($category);
             }
 
-            $data = Category::select(['id', 'name', 'description', 'status'])->get();
-            return DataTables::of($data)
+            $query = Category::select(['id', 'name', 'description', 'status']);
+            if ($request->category_name) {
+                 $query->where('name', 'LIKE', '%' . $request->category_name . '%');
+            }
+            return DataTables::of($query)
                 ->addIndexColumn()
                 ->addColumn('action', function ($row) {
                     return '
@@ -134,7 +137,5 @@ class CategoryController extends Controller
             $pdf = Pdf::loadView('category.category_pdf', ['categories' => $categories]);
             return $pdf->download('categories.pdf');
         }
-
-        // return back()->with('error', 'Invalid export type');
     }
 }

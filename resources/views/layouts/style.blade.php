@@ -313,6 +313,13 @@
         height: 85px;
     }
 
+    .col-6,
+    .col-4,
+    .col-3,
+    .col-5.col-2,col {
+        min-height: 90px;
+    }
+
     .form-field small {
         height: 10px;
         display: block;
@@ -320,9 +327,10 @@
         color: red;
     }
 
-    .text-danger {
+    .text-dangers {
         font-size: 13px;
     }
+
 
 
 
@@ -552,6 +560,7 @@
         border-collapse: collapse !important;
         font-size: 14px;
         background: #ffffff;
+        margin-top: 12px;
 
     }
 
@@ -567,8 +576,18 @@
     #datatable tbody td {
         padding: 5px 12px;
         border: 1px solid #5a5f68;
-        verticheaderl-align: middle;
+        vertical-align: middle;
     }
+
+    .dataTables_wrapper .dataTables_filter,
+    .dataTables_wrapper .dataTables_length {
+        margin-bottom: 12px;
+    }
+
+    .dataTables_wrapper .row:first-child {
+        margin-bottom: 10px;
+    }
+
 
 
     /* --------------------------Select2------------------------------------ */
