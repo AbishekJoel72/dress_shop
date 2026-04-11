@@ -231,7 +231,7 @@
 
     }
 
-    
+
 
     .footer {
         position: fixed;
@@ -306,7 +306,23 @@
         border: 1px solid black
     }
 
+    .form-field {
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        height: 85px;
+    }
 
+    .form-field small {
+        height: 10px;
+        display: block;
+        font-size: 15px;
+        color: red;
+    }
+
+    .text-danger {
+        font-size: 13px;
+    }
 
 
 
