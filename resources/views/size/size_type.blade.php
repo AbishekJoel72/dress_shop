@@ -1,8 +1,29 @@
 @extends('layouts.admin.default')
 @section('content')
+
     <div class="container mt-4">
 
         <div class="card">
+            <div class="card-header bg-transparent">
+                <h5 class="">Size Filter</h5>
+
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-4">
+                        <label for="size_name">Size Name</label>
+                        <input type="text" name="size_name" id="size_name" placeholder="Size Name" class="form-control">
+                    </div>
+                </div>
+            </div>
+            {{-- <div class="card-footer d-flex justify-content-center bg-transparent">
+                <button class="btn  btn-primary"> <i class="fa-solid fa-filter"></i> Filter</button>
+
+            </div> --}}
+
+        </div>
+
+        <div class="card mt-4">
             <div class="card-header bg-transparent d-flex justify-content-between align-items-center py-2">
                 <h5 class="mb-0">List Size</h5>
                 <div class="d-flex align-items-center gap-2 ms-auto">
@@ -55,10 +76,11 @@
                         </div>
                         <div class="modal-body">
                             <div class="row g-3">
-                                <div class="col-6">
-                                    <label for="size_type" class="form-label">Size</label>
+                                <div class="col-6 form-field">
+                                    <label for="size_type" class="form-label">Size <span class="text-danger">*</span></label>
                                     <input type="text" name="size_type" id="size_type" placeholder="size"
                                         class="form-control" required>
+                                         <small class="text-dangers"></small>
                                 </div>
 
                             </div>
@@ -80,7 +102,6 @@
                 <div class="modal-content">
                     <form action="{{ route('size_type') }}" method="POST" autocomplete="off">
                         @csrf
-                        {{-- <input type="hidden" name="id" id="edit_id"> --}}
                         <input type="hidden" name="id" id="edit_size_id">
                         <input type="hidden" name="edit_size_list" value="true">
 
@@ -90,10 +111,11 @@
                         </div>
                         <div class="modal-body">
                             <div class="row g-3">
-                                <div class="col-6">
-                                    <label for="size_type" class="form-label">Size</label>
+                                <div class="col-6 form-field">
+                                    <label for="size_type" class="form-label">Size <span class="text-danger">*</span></label>
                                     <input type="text" name="size_type" id="edit_size_type" placeholder="size"
                                         class="form-control" required>
+                                         <small class="text-dangers"></small>
                                 </div>
 
                             </div>
@@ -165,10 +187,15 @@
     <script>
         $(document).ready(function() {
 
-            $('#datatable').DataTable({
+            var table = $('#datatable').DataTable({
                 processing: true,
                 serverSide: true,
-                ajax: "{{ route('size_type') }}",
+                ajax: {
+                    url: "{{ route('size_type') }}",
+                    data: function(d) {
+                        d.size_name = $('#size_name').val();
+                    }
+                },
 
                 columns: [{
                         data: 'DT_RowIndex',
@@ -210,6 +237,9 @@
                     }
                 ]
             });
+            $('#size_name').on('keyup', function() {
+                table.draw();
+            });
 
             $(document).on('click', '.editRow', function(e) {
                 let id = $(this).data('id');
@@ -229,7 +259,7 @@
                 })
             });
 
-            
+
             $(document).on('click', '.editStatusRow', function(e) {
                 let id = $(this).data('id');
                 $.ajax({
@@ -285,6 +315,50 @@
                     }
 
                 });
+            });
+        });
+
+
+        document.addEventListener("DOMContentLoaded", function() {
+
+            function showError(input, message) {
+                let error = input.parentElement.querySelector("small");
+                error.innerText = message;
+            }
+
+            function clearError(input) {
+                let error = input.parentElement.querySelector("small");
+                error.innerText = "";
+            }
+
+
+            const sizetype = document.getElementById("size_type");
+            const editname = document.getElementById("edit_size_type");
+
+
+            sizetype.addEventListener("input", function() {
+                const value = this.value.trim();
+
+                if (value === "") {
+                    showError(this, "Field is required");
+                } else if (!/^[A-Za-z\s]+$/.test(value)) {
+                    showError(this, "Only letters allowed");
+                } else {
+                    clearError(this);
+                }
+            });
+
+
+            editname.addEventListener("input", function() {
+                const value = this.value.trim();
+
+                if (value === "") {
+                    showError(this, "Field is required");
+                } else if (!/^[A-Za-z\s]+$/.test(value)) {
+                    showError(this, "Only letters allowed");
+                } else {
+                    clearError(this);
+                }
             });
         });
     </script>

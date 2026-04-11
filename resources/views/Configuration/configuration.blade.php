@@ -1,17 +1,6 @@
 @extends('layouts.admin.default')
 @section('content')
-    <style>
-        .col-6,
-        .col-4,
-        .col-3,
-        .col-5 {
-            min-height: 90px;
-        }
 
-        .text-danger {
-            font-size: 13px;
-        }
-    </style>
     <div class="container">
 
         <form action="{{ route('configuration') }}" method="POST" enctype="multipart/form-data" autocomplete="off">
@@ -29,13 +18,13 @@
                                         class="text-danger">*</span></strong></label>
                             <input type="text" name="company_name" id="company_name" class="form-control" required
                                 placeholder="Company Name" value="{{ $config->company_name ?? null }}">
-                            <small class="text-danger"></small>
+                            <small class="text-dangers"></small>
                         </div>
                         <div class="col-6 form-field">
                             <label for="tag_line"><strong>Tag Line <span class="text-danger">*</span></strong></label>
                             <input type="text" name="tag_line" id="tag_line" required placeholder="Tag Line"
                                 class="form-control" value="{{ $config->tag_line ?? null }}">
-                            <small class="text-danger"></small>
+                            <small class="text-dangers"></small>
                         </div>
                     </div>
 
@@ -44,13 +33,13 @@
                             <label for="phone"><strong>Phone NO <span class="text-danger">*</span></strong></label>
                             <input type="text" name="phone" id="phone" class="form-control" required
                                 placeholder="Phone NO" value="{{ $config->phone ?? null }}">
-                            <small class="text-danger"></small>
+                            <small class="text-dangers"></small>
                         </div>
                         <div class="col-6 form-field">
                             <label for="alter_phone"><strong>Alter No <span class="text-danger">*</span></strong></label>
                             <input type="text" name="alter_phone" id="alter_phone" placeholder="Alter No"
                                 class="form-control" value="{{ $config->alter_phone ?? null }}">
-                            <small class="text-danger"></small>
+                            <small class="text-dangers"></small>
                         </div>
                     </div>
 
@@ -59,7 +48,7 @@
                             <label for="email"><strong>Email-ID <span class="text-danger">*</span></strong></label>
                             <input type="email" name="email" id="email" class="form-control" required
                                 placeholder="Email-ID" value="{{ $config->email ?? null }}">
-                            <small class="text-danger"></small>
+                            <small class="text-dangers"></small>
 
                         </div>
                         <div class="col-6 form-field">
@@ -67,7 +56,7 @@
                                         class="text-danger">*</span></strong></label>
                             <input type="email" name="support_email" id="support_email" placeholder="Support Email-ID"
                                 class="form-control" value="{{ $config->support_email ?? null }}">
-                            <small class="text-danger"></small>
+                            <small class="text-dangers"></small>
 
                         </div>
                     </div>
@@ -76,7 +65,7 @@
                         <div class="col-12 form-field">
                             <label for="address"><strong>Address <span class="text-danger">*</span></strong></label>
                             <textarea name="address" id="address" rows="5" placeholder="Address" class="form-control" required>{{ $config->address ?? null }}</textarea>
-                            <small class="text-danger"></small>
+                            <small class="text-dangers"></small>
                         </div>
 
                     </div>
@@ -92,7 +81,7 @@
                                         {{ $s->state_name }}</option>
                                 @endforeach
                             </select>
-                            <small class="text-danger"></small>
+                            <small class="text-dangers"></small>
                         </div>
                         <div class="col-4 form-field">
                             <label for="city_id"><strong>City <span class="text-danger">*</span></strong></label>
@@ -103,14 +92,14 @@
                                         {{ old('city_id', $config->city_id ?? '') == $c->id ? 'selected' : '' }}>
                                         {{ $c->city_name }}</option>
                                 @endforeach
-                                <small class="text-danger"></small>
+                                <small class="text-dangers"></small>
                             </select>
                         </div>
                         <div class="col-4 form-field">
                             <label for="pincode"><strong>Pincode <span class="text-danger">*</span></strong> </label>
                             <input type="number" name="pincode" id="pincode" placeholder="Pincode"
                                 class="form-control" value="{{ $config->pincode ?? null }}" required>
-                            <small class="text-danger"></small>
+                            <small class="text-dangers"></small>
                         </div>
                     </div>
 
@@ -120,14 +109,14 @@
                             </label>
                             <input type="url" name="website_url" id="website_url" class="form-control" required
                                 placeholder="Website URL" value="{{ $config->website_url ?? null }}">
-                            <small class="text-danger"></small>
+                            <small class="text-dangers"></small>
                         </div>
 
                         <div class="col-6 form-field">
                             <label for="facebook"><strong>Facebook <span class="text-danger">*</span></strong></label>
                             <input type="text" name="facebook" id="facebook" class="form-control" required
                                 placeholder="facebook" value="{{ $config->facebook ?? null }}">
-                            <small class="text-danger"></small>
+                            <small class="text-dangers"></small>
 
 
                         </div>
@@ -141,7 +130,7 @@
                             <label for="instagram"><strong>Instagram <span class="text-danger">*</span></strong></label>
                             <input type="text" name="instagram" id="instagram" class="form-control" required
                                 placeholder="Instagram" value="{{ $config->instagram ?? null }}">
-                            <small class="text-danger"></small>
+                            <small class="text-dangers"></small>
 
                         </div>
 
@@ -149,7 +138,7 @@
                             <label for="twitter"><strong>Twitter <span class="text-danger">*</span></strong></label>
                             <input type="text" name="twitter" id="twitter" class="form-control" required
                                 placeholder="Twitter" value="{{ $config->twitter ?? null }}">
-                            <small class="text-danger"></small>
+                            <small class="text-dangers"></small>
 
                         </div>
 
