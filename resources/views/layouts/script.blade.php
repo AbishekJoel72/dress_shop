@@ -27,37 +27,86 @@
             myModal.show();
         @endif
     });
-</script>
-<script>
-    const menuOpen  = document.getElementById('menuOpen');
-    const menuClose = document.getElementById('menuClose');
 
-    const sidebar = document.getElementById('sidebar');
-    const header  = document.getElementById('mainHeader');
-    const footer  = document.getElementById('mainFooter');
-    const main    = document.querySelector('.main-container');
+    document.addEventListener("DOMContentLoaded", function() {
+        const menuOpen = document.getElementById('menuOpen');
+        const menuClose = document.getElementById('menuClose');
+        const sidebar = document.getElementById('sidebar');
+        const header = document.getElementById('mainHeader');
+        const footer = document.getElementById('mainFooter');
+        const main = document.querySelector('.main-container');
 
-    // Collapse
-    
-    menuOpen.addEventListener('click', () => {
-        sidebar.classList.add('collapsed');
-        header.classList.add('collapsed');
-        footer.classList.add('collapsed');
-        main.classList.add('collapsed');
+        menuOpen.addEventListener('click', () => {
+            sidebar.classList.add('collapsed');
+            header.classList.add('collapsed');
+            footer.classList.add('collapsed');
+            main.classList.add('collapsed');
 
-        menuOpen.classList.add('d-none');
-        menuClose.classList.remove('d-none');
+            menuOpen.classList.add('d-none');
+            menuClose.classList.remove('d-none');
+        });
+
+
+        menuClose.addEventListener('click', () => {
+            sidebar.classList.remove('collapsed');
+            header.classList.remove('collapsed');
+            footer.classList.remove('collapsed');
+            main.classList.remove('collapsed');
+
+            menuClose.classList.add('d-none');
+            menuOpen.classList.remove('d-none');
+        });
     });
 
-    // Expand
-    menuClose.addEventListener('click', () => {
-        sidebar.classList.remove('collapsed');
-        header.classList.remove('collapsed');
-        footer.classList.remove('collapsed');
-        main.classList.remove('collapsed');
+    document.addEventListener("DOMContentLoaded", function() {
 
-        menuClose.classList.add('d-none');
-        menuOpen.classList.remove('d-none');
+        function setInvalid(input, message) {
+            input.classList.remove("is-valid");
+            input.classList.add("is-invalid");
+
+            let error = input.parentElement.querySelector(".invalid-feedback");
+            if (error) error.innerText = message;
+        }
+
+        function setValid(input) {
+            input.classList.remove("is-invalid");
+            input.classList.add("is-valid");
+
+            let error = input.parentElement.querySelector(".invalid-feedback");
+            if (error) error.innerText = "";
+        }
+
+        function clearState(input) {
+            input.classList.remove("is-valid");
+            input.classList.remove("is-invalid");
+
+            let error = input.parentElement.querySelector(".invalid-feedback");
+            if (error) error.innerText = "";
+        }
+
+        document.querySelectorAll("input, textarea, select").forEach(function(input) {
+
+            input.addEventListener("input", function() {
+                const value = this.value.trim();
+                const isRequired = this.hasAttribute("required");
+
+
+                if (isRequired) {
+                    if (value === "") {
+                        setInvalid(this, "This field is required");
+                    } else {
+                        setValid(this);
+                    }
+                } else {
+                    if (value === "") {
+                        clearState(this);
+                    } else {
+                        setValid(this);
+                    }
+                }
+            });
+
+        });
+
     });
 </script>
-
