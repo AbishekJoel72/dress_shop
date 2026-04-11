@@ -320,9 +320,7 @@
         color: red;
     }
 
-    .text-danger {
-        font-size: 13px;
-    }
+ 
 
 
 

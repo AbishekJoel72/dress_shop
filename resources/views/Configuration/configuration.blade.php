@@ -8,7 +8,9 @@
             min-height: 90px;
         }
 
-    
+        .text-danger {
+            font-size: 13px;
+        }
     </style>
     <div class="container">
 
@@ -423,6 +425,4 @@
 
         });
     </script>
-
-
 @endsection
