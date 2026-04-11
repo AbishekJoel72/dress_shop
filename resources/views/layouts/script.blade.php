@@ -58,4 +58,46 @@
         });
     });
 
+    function showError(input, message) {
+        let error = input.parentElement.querySelector("small");
+        error.innerText = message;
+    }
+
+    function clearError(input) {
+        let error = input.parentElement.querySelector("small");
+        error.innerText = "";
+    }
+
+
+document.addEventListener("DOMContentLoaded", function () {
+
+    const forms = document.querySelectorAll(".needs-validation");
+
+    forms.forEach(function (form) {
+
+        form.addEventListener("submit", function (event) {
+
+            if (!form.checkValidity()) {
+                event.preventDefault();
+                event.stopPropagation();
+
+                // 🔥 First invalid field கண்டுபிடி
+                const firstInvalid = form.querySelector(":invalid");
+
+                if (firstInvalid) {
+                    firstInvalid.focus();   // focus
+                    firstInvalid.scrollIntoView({
+                        behavior: "smooth",
+                        block: "center"
+                    }); // scroll (optional but nice UX)
+                }
+            }
+
+            form.classList.add("was-validated");
+
+        });
+
+    });
+
+});
 </script>

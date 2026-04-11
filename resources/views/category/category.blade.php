@@ -1,6 +1,6 @@
 @extends('layouts.admin.default')
 @section('content')
-  
+
     <div class="container  mt-4">
 
         <div class="card">
@@ -72,7 +72,7 @@
         <div class="modal fade" id="Addmodel" tabindex="-1" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
-                    <form action="{{ route('categories') }}" method="POST" autocomplete="off">
+                    <form action="{{ route('categories') }}" method="POST" autocomplete="off" class="needs-validation" novalidate>
                         @csrf
                         <input type="hidden" name="category" id="" value="true">
 
@@ -87,6 +87,7 @@
                                             class="text-danger">*</span></label>
                                     <input type="text" name="name" id="name" placeholder="Category"
                                         class="form-control" required>
+                                        {{-- <div class="invalid-feedback">Field is required</div> --}}
                                     <small class="text-dangers"></small>
                                 </div>
 
@@ -160,7 +161,7 @@
         <div class="modal fade" id="editmodel" tabindex="-1" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
-                    <form action="{{ route('categories') }}" method="POST" autocomplete="off">
+                    <form action="{{ route('categories') }}" method="POST" autocomplete="off" class="needs-validation" novalidate>
                         @csrf
                         <input type="hidden" name="id" id="edit_id">
                         <input type="hidden" name="edit_category" value="true">
@@ -348,19 +349,9 @@
             });
         });
     </script>
-    <script>
+    {{-- <script>
+
         document.addEventListener("DOMContentLoaded", function() {
-
-            function showError(input, message) {
-                let error = input.parentElement.querySelector("small");
-                error.innerText = message;
-            }
-
-            function clearError(input) {
-                let error = input.parentElement.querySelector("small");
-                error.innerText = "";
-            }
-
 
             const name = document.getElementById("name");
             const description = document.getElementById("description");
@@ -419,5 +410,5 @@
 
 
         });
-    </script>
+    </script> --}}
 @endsection

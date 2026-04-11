@@ -66,7 +66,7 @@
         <div class="modal fade" id="Addmodel" tabindex="-1" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
-                    <form action="{{ route('size_type') }}" method="POST" autocomplete="off">
+                    <form action="{{ route('size_type') }}" method="POST" autocomplete="off" class="needs-validation" novalidate>
                         @csrf
                         <input type="hidden" name="size_list" value="true">
 
@@ -100,7 +100,7 @@
         <div class="modal fade" id="editmodel" tabindex="-1" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
-                    <form action="{{ route('size_type') }}" method="POST" autocomplete="off">
+                    <form action="{{ route('size_type') }}" method="POST" autocomplete="off" class="needs-validation" novalidate>
                         @csrf
                         <input type="hidden" name="id" id="edit_size_id">
                         <input type="hidden" name="edit_size_list" value="true">
@@ -319,47 +319,41 @@
         });
 
 
-        document.addEventListener("DOMContentLoaded", function() {
-
-            function showError(input, message) {
-                let error = input.parentElement.querySelector("small");
-                error.innerText = message;
-            }
-
-            function clearError(input) {
-                let error = input.parentElement.querySelector("small");
-                error.innerText = "";
-            }
 
 
-            const sizetype = document.getElementById("size_type");
-            const editname = document.getElementById("edit_size_type");
+        // document.addEventListener("DOMContentLoaded", function() {
+
+        //     const sizetype = document.getElementById("size_type");
+        //     const editname = document.getElementById("edit_size_type");
 
 
-            sizetype.addEventListener("input", function() {
-                const value = this.value.trim();
+        //     sizetype.addEventListener("input", function() {
+        //         const value = this.value.trim();
 
-                if (value === "") {
-                    showError(this, "Field is required");
-                } else if (!/^[A-Za-z\s]+$/.test(value)) {
-                    showError(this, "Only letters allowed");
-                } else {
-                    clearError(this);
-                }
-            });
+        //         if (value === "") {
+        //             showError(this, "Field is required");
+        //         } else if (!/^[A-Za-z\s]+$/.test(value)) {
+        //             showError(this, "Only letters allowed");
+        //         } else {
+        //             clearError(this);
+        //         }
+        //     });
 
 
-            editname.addEventListener("input", function() {
-                const value = this.value.trim();
+        //     editname.addEventListener("input", function() {
+        //         const value = this.value.trim();
 
-                if (value === "") {
-                    showError(this, "Field is required");
-                } else if (!/^[A-Za-z\s]+$/.test(value)) {
-                    showError(this, "Only letters allowed");
-                } else {
-                    clearError(this);
-                }
-            });
-        });
+        //         if (value === "") {
+        //             showError(this, "Field is required");
+        //         } else if (!/^[A-Za-z\s]+$/.test(value)) {
+        //             showError(this, "Only letters allowed");
+        //         } else {
+        //             clearError(this);
+        //         }
+        //     });
+
+
+
+        // });
     </script>
 @endsection

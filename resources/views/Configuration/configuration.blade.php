@@ -3,7 +3,7 @@
 
     <div class="container">
 
-        <form action="{{ route('configuration') }}" method="POST" enctype="multipart/form-data" autocomplete="off">
+        <form action="{{ route('configuration') }}" method="POST" enctype="multipart/form-data" autocomplete="off" class="needs-validation" novalidate>
             @csrf
             <input type="hidden" name="config" value="true">
             <input type="hidden" name="id" value="{{ $config->id ?? null }}">
@@ -19,6 +19,7 @@
                             <input type="text" name="company_name" id="company_name" class="form-control" required
                                 placeholder="Company Name" value="{{ $config->company_name ?? null }}">
                             <small class="text-dangers"></small>
+
                         </div>
                         <div class="col-6 form-field">
                             <label for="tag_line"><strong>Tag Line <span class="text-danger">*</span></strong></label>
@@ -229,19 +230,8 @@
         });
     </script>
 
-    <script>
+    {{-- <script>
         document.addEventListener("DOMContentLoaded", function() {
-
-            function showError(input, message) {
-                let error = input.parentElement.querySelector("small");
-                error.innerText = message;
-            }
-
-            function clearError(input) {
-                let error = input.parentElement.querySelector("small");
-                error.innerText = "";
-            }
-
 
             const company = document.getElementById("company_name");
             const tagline = document.getElementById("tag_line");
@@ -413,5 +403,5 @@
 
 
         });
-    </script>
+    </script> --}}
 @endsection
