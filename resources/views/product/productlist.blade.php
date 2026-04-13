@@ -54,7 +54,7 @@
         </style>
 
 
-        <form action="{{ route('update_products') }}" method="POST" autocomplete="off" enctype="multipart/form-data">
+        <form action="{{ route('update_products') }}" method="POST" autocomplete="off" enctype="multipart/form-data"  class="needs-validation" novalidate>
             @csrf
             <input type="hidden" name="Product_update" value="true">
             <input type="hidden" name="id" value="{{ $product->id }}">
@@ -74,14 +74,14 @@
                         <div class="col-10">
                             <div class="row">
                                 <div class="col">
-                                    <label for="product_name">Product Name</label>
+                                    <label for="product_name">Product Name <span class="text-danger">*</span></label>
                                     <input type="text" name="product_name" id="product_name" class="form-control"
                                         value="{{ old('product_name', $product->product_name) }}" required>
                                 </div>
 
                                 <div class="col">
-                                    <label for="category_id">Category</label>
-                                    <select name="category_id" id="category_id" class="form-select">
+                                    <label for="category_id">Category <span class="text-danger">*</span></label>
+                                    <select name="category_id" id="category_id" class="form-select" required>
                                         <option value="" selected disabled>Select Category</option>
                                         @foreach ($category as $item)
                                             <option value="{{ $item->id }}"
@@ -96,13 +96,13 @@
                             </div>
                             <div class="row mt-3">
                                 <div class="col">
-                                    <label for="price">Price</label>
+                                    <label for="price">Price <span class="text-danger">*</span></label>
                                     <input type="number" name="price" id="price" class="form-control"
                                         value="{{ old('price', $product->price) }}" required>
                                 </div>
 
                                 <div class="col">
-                                    <label for="discount_price">Discount Price</label>
+                                    <label for="discount_price">Discount Price <span class="text-danger">*</span></label>
                                     <input type="number" name="discount_price" id="discount_price"
                                         value="{{ old('discount_price', $product->discount_price) }}" class="form-control"
                                         required>
@@ -113,7 +113,7 @@
 
 
                                 <div class="col-6">
-                                    <label for="stock">Stock</label>
+                                    <label for="stock">Stock <span class="text-danger">*</span></label>
                                     <input type="number" name="stock" id="stock" class="form-control"
                                         value="{{ old('stock', $product->stock) }}" required>
                                 </div>
@@ -127,8 +127,8 @@
                                 <input type="file" name="image_path" id="image_path" class="d-none" accept="image/*"
                                     onchange="previewImage(event)">
                                 <label for="image_path" class="custom-file-upload" id="uploadBox">
-                                    @if ($product->image_path)
-                                        <img src="{{ asset($product->image_path) }}" alt="Product Image">
+                                    @if ($product->get_product_images)
+                                        <img src="{{ asset($product->get_product_images->image_path) }}" alt="Product Image">
                                     @else
                                         <i class="fa fa-cloud-upload"></i>
                                         <span>Choose File</span>
@@ -139,7 +139,7 @@
                             </div>
                         </div>
                         <div class="col-10">
-                            <label for="description">Description</label>
+                            <label for="description">Description <span class="text-danger">*</span></label>
                             <textarea name="description" id="description" rows="4" class="form-control" required>{{ old('description', $product->description) }}</textarea>
 
                         </div>

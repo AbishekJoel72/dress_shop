@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('product', function (Blueprint $table) {
+        Schema::create('products', function (Blueprint $table) {
             $table->bigIncrements("id");
             $table->string('product_name');
             $table->text('description')->nullable();
@@ -19,7 +19,6 @@ return new class extends Migration
             $table->decimal('discount_price')->nullable();
             $table->unsignedBigInteger('category_id');
             $table->integer('stock')->default(0);
-            $table->string('image_path');
             $table->enum('status', ['0', '1'])->default('1');
             $table->timestamps();
             $table->foreign('category_id')->references('id')->on('category')->onDelete('no action');

@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Product extends Model
 {
-    protected $table = "product";
+    protected $table = "products";
     protected $fillable = [
         'product_name',
         'description',
@@ -14,7 +14,6 @@ class Product extends Model
         'discount_price',
         'category_id',
         'stock',
-        'image_path',
         'status'
     ];
 
@@ -22,5 +21,10 @@ class Product extends Model
     public function get_category()
     {
         return $this->belongsTo(Category::class, 'category_id');
+    }
+
+    public function get_product_images()
+    {
+        return $this->hasOne(ProductImages::class, 'product_id');
     }
 }
