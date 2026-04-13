@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Category;
 use App\Models\Product;
 use App\Models\ProductImage;
+use App\Models\ProductImages;
 use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
 
@@ -33,7 +34,7 @@ class ProductController extends Controller
 
             if ($request->get_image) {
                 $id = $request->id;
-                $product = Product::where('id', $id)->first();
+                $product = Product::with('get_product_images')->where('id', $id)->first();
                 return response()->json($product);
             }
 
@@ -51,7 +52,7 @@ class ProductController extends Controller
             }
 
 
-            $data = Product::with('get_category')->get();
+            $data = Product::with('get_category','get_product_images')->get();
             return DataTables::of($data)
                 ->addIndexColumn()
                 ->addColumn('action', function ($row) {
@@ -122,15 +123,18 @@ class ProductController extends Controller
                             $p->discount_price = $request->discount_price;
                             $p->category_id = $request->category_id;
                             $p->stock = $request->stock;
-
+                            $p->save();
 
                             if ($request->hasFile('image_path')) {
                                 $file = $request->file('image_path');
                                 $filename = time() . '_' . $file->getClientOriginalName();
                                 $file->move(public_path('images'), $filename);
-                                $p->image_path = 'images/' . $filename;
+                                // $p->image_path = 'images/' . $filename;
+                                ProductImages::create([
+                                    'product_id' => $p->id,
+                                    'image_path' => 'images/' . $filename,
+                                ]);
                             }
-                            $p->save();
 
                             session()->flash("success", "Product Added Successfully");
                             return redirect()->route("product");

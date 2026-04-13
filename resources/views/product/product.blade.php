@@ -199,11 +199,11 @@
                         $('#product_images').html('');
 
                         // Append images dynamically
-                        if (data.image_path) {
+                        if (data.get_product_images && data.get_product_images.image_path) {
 
                             $('#product_images').append(`
                             <div class="col-md-3 mb-3">
-                                <img src="/${data.image_path}" class="img-fluid rounded border" />
+                                <img src="/${data.get_product_images.image_path}" class="img-fluid rounded border" />
                             </div>`);
 
 
