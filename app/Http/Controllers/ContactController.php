@@ -40,13 +40,12 @@ class ContactController extends Controller
 
     public function ContactList(Request $request)
     {
-                if ($request->ajax()) {
+        if ($request->ajax()) {
             $data = Contact::get();
             return DataTables::of($data)
                 ->addIndexColumn()
                 ->make(true);
         }
-
         return view('contact.contact_list');
     }
 }
