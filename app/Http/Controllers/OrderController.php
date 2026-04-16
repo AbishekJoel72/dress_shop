@@ -15,7 +15,6 @@ class OrderController extends Controller
 {
     public function Order(Request $request)
     {
-
         if ($request->method("POST")) {
             if ($request->order_items) {
                 try {
@@ -29,7 +28,6 @@ class OrderController extends Controller
                     if ($validation) {
                         $lastOrder = Order::latest()->first();
                         $newOrderId = 'ORD' . str_pad(($lastOrder?->id + 1 ?? 1), 5, '0', STR_PAD_LEFT);
-
                         $o = new Order();
                         $o->order_id =  $newOrderId;
                         $o->date = $request->date;
@@ -43,11 +41,8 @@ class OrderController extends Controller
                         $o->city_id = $request->city_id;
                         $o->pincode = $request->pincode;
                         $o->save();
-
-
                         $lastOrder = Payment::latest()->first();
                         $transaction = 'TRA' . str_pad(($lastOrder?->id + 1 ?? 1), 5, '0', STR_PAD_LEFT);
-
                         $data = [
                             'order_id'        => $o->id,
                             'payment_gateway' => $request->payment_gateway,
@@ -64,10 +59,7 @@ class OrderController extends Controller
                             $data['paid_at']        = null;
                             $data['payment_status'] = '0';
                         }
-
                         Payment::create($data);
-
-
                         session()->flash("success", "Order Placed Successfully");
                         return redirect()->route("product_list");
                     }
@@ -77,8 +69,8 @@ class OrderController extends Controller
                 }
             }
         }
-        if ($request->ajax()) {
 
+        if ($request->ajax()) {
             if ($request->get_city) {
                 $state = $request->stateID;
                 $city = City::where("state_id", $state)->get();
@@ -86,38 +78,19 @@ class OrderController extends Controller
             }
         }
 
-
         if ($request->id) {
             $id = decrypt($request->id);
             $data['product_items'] = Product::where('id', $id)->first();
         }
-
         $data['size'] = Sizetype::get();
         $data['state'] = State::get();
-
-
         return view('Order.order')->with($data);
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     public function OrderPlaced(Request $request)
     {
         $user = session('user_id');
-
         if ($request->ajax()) {
-
             if ($request->get_view_item) {
                 $id = $request->id;
                 $order = Order::with('get_product', 'get_product.get_category', 'get_state', 'get_size', 'get_cities')
@@ -125,10 +98,8 @@ class OrderController extends Controller
                     ->first();
                 return response()->json($order);
             }
-
             if ($request->get_payment_list) {
                 $id = $request->id;
-
                 $order = Order::where('id', $id)
                     ->whereHas('get_payment', function ($q) use ($id) {
 
@@ -136,24 +107,17 @@ class OrderController extends Controller
                     })
                     ->with('get_payment')
                     ->first();
-
                 return response()->json($order);
             }
-
-
-
             if ($request->delete_order) {
                 $id = $request->id;
                 Payment::where('order_id', $id)->delete();
                 $order = Order::where('id', $id)->delete();
                 return response()->json($order);
             }
-
-
             $data = Order::with('get_product', 'get_product.get_category', 'get_state', 'get_size', 'get_cities', 'get_payment')
                 ->where('user_id', $user)
                 ->get();
-
             return DataTables::of($data)
                 ->addIndexColumn()
                 ->addColumn('payment_gateway', function ($row) {
@@ -161,52 +125,40 @@ class OrderController extends Controller
                 })
                 ->addColumn('action', function ($row) {
                     $actions = '
-        <div class="dropdown">
-            <a href="#" class="text-dark" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                <i class="fas fa-ellipsis-v"></i>
-            </a>
-            <ul class="dropdown-menu">
-                <li>
-                    <a href="javascript:void(0)" class="ViewRow dropdown-item" data-id="' . $row->id . '">View</a>
-                </li>';
-
-                    if ($row->get_payment->payment_status == "1") {
-                        $actions .= '
-                          <li>
-                            <a href="javascript:void(0)" class="PaymentRow dropdown-item" data-id="' . $row->id . '">Payment</a>
-                        </li>';
-                    }
-
-
-                    if (in_array($row->delivery_status, ['pending'])) {
-                        $actions .= '
-                <li>
-                    <a href="javascript:void(0)" class="deleteRow dropdown-item text-danger" data-id="' . $row->id . '">Delete</a>
-                </li>';
-                    }
-
-
-                    if ($row->delivery_status === 'delivered') {
-                        $actions .= '
-                <li>
-                    <a href="javascript:void(0)" class="returnRow dropdown-item text-danger" data-id="' . $row->id . '">Return</a>
-                </li>';
-                    }
-
-                    $actions .= '
-            </ul>
-        </div>';
-
+                        <div class="dropdown">
+                            <a href="#" class="text-dark" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fas fa-ellipsis-v"></i>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <a href="javascript:void(0)" class="ViewRow dropdown-item" data-id="' . $row->id . '">View</a>
+                                </li>';
+                                    if ($row->get_payment->payment_status == "1") {
+                                        $actions .= '
+                                        <li>
+                                            <a href="javascript:void(0)" class="PaymentRow dropdown-item" data-id="' . $row->id . '">Payment</a>
+                                        </li>';
+                                    }
+                                    if (in_array($row->delivery_status, ['pending'])) {
+                                        $actions .= '
+                                            <li>
+                                                <a href="javascript:void(0)" class="deleteRow dropdown-item text-danger" data-id="' . $row->id . '">Delete</a>
+                                            </li>';
+                                    }
+                                    if ($row->delivery_status === 'delivered') {
+                                        $actions .= '
+                                <li>
+                                    <a href="javascript:void(0)" class="returnRow dropdown-item text-danger" data-id="' . $row->id . '">Return</a>
+                                </li>';
+                                    }
+                                    $actions .= '
+                            </ul>
+                        </div>';
                     return $actions;
                 })
                 ->rawColumns(['action'])
                 ->make(true);
         }
-
-
-
-
-
         return view('Order.orderplaced');
     }
 

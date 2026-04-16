@@ -74,7 +74,6 @@ class RegistrationController extends Controller
                             $reg->password = Hash::make($request->password);
                             $reg->confirmation_password = Hash::make($request->confirmation_password);
                             $reg->save();
-                            // dd( $request);
                         session()->flash("success", "Register Successfully");
                         return redirect()->route("login");
                     }
@@ -100,10 +99,8 @@ class RegistrationController extends Controller
 
     public function ResetPassword(Request $request)
     {
-
         $email = $request->email;
         $user = Registration::where('email', $email)->first();
-
         if (isset($user) && !empty($user)) {
             if ($request->method("POST")) {
                 if ($request->reset) {
@@ -111,19 +108,18 @@ class RegistrationController extends Controller
                         'password' => Hash::make($request->password),
                         'confirmation_password' => Hash::make($request->confirmation_password),
                     ]);
-
                     return redirect()->route('login');
                 }
             }
+        } else {
+            session()->flash('error', 'Email not found!');
+            return redirect()->back();
         }
-
-
         return view("login.password_reset", ['user' => $user]);
     }
 
     public function Logout(Request $request)
     {
-
         $request->session()->flush();
         session()->flash("success", "Logged Out Successfully!");
         return redirect()->route("home_page");

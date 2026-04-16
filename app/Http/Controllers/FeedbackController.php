@@ -13,7 +13,6 @@ class FeedbackController extends Controller
     public function Feedback(Request $request)
     {
         $user = session('user_id');
-
         if ($request->method("POST")) {
             if ($request->feedbacks) {
                 try {
@@ -38,7 +37,6 @@ class FeedbackController extends Controller
                             $feedback->rating = $request->rating;
                             $feedback->comment = $request->comment;
                             $feedback->save();
-
                             session()->flash("success", "Feedback Added Sucessfully");
                             return redirect()->route("feedback");
                         }
@@ -49,7 +47,6 @@ class FeedbackController extends Controller
                 }
             }
         }
-
         $data['feedback_list'] = Feedback::where('user_id', $user)->first();
         if (!$data['feedback_list']) {
             $data['feedback_list'] = new Feedback;
@@ -68,7 +65,6 @@ class FeedbackController extends Controller
                 })
                 ->make(true);
         }
-
         return view('feedback.feedback_list');
     }
 }

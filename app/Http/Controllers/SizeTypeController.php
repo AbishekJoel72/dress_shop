@@ -16,7 +16,6 @@ class SizeTypeController extends Controller
 {
     public function SizeType(Request $request)
     {
-
         if ($request->method("POST")) {
             if ($request->size_list) {
                 try {
@@ -35,7 +34,6 @@ class SizeTypeController extends Controller
                     return redirect()->back();
                 }
             }
-
             if ($request->edit_size_list) {
                 try {
                     $validation = $request->validate([
@@ -53,7 +51,6 @@ class SizeTypeController extends Controller
                     return redirect()->back();
                 }
             }
-
             if ($request->edit_status) {
                 try {
                     $validation = $request->validate([
@@ -72,8 +69,6 @@ class SizeTypeController extends Controller
                 }
             }
         }
-
-
         if ($request->ajax()) {
             if ($request->get_size) {
                 $id = $request->id;
@@ -85,17 +80,14 @@ class SizeTypeController extends Controller
                 $s = Sizetype::where('id', $id)->first();
                 return response()->json($s);
             }
-
             if ($request->delete_size) {
                 $id = $request->id;
                 $s = Sizetype::where('id', $id)->delete();
                 return response()->json($s);
             }
-
             $query = Sizetype::select(['id', 'size_name', 'status']);
-
-             if ($request->size_name) {
-                 $query->where('size_name', 'LIKE', '%' . $request->size_name . '%');
+            if ($request->size_name) {
+                $query->where('size_name', 'LIKE', '%' . $request->size_name . '%');
             }
             return DataTables::of($query)
                 ->addIndexColumn()
@@ -122,12 +114,8 @@ class SizeTypeController extends Controller
                 ->rawColumns(['action'])
                 ->make(true);
         }
-
-
         return view("size.size_type");
     }
-
-
 
     public function SizeTypeExport(Request $request)
     {

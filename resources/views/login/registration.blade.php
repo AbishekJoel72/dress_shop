@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html>
 @include('layouts.head')
-
 <style>
     body {
         background: linear-gradient(90deg, #e62a49 0%, #9b87f2 100%);
@@ -9,7 +8,6 @@
         margin: 0;
         padding: 0;
     }
-
     .container {
         margin: 6px auto;
         max-width: 1000px;
@@ -17,28 +15,23 @@
         background: #fff;
         padding: 10px 40px;
         border-radius: 0px;
-
     }
-
     h3 {
         font-weight: 600;
         text-align: center;
         margin-bottom: 30px;
     }
-
     .row {
         display: flex;
         gap: 25px;
         margin-bottom: 25px;
     }
-
     .col {
         flex: 1;
         display: flex;
         flex-direction: column;
         position: relative;
     }
-
     label {
         font-weight: 500;
         font-size: 14px;
@@ -46,7 +39,6 @@
         color: #333;
         padding-left: 2px;
     }
-
     .form-control,
     .form-select {
         border: none;
@@ -58,31 +50,25 @@
         background: transparent;
         transition: all 0.3s ease;
     }
-
     .form-control:focus {
         border-bottom: 2px solid #e62a49;
         box-shadow: none;
         outline: none;
     }
-
     .form-control:hover {
         border-bottom: 2px solid #e62a49;
     }
-
     .form-check-input:checked {
         background-color: #e62a49;
         border-color: #e62a49;
     }
-
     .form-control:focus+label {
         color: #e62a49;
     }
-
     ::placeholder {
         font-size: 13px;
         color: #aaa;
     }
-
     button {
         width: 100%;
         padding: 12px;
@@ -93,18 +79,14 @@
         cursor: pointer;
         background: linear-gradient(145deg, #e62a49, #b11e36);
     }
-
-
     .login {
         text-decoration: none;
         color: #0092ca
     }
-
     .login:hover {
         text-decoration: none;
         color: #e62a49
     }
-
     .error {
         color: red;
         font-size: 12px;
@@ -112,12 +94,9 @@
         margin-top: 2px;
         line-height: 14px;
     }
-
     .input-error {
         border-bottom: 2px solid red !important;
     }
-
-
     .input-icon {
         position: absolute;
         right: 10px;
@@ -126,12 +105,9 @@
         font-size: 16px;
         cursor: pointer;
     }
-
     .input-icon:hover {
         color: #e62a49;
     }
-
-    /* Calendar box */
     .datepicker {
         border-radius: 12px;
         padding: 10px;
@@ -139,55 +115,39 @@
         box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
         font-family: 'Poppins', sans-serif;
     }
-
-    /* Header (Month + Year) */
     .datepicker .datepicker-switch {
         font-weight: 600;
         color: #333;
     }
-
-    /* Navigation arrows */
     .datepicker .prev,
     .datepicker .next {
         color: #e62a49;
         font-size: 18px;
     }
-
-    /* Days row */
     .datepicker table tr td,
     .datepicker table tr th {
         text-align: center;
         border-radius: 8px;
         padding: 8px;
     }
-
-    /* Hover effect */
     .datepicker table tr td:hover {
         background: #f1f1f1;
         cursor: pointer;
     }
-
-    /* Selected date */
     .datepicker table tr td.active,
     .datepicker table tr td.active:hover {
         background: #9b87f2;
         color: #fff;
         border-radius: 8px;
     }
-
-    /* Today highlight */
     .datepicker table tr td.today {
         background: #ffe5ea;
         border-radius: 8px;
     }
-
-    /* Disabled dates */
     .datepicker table tr td.disabled {
         color: #ccc !important;
         cursor: not-allowed;
     }
-
-    /* Month/Year selection */
     .datepicker .month,
     .datepicker .year {
         border-radius: 8px;
@@ -198,8 +158,6 @@
     .datepicker .year:hover {
         background: #f1f1f1;
     }
-
-    /* Active month/year */
     .datepicker .month.active,
     .datepicker .year.active {
         background: #9b87f2;
@@ -210,19 +168,15 @@
         .row {
             display: block;
         }
-
         .col {
             width: 100%;
         }
-
         .container {
             padding: 18px;
         }
     }
 </style>
-
 <body>
-
     <div class="container">
         <form action="{{ route('registration') }}" method="POST" autocomplete="off">
             @csrf
@@ -241,7 +195,6 @@
                     <small class="error" id="error_last_name"></small>
                 </div>
             </div>
-
             <div class="row">
                 <div class="col">
                     <label for="gender">Gender <span class="text-danger">*</span> </label>
@@ -275,7 +228,6 @@
                         readonly>
                 </div>
             </div>
-
             <div class="row">
                 <div class="col">
                     <label for="phone">Phone Number <span class="text-danger">*</span> </label>
@@ -307,18 +259,12 @@
                     <small class="error" id="error_confirmation_password"></small>
                 </div>
             </div>
-
             <div class="col-12 mt-4">
                 <button type="submit">Create Account</button>
             </div>
-
-            <p class="mt-3 text-center">Already have an Account? <a href="{{ route('login') }}" class="login"> Sign
-                    In </a></p>
-
+            <p class="mt-3 text-center">Already have an Account? <a href="{{ route('login') }}" class="login"> Sign In </a></p>
         </form>
     </div>
-
-
     <script>
         $(document).ready(function() {
             $('#date_of_birth').datepicker({
@@ -331,11 +277,8 @@
                 yearRange: "1900:2026"
             }).on('changeDate', function(e) {
                 let dob = $(this).val();
-                calculateAge(dob); // 👈 auto age call
+                calculateAge(dob);
             });
-
-
-
 
             function isValidName(name) {
                 return /^[A-Za-z ]+$/.test(name);
@@ -353,39 +296,30 @@
                 document.getElementById(id).classList.remove("input-error");
             }
 
-
             document.querySelectorAll("input, select").forEach(input => {
                 input.addEventListener("input", validateField);
                 input.addEventListener("change", validateField);
             });
 
-
             function calculateAge(dob) {
-
                 let parts = dob.split("-");
                 let day = parts[0];
                 let month = parts[1] - 1;
                 let year = parts[2];
-
                 let birthDate = new Date(year, month, day);
                 let today = new Date();
-
                 let age = today.getFullYear() - birthDate.getFullYear();
                 let m = today.getMonth() - birthDate.getMonth();
-
                 if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
                     age--;
                 }
-
                 $('#age').val(age);
             }
 
             function validateField() {
                 let id = this.id;
                 let value = this.value.trim();
-
                 clearError(id);
-
                 if (id === "first_name") {
                     if (value.trim() === "") {
                         setError(id, "First name is required");
@@ -393,14 +327,11 @@
                         setError(id, "Only letters allowed");
                     }
                 }
-
-
                 if (id === "last_name") {
                     if (value !== "" && !isValidName(value)) {
                         setError(id, "Only letters allowed");
                     }
                 }
-
                 if (id === "date_of_birth") {
                     if (value === "") {
                         setError(id, "Select DOB");
@@ -408,50 +339,37 @@
                         calculateAge(value); 
                     }
                 }
-
                 if (id === "age") {
                     if (value === "" || !/^\d+$/.test(value) || value <= 0 || value > 120) {
                         setError(id, "Enter valid age");
                     }
                 }
-
                 if (id === "phone") {
                     if (!/^\d{10}$/.test(value)) {
                         setError(id, "Enter valid 10 digit number");
                     }
                 }
-
                 if (id === "email") {
                     if (!/^\S+@\S+\.\S+$/.test(value)) {
                         setError(id, "Invalid email");
                     }
                 }
-
                 if (id === "password") {
                     if (value.length < 6) {
                         setError(id, "Minimum 6 characters");
                     }
                 }
-
                 if (id === "confirmation_password") {
                     let pwd = document.getElementById("password").value;
                     if (value !== pwd) {
                         setError(id, "Passwords do not match");
                     }
                 }
-
             }
 
-
-
             document.querySelector("form").addEventListener("submit", function(e) {
-
                 let valid = true;
-
-                let fields = [
-                    "first_name", "last_name", "date_of_birth", "age", "phone", "email",
-                ];
-
+                let fields = ["first_name", "last_name", "date_of_birth", "age", "phone", "email", "password", "confirmation_password"];
                 fields.forEach(id => {
                     let el = document.getElementById(id);
                     if (el) {
@@ -461,23 +379,18 @@
                         }
                     }
                 });
-
                 let gender = document.querySelector('input[name="gender"]:checked');
                 if (!gender) {
                     alert("Select gender");
                     valid = false;
                 }
-
                 if (!valid) {
                     e.preventDefault();
                 }
             });
 
-
             document.getElementById("togglePassword").addEventListener("click", function() {
-
                 let pwd = document.getElementById("password");
-
                 if (pwd.type === "password") {
                     pwd.type = "text";
                     this.classList.remove("fa-eye-slash");
@@ -492,5 +405,4 @@
         });
     </script>
 </body>
-
 </html>

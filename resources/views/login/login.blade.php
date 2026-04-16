@@ -41,7 +41,6 @@
         transition: all 0.3s ease;
     }
 
-
     .form-control:focus {
         border-bottom: 2px solid #e62a49;
         box-shadow: none;
@@ -70,7 +69,6 @@
         color: #fff;
         cursor: pointer;
         background: linear-gradient(145deg, #e62a49, #b11e36);
-
     }
 
     button:hover {
@@ -91,7 +89,6 @@
         text-decoration: underline;
     }
 
-
     .login {
         text-decoration: none;
         color: #0092ca
@@ -101,7 +98,6 @@
         text-decoration: none;
         color: #e62a49
     }
-
 
     .input-icon {
         position: absolute;
@@ -131,10 +127,7 @@
     }
 </style>
 
-
 <body>
-
-
     <div class="container">
         <form action="{{ route('login') }}" method="GET" autocomplete="off">
             @csrf
@@ -147,37 +140,26 @@
                         class="form-control pe-5">
                     <i class="fa fa-envelope input-icon"></i>
                 </div>
-
                 <div class="col-12 mt-2 position-relative">
                     <label for="password">Password</label>
                     <input type="password" name="password" id="password" placeholder="Password" required
                         class="form-control pe-5">
                     <i class="fa fa-eye-slash input-icon" id="togglePassword"></i>
                 </div>
-
-
                 <a href="#" class="text-end forgot " id="forgot_password">Forgot Password</a>
-
                 <div class="col-12 mt-4">
                     <button type="submit">Login</button>
                 </div>
-
-                <p class="mt-3 text-center">New to Fashion? <a href="{{ route('registration') }}" class="login"> Join
-                        the
-                        Style Club
-                    </a></p>
+                <p class="mt-3 text-center">New to Fashion? <a href="{{ route('registration') }}" class="login">
+                        Jointhe Style Club </a></p>
             </div>
         </form>
     </div>
 </body>
-
-
 <script>
     $(document).on("click", "#forgot_password", function(e) {
         e.preventDefault();
-
         var email = $("#email").val().trim();
-
         if (!email) {
             $("#modalMessage").text("Please enter your email address.");
             var modal = new bootstrap.Modal(document.getElementById('sessionModal'));
@@ -202,9 +184,7 @@
     });
 
     document.getElementById("togglePassword").addEventListener("click", function() {
-
         let pwd = document.getElementById("password");
-
         if (pwd.type === "password") {
             pwd.type = "text";
             this.classList.remove("fa-eye-slash");
@@ -214,8 +194,6 @@
             this.classList.remove("fa-eye");
             this.classList.add("fa-eye-slash");
         }
-
     });
 </script>
-
 </html>

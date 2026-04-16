@@ -1,9 +1,6 @@
 @extends('layouts.user.default')
-
 @section('content')
-    <div class="f">
-
-
+    <div class="container ">
         <div class="row">
             @foreach ($products as $p)
                 @if ($p->status == 1)
@@ -31,9 +28,7 @@
                 @endif
             @endforeach
         </div>
-
     </div>
-
     @include('layouts.user.footer')
 @endsection
 @section('script')

@@ -1,30 +1,21 @@
 <header id="mainHeader" class="header d-flex  align-items-center">
-
-      <div class="header-left d-flex align-items-center gap-3">
+    <div class="header-left d-flex align-items-center gap-3">
         <i id="menuOpen" class="fa-solid fa-bars-staggered fs-5" style="color:#0092ca; cursor:pointer;"></i>
         <i id="menuClose" class="fa-solid fa-arrow-right fs-5 d-none" style="color:#0092ca; cursor:pointer;"></i>
-
-
         @php
             use App\Models\Configuration;
-
             $config = Configuration::first();
-
         @endphp
         @if (!empty($config->logo))
             <img src="{{ asset($config->logo) }}" width="170" height="100"
                 style="border:1px solid #000;border-radius:0px;" alt="Company Logo" class="img-thumbnail">
         @endif
-      </div>
-
-
-       <nav class="ms-auto bg-light text-primary p-3">
+    </div>
+    <nav class="ms-auto bg-light text-primary p-3">
         @php
             use App\Models\Registration;
             $reg = Registration::where('role', 'admin')->first();
         @endphp
-
-
         <div class="dropdown">
             <div class=" d-flex flex-column align-items-start" id="adminDropdown" data-bs-toggle="dropdown"
                 aria-expanded="false" style="cursor:pointer;">
@@ -41,6 +32,5 @@
                 </li>
             </ul>
         </div>
-
     </nav>
 </header>

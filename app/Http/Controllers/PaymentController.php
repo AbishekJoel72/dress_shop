@@ -11,12 +11,9 @@ class PaymentController extends Controller
     public function PaymentList(Request $request)
     {
         if ($request->ajax()) {
-
-
             $data = Payment::with('get_order', 'get_order.get_product')
                 ->where('payment_status','!=', '0')
                 ->get();
-
             return DataTables::of($data)
                 ->addIndexColumn()
                 ->make(true);
