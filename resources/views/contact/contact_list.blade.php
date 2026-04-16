@@ -7,7 +7,6 @@
                 <h5 class="mb-0">List Contact</h5>
             </div>
             <div class="card-body">
-
                 <table id="datatable" class="table table-bordered">
                     <thead>
                         <tr>
@@ -21,7 +20,6 @@
                     <tbody></tbody>
                 </table>
             </div>
-
         </div>
     </div>
     @include('layouts.footer')
@@ -29,13 +27,11 @@
 @section('script')
 @include("layouts.datatable")
  <script>
-             $(document).ready(function() {
-
+        $(document).ready(function() {
             $('#datatable').DataTable({
                 processing: true,
                 serverSide: true,
                 ajax: "{{ route('contact_list') }}",
-
                 columns: [{
                         data: 'DT_RowIndex',
                         name: 'DT_RowIndex',
@@ -47,24 +43,18 @@
                     {
                         data: 'email',
                         name: 'email',
-
                     },
                     {
                         data: 'phone',
                         name: 'phone',
-
                     },
                     {
                         data: 'message',
                         name: 'message',
 
                     },
-
-
                 ]
             });
-
-
         });
     </script>
 @endsection

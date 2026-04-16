@@ -1,5 +1,4 @@
 @extends('layouts.user.default')
-
 @section('content')
     <div class="container-fluid ">
         <style>
@@ -8,15 +7,10 @@
                 padding-right: 25px;
             }
         </style>
-
         <div class="row justify-content-center">
             <div class="col-lg-10">
-
-
                 <div class="card shadow-sm p-4">
                     <div class="row align-items-start">
-
-                        <!-- LEFT : COMPANY DETAILS -->
                         <div class="col-md-5 mb-4 mb-md-0 border-divider">
                             @php
                                 use App\Models\Configuration;
@@ -49,16 +43,11 @@
                                     </li>
                                 </ul>
                             @endif
-
                         </div>
-
-
-                        <!-- RIGHT : CONTACT FORM -->
                         <div class="col-md-7">
                             <h4 class="fw-bold mb-4 text-center text-md-start">
                                 Send Us a Message
                             </h4>
-
                             @php
                                 use App\Models\Registration;
                                 $user = session('user_id');
@@ -71,31 +60,23 @@
                                     <label class="form-label">Email</label>
                                     <input type="email" class="form-control" value="{{ $register->email ?? ''}}" name="email" placeholder="Enter your email">
                                 </div>
-
                                 <div class="mb-3">
                                     <label class="form-label">Phone Number</label>
                                     <input type="text" class="form-control" name="phone" value="{{ $register->phone?? '' }}" placeholder="Enter your phone number">
                                 </div>
-
                                 <div class="mb-3">
                                     <label class="form-label">Message</label>
                                     <textarea class="form-control" name="message"  placeholder="Type your message"></textarea>
                                 </div>
-
                                 <button type="submit" class="btn btn-primary px-4">
                                     Submit
                                 </button>
                             </form>
                         </div>
-
                     </div>
                 </div>
-
-
             </div>
         </div>
-
     </div>
-
     @include('layouts.user.footer')
 @endsection
