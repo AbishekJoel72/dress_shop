@@ -1,5 +1,4 @@
 @extends('layouts.user.default')
-
 @section('content')
     <div class="container">
         <style>
@@ -10,30 +9,22 @@
                 gap: 8px;
                 font-size: 2rem;
             }
-
             .star-rating input {
                 display: none;
-
             }
-
             .star-rating label {
                 color: #d3d3d3;
                 cursor: pointer;
                 transition: color 0.2s;
             }
-
-
             .star-rating label:hover,
             .star-rating label:hover~label {
                 color: #ffb400;
             }
-
             .star-rating input:checked~label {
                 color: #ffb400;
             }
         </style>
-
-
         <form action="{{ route('feedback') }}" method="POST" autocomplete="off">
             @csrf
             <input type="hidden" name="feedbacks" value="true">
@@ -43,15 +34,11 @@
                     <h5 class="mb-0"> Feedback</h5>
                 </div>
                 <div class="card-body">
-
-                    {{-- Subject --}}
                     <div class="mb-3">
                         <label for="subject" class="form-label">Subject</label>
                         <input type="text" name="subject" id="subject" class="form-control" placeholder="Enter subject"
                             required value="{{ $feedback_list->subject }}">
                     </div>
-
-                    {{-- Rating --}}
                     <div class="mb-3">
                         <label class="form-label">Rating</label>
                         <div class="star-rating">
@@ -69,14 +56,8 @@
 
                             <input type="radio" id="star5" name="rating" value="5"  {{ $feedback_list->rating == 5 ? 'checked' : '' }}>
                             <label for="star5" title="5 stars"><i class="fa fa-star"></i></label>
-
                         </div>
                     </div>
-
-
-
-
-                    {{-- Comment --}}
                     <div class="mb-3">
                         <label for="comment" class="form-label">Comment</label>
                         <textarea name="comment" id="comment" cols="6"
@@ -91,9 +72,6 @@
                 </div>
             </div>
         </form>
-
-
-
     </div>
     @include('layouts.user.footer')
 @endsection

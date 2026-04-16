@@ -1,7 +1,6 @@
 @extends('layouts.admin.default')
 @section('content')
     <div class="container">
-
         <div class="card">
             <div class="card-header bg-transparent d-flex justify-content-between align-items-center py-2">
                 <h5 class="mb-0">List Feedback</h5>
@@ -10,7 +9,6 @@
                 </a> --}}
             </div>
             <div class="card-body">
-
                 <table id="datatable" class="table table-bordered">
                     <thead>
                         <tr>
@@ -25,22 +23,18 @@
                     <tbody></tbody>
                 </table>
             </div>
-
         </div>
-
     </div>
     @include('layouts.footer')
 @endsection
 @section('script')
     @include('layouts.datatable')
     <script>
-             $(document).ready(function() {
-
+        $(document).ready(function() {
             $('#datatable').DataTable({
                 processing: true,
                 serverSide: true,
                 ajax: "{{ route('feedback_list') }}",
-
                 columns: [{
                         data: 'DT_RowIndex',
                         name: 'DT_RowIndex',
@@ -52,12 +46,10 @@
                     {
                         data: 'full_name',
                         name: 'full_name',
-
                     },
                     {
                         data: 'get_register.email',
                         name: 'get_register.email',
-
                     },
                     {
                         data: 'subject',
@@ -67,20 +59,13 @@
                     {
                         data: 'rating',
                         name: 'rating',
-
-
                     },
                     {
                         data: 'comment',
                         name: 'comment',
-
-
                     },
-
                 ]
             });
-
-
         });
     </script>
 @endsection

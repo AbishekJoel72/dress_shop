@@ -1,8 +1,6 @@
 @extends('layouts.user.default')
-
 @section('content')
     <div class="container">
-
         <div class="card">
             <div class="card-header bg-transparent d-flex justify-content-between align-items-center py-2">
                 <h5 class="mb-0">Ordered List</h5>
@@ -11,7 +9,6 @@
                 </a>
             </div>
             <div class="card-body">
-
                 <table id="datatable" class="table table-bordered">
                     <thead>
                         <tr>
@@ -29,10 +26,7 @@
                     <tbody></tbody>
                 </table>
             </div>
-
         </div>
-
-
 
         <div class="modal fade" id="viewModal" tabindex="-1" aria-hidden="true">
             <div class="modal-dialog modal-lg">
@@ -115,7 +109,6 @@
                     <div class="modal-body">
                         <table class="table table-bordered">
                             <tbody>
-
                                 <tr>
                                     <th>Date</th>
                                     <td><span id="paid_at"></span></td>
@@ -136,16 +129,12 @@
                                     <th>Currency</th>
                                     <td><span id="currency"></span></td>
                                 </tr>
-
                             </tbody>
-
                         </table>
                     </div>
                 </div>
             </div>
         </div>
-
-
     </div>
     @include('layouts.user.footer')
 @endsection
@@ -153,12 +142,10 @@
     @include('layouts.datatable')
     <script>
         $(document).ready(function() {
-
             $('#datatable').DataTable({
                 processing: true,
                 serverSide: true,
                 ajax: "{{ route('order_placed') }}",
-
                 columns: [{
                         data: 'DT_RowIndex',
                         name: 'DT_RowIndex',
@@ -249,10 +236,8 @@
                 ]
             });
 
-
             $(document).on('click', '.ViewRow', function() {
                 let id = $(this).data('id');
-
                 $.ajax({
                     url: "{{ route('order_placed') }}",
                     method: "GET",
@@ -265,18 +250,15 @@
                         $('#order_id').text(data.order_id ?? "-");
                         $('#product_id').text(data.get_product?.product_name ?? "-");
                         $('#category_id').text(data.get_product?.get_category?.name ?? "-");
-
                         if (data.get_product?.image_path) {
                             $('#product_images').html(`
-                    <div class="col-md-3 mb-3">
-                        <img src="/${data.get_product.image_path}" class="img-fluid rounded border" />
-                    </div>
-                `);
+                                <div class="col-md-3 mb-3">
+                                    <img src="/${data.get_product.image_path}" class="img-fluid rounded border" />
+                                </div>
+                            `);
                         } else {
-                            $('#product_images').html(
-                                '<p class="text-muted">No Images Found</p>');
+                            $('#product_images').html('<p class="text-muted">No Images Found</p>');
                         }
-
                         $('#price').text(data.get_product?.price ?? "-");
                         $('#size_id').text(data.get_size?.size_name ?? "-");
                         $('#quantity').text(data.quantity ?? "-");
@@ -285,17 +267,13 @@
                         $('#state').text(data.get_state?.state_name ?? "-");
                         $('#city_id').text(data.get_cities?.city_name ?? "-");
                         $('#pin_no').text(data.pincode ?? "-");
-
                         $('#viewModal').modal('show');
                     }
                 });
             });
 
             $(document).on('click', '.PaymentRow', function() {
-
                 let id = $(this).data('id');
-                // console.log(id);
-
                 $.ajax({
                     url: "{{ route('order_placed') }}",
                     method: "GET",
@@ -329,10 +307,8 @@
                         $('#currency').text(data.get_payment.currency ?? "-");
                         $("#PaymentModal").modal("show");
                     }
-
                 });
             });
-
 
             $(document).on('click', '.deleteRow', function() {
                 let id = $(this).data('id');
@@ -359,14 +335,8 @@
                             'sessionModal'));
                         modal.show();
                     }
-
-
                 });
-
             });
-
-
-
         });
     </script>
 @endsection

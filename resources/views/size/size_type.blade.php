@@ -1,12 +1,9 @@
 @extends('layouts.admin.default')
 @section('content')
-
     <div class="container mt-4">
-
         <div class="card">
             <div class="card-header bg-transparent">
                 <h5 class="">Size Filter</h5>
-
             </div>
             <div class="card-body">
                 <div class="row">
@@ -18,9 +15,7 @@
             </div>
             {{-- <div class="card-footer d-flex justify-content-center bg-transparent">
                 <button class="btn  btn-primary"> <i class="fa-solid fa-filter"></i> Filter</button>
-
             </div> --}}
-
         </div>
 
         <div class="card mt-4">
@@ -30,7 +25,6 @@
                     <a href="#" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#Addmodel">
                         <i class="fa-solid fa-plus"></i> Add New
                     </a>
-
                     <div class="dropdown">
                         <button class="btn btn-sm btn-warning" type="button" data-bs-toggle="dropdown">
                             Download
@@ -60,7 +54,6 @@
                     <tbody></tbody>
                 </table>
             </div>
-
         </div>
 
         <div class="modal fade" id="Addmodel" tabindex="-1" aria-hidden="true">
@@ -69,7 +62,6 @@
                     <form action="{{ route('size_type') }}" method="POST" autocomplete="off" class="needs-validation" novalidate>
                         @csrf
                         <input type="hidden" name="size_list" value="true">
-
                         <div class="modal-header">
                             <h5 class="modal-title">Add Size</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -82,20 +74,16 @@
                                         class="form-control" required>
                                          <small class="text-dangers"></small>
                                 </div>
-
                             </div>
                         </div>
                         <div class="modal-footer d-flex justify-content-center">
                             <button type="submit" class="btn btn-primary"> <i class="fa-solid fa-floppy-disk">
                                 </i> Submit</button>
                         </div>
-
                     </form>
                 </div>
             </div>
         </div>
-
-
 
         <div class="modal fade" id="editmodel" tabindex="-1" aria-hidden="true">
             <div class="modal-dialog">
@@ -117,15 +105,12 @@
                                         class="form-control" required>
                                          <small class="text-dangers"></small>
                                 </div>
-
                             </div>
                         </div>
                         <div class="modal-footer d-flex justify-content-center">
                             <button type="submit" class="btn btn-primary"> <i class="fa-solid fa-pen">
-
                                 </i> Update</button>
                         </div>
-
                     </form>
                 </div>
             </div>
@@ -138,7 +123,6 @@
                         @csrf
                         <input type="hidden" name="id" id="edit_status_id">
                         <input type="hidden" name="edit_status" value="true">
-
                         <div class="modal-header">
                             <h5 class="modal-title">Edit Status</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal"
@@ -148,7 +132,6 @@
                             <div class="row g-3">
                                 <div class="col-12">
                                     <label class="form-label d-block">Status</label>
-
                                     <div class="form-check form-check-inline">
                                         <input type="radio" name="status" id="edit_status_active" value="active"
                                             class="form-check-input" checked>
@@ -156,7 +139,6 @@
                                             Active
                                         </label>
                                     </div>
-
                                     <div class="form-check form-check-inline">
                                         <input type="radio" name="status" id="edit_status_inactive" value="inactive"
                                             class="form-check-input">
@@ -164,21 +146,17 @@
                                             Inactive
                                         </label>
                                     </div>
-
                                 </div>
                             </div>
                         </div>
                         <div class="modal-footer d-flex justify-content-center">
                             <button type="submit" class="btn btn-primary"> <i class="fa-solid fa-pen">
-
                                 </i> Update</button>
                         </div>
-
                     </form>
                 </div>
             </div>
         </div>
-
     </div>
     @include('layouts.footer')
 @endsection
@@ -186,7 +164,6 @@
     @include('layouts.datatable')
     <script>
         $(document).ready(function() {
-
             var table = $('#datatable').DataTable({
                 processing: true,
                 serverSide: true,
@@ -196,7 +173,6 @@
                         d.size_name = $('#size_name').val();
                     }
                 },
-
                 columns: [{
                         data: 'DT_RowIndex',
                         name: 'DT_RowIndex',
@@ -225,8 +201,6 @@
 
                         }
                     },
-
-
                     {
                         data: 'action',
                         name: 'action',
@@ -271,25 +245,19 @@
                         get_status: true,
                     },
                     success: function(data) {
-                        // console.log("response": data);
-
                         $('#edit_status_id').val(data.id);
-
                         if (data.status === 'active') {
                             $('#edit_status_active').prop('checked', true);
                         } else {
                             $('#edit_status_inactive').prop('checked', true);
                         }
-
                         $('#editstatusmodel').modal("show");
                     }
                 });
             });
 
             $(document).on('click', '.deleteRow', function() {
-
                 let id = $(this).data('id');
-
                 $.ajax({
                     url: "{{ route('size_type') }}",
                     type: "DELETE",
@@ -317,43 +285,5 @@
                 });
             });
         });
-
-
-
-
-        // document.addEventListener("DOMContentLoaded", function() {
-
-        //     const sizetype = document.getElementById("size_type");
-        //     const editname = document.getElementById("edit_size_type");
-
-
-        //     sizetype.addEventListener("input", function() {
-        //         const value = this.value.trim();
-
-        //         if (value === "") {
-        //             showError(this, "Field is required");
-        //         } else if (!/^[A-Za-z\s]+$/.test(value)) {
-        //             showError(this, "Only letters allowed");
-        //         } else {
-        //             clearError(this);
-        //         }
-        //     });
-
-
-        //     editname.addEventListener("input", function() {
-        //         const value = this.value.trim();
-
-        //         if (value === "") {
-        //             showError(this, "Field is required");
-        //         } else if (!/^[A-Za-z\s]+$/.test(value)) {
-        //             showError(this, "Only letters allowed");
-        //         } else {
-        //             clearError(this);
-        //         }
-        //     });
-
-
-
-        // });
     </script>
 @endsection

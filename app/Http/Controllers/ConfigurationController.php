@@ -6,8 +6,6 @@ use App\Models\City;
 use App\Models\Configuration;
 use App\Models\State;
 use Illuminate\Http\Request;
-
-
 class ConfigurationController extends Controller
 {
     public function Configuration(Request $request)
@@ -28,9 +26,7 @@ class ConfigurationController extends Controller
                         "facebook" => "required",
                         "instagram" => "required",
                         "twitter" => "required",
-
                     ]);
-
                     if ($validation) {
                         $data = [
                             'company_name' => $request->company_name,
@@ -54,7 +50,6 @@ class ConfigurationController extends Controller
                             $file->move(public_path('images'), $filename);
                             $data['logo'] = 'images/' . $filename;
                         }
-
                         if ($request->id) {
                             Configuration::where("id", $request->id)->update($data);
                             session()->flash("success", "Details Updated Successfully");
@@ -62,7 +57,6 @@ class ConfigurationController extends Controller
                             Configuration::create($data);
                             session()->flash("success", "Details Added Successfully");
                         }
-
                         return redirect()->route("configuration");
                     }
                 } catch (\Throwable $th) {
@@ -71,21 +65,14 @@ class ConfigurationController extends Controller
                 }
             }
         }
-
         if ($request->get_city) {
-
             $state = $request->stateID;
             $city = City::where("state_id", $state)->get();
             return response()->json($city);
         }
-
         $data['state'] = State::all();
         $data['city'] = City::all();
-
         $data['config'] = Configuration::first() ?? new Configuration();
-
-
-
         return view('Configuration.configuration')->with($data);
     }
 }

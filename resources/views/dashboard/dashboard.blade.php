@@ -1,14 +1,11 @@
 @extends('layouts.admin.default')
-
 @section('content')
     <div class="container">
-
         <div class="card ">
             <div class="card-header bg-transparent">
                 <h5>Dashboard</h5>
             </div>
             <div class="card-body">
-
                 <div class="row">
                     <div class="col-3">
                         <div class="card text-bg-primary mb-3" style="height:130px">
@@ -22,7 +19,6 @@
                             </div>
                         </div>
                     </div>
-
                     <div class="col-3">
                         <div class="card text-bg-secondary mb-3" style="height:130px">
                             <div class="card-header bg-transparent text-center">
@@ -35,8 +31,6 @@
                             </div>
                         </div>
                     </div>
-
-
                     <div class="col-3">
                         <div class="card text-bg-success mb-3" style="height:130px">
                             <div class="card-header bg-transparent text-center">
@@ -50,7 +44,6 @@
                             </div>
                         </div>
                     </div>
-
                     <div class="col-3">
                         <div class="card text-bg-light  mb-3" style="height:130px">
                             <div class="card-header bg-transparent text-center">
@@ -65,10 +58,7 @@
                         </div>
                     </div>
                 </div>
-
-
                 <div class="row">
-
                     <div class="col-3">
                         <div class="card text-bg-info mb-3" style="height:130px">
                             <div class="card-header bg-transparent text-center">
@@ -81,15 +71,12 @@
                                         <a href="{{ route('product') }}" class="text-dark"
                                             id="men">{{ $men_products }}</a>
                                     </div>
-
                                     <div class="col-6 d-flex flex-column align-items-center">
                                         <label for="women">Women</label>
                                         <a href="{{ route('product') }}" class="text-dark"
                                             id="women">{{ $women_products }}</a>
                                     </div>
                                 </div>
-
-
                             </div>
                         </div>
                     </div>
@@ -105,7 +92,6 @@
                                         <a href="{{ route('order_list') }}" class="text-dark"
                                             id="total">{{ $total_orders }}</a>
                                     </div>
-
                                     <div class="col-6 d-flex flex-column align-items-center">
                                         <label for="today">Today</label>
                                         <a href="{{ route('order_list') }}" class="text-dark"
@@ -115,8 +101,6 @@
                             </div>
                         </div>
                     </div>
-
-
                     <div class="col-3">
                         <div class="card text-bg-danger mb-3" style="height:130px">
                             <div class="card-header bg-transparent text-center">
@@ -130,7 +114,6 @@
                             </div>
                         </div>
                     </div>
-
                     <div class="col-3">
                         <div class="card text-bg-dark mb-3" style="height:130px">
                             <div class="card-header bg-transparent text-center">
@@ -145,23 +128,8 @@
                         </div>
                     </div>
                 </div>
-
-
-
-
-
-
             </div>
-
         </div>
-
-
-
-
-
-
-
-
         <div class="row mt-3">
             <div class="col-6">
                 <div class="card">
@@ -169,18 +137,14 @@
                         <h5>Product</h5>
                     </div>
                     <div class="card-body">
-
                         @if ($men_products + $women_products > 0)
                             <canvas id="productPie" style="max-height:300px;"></canvas>
                         @else
                             <p>Product empty</p>
                         @endif
-
-
                     </div>
                 </div>
             </div>
-
             <div class="col-6">
                 <div class="card">
                     <div class="card-header bg-transparent">
@@ -195,57 +159,45 @@
                     </div>
                 </div>
             </div>
-
-
-
         </div>
-
-      
-
-
-
-        @include('layouts.footer')
-    @endsection
-
-    @section('script')
-        <script>
-            @if ($men_products + $women_products > 0)
-                const ctx = document.getElementById('productPie').getContext('2d');
-
-                new Chart(ctx, {
-                    type: 'pie',
-                    data: {
-                        labels: ['Men', 'Women'],
-                        datasets: [{
-                            data: [{{ $men_products }}, {{ $women_products }}],
-                            backgroundColor: ['#36A2EB', '#FF6384']
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false
-                    }
-                });
-            @endif
-
-            @if ($total_orders > 0)
-                const ctxOrder = document.getElementById('orderPie').getContext('2d');
-
-                new Chart(ctxOrder, {
-                    type: 'pie',
-                    data: {
-                        labels: ['Total Orders'],
-                        datasets: [{
-                            data: [{{ $total_orders }}],
-                            backgroundColor: ['#4CAF50']
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false
-                    }
-                });
-            @endif
-
-        </script>
-    @endsection
+    </div>
+    @include('layouts.footer')
+@endsection
+@section('script')
+    <script>
+        @if ($men_products + $women_products > 0)
+            const ctx = document.getElementById('productPie').getContext('2d');
+            new Chart(ctx, {
+                type: 'pie',
+                data: {
+                    labels: ['Men', 'Women'],
+                    datasets: [{
+                        data: [{{ $men_products }}, {{ $women_products }}],
+                        backgroundColor: ['#36A2EB', '#FF6384']
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false
+                }
+            });
+        @endif
+        @if ($total_orders > 0)
+            const ctxOrder = document.getElementById('orderPie').getContext('2d');
+            new Chart(ctxOrder, {
+                type: 'pie',
+                data: {
+                    labels: ['Total Orders'],
+                    datasets: [{
+                        data: [{{ $total_orders }}],
+                        backgroundColor: ['#4CAF50']
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false
+                }
+            });
+        @endif
+    </script>
+@endsection

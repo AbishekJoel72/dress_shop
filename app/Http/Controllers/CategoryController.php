@@ -32,7 +32,6 @@ class CategoryController extends Controller
                     return redirect()->back();
                 }
             }
-
             if ($request->edit_category) {
                 try {
                     $validation = $request->validate([
@@ -51,7 +50,6 @@ class CategoryController extends Controller
                     return redirect()->back();
                 }
             }
-
             if ($request->edit_status) {
                 try {
                     $validation = $request->validate([
@@ -70,27 +68,22 @@ class CategoryController extends Controller
                 }
             }
         }
-
         if ($request->ajax()) {
-
             if ($request->get_category) {
                 $id = $request->id;
                 $category = Category::where("id", $id)->first();
                 return response()->json($category);
             }
-
             if ($request->get_status) {
                 $id = $request->id;
                 $category = Category::where("id", $id)->first();
                 return response()->json($category);
             }
-
             if ($request->delete_cate) {
                 $id = $request->id;
                 $category = Category::where("id", $id)->delete();
                 return response()->json($category);
             }
-
             $query = Category::select(['id', 'name', 'description', 'status']);
             if ($request->category_name) {
                  $query->where('name', 'LIKE', '%' . $request->category_name . '%');
@@ -120,15 +113,12 @@ class CategoryController extends Controller
                 ->rawColumns(['action'])
                 ->make(true);
         }
-
-
         return view("category.category");
     }
 
     public function CategoryExport(Request $request)
     {
         $type = $request->type;
-
         if ($type == 'excel') {
             return Excel::download(new CategoryExport, 'categories.xlsx');
         }

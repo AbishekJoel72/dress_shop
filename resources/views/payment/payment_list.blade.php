@@ -1,13 +1,11 @@
 @extends('layouts.admin.default')
 @section('content')
     <div class="container">
-
         <div class="card">
             <div class="card-header bg-transparent d-flex justify-content-between align-items-center py-2">
                 <h5 class="mb-0">payment List</h5>
             </div>
             <div class="card-body">
-
                 <table id="datatable" class="table table-bordered">
                     <thead>
                         <tr>
@@ -18,17 +16,14 @@
                             <th>Transaction ID</th>
                             <th>payment Gateway</th>
                             <th>Amount</th>
-                            <th>Currency</th>
-                      
+                            <th>Currency</th> 
+                            {{-- <th>Action</th> --}}         
                         </tr>
                     </thead>
                     <tbody></tbody>
                 </table>
             </div>
-
         </div>
-
-
     </div>
     @include('layouts.footer')
 @endsection
@@ -36,12 +31,10 @@
     @include('layouts.datatable')
     <script>
         $(document).ready(function() {
-
             $('#datatable').DataTable({
                 processing: true,
                 serverSide: true,
                 ajax: "{{ route('payment_list') }}",
-
                 columns: [{
                         data: 'DT_RowIndex',
                         name: 'DT_RowIndex',
@@ -58,22 +51,18 @@
                             let dateObj = new Date(data);
                             return dateObj.toLocaleDateString('en-GB');
                         }
-
                     },
                     {
                         data: 'get_order.get_product.product_name',
                         name: 'get_order.get_product.product_name',
-
                     },
                     {
                         data: 'get_order.order_id',
                         name: 'get_order.order_id',
-
                     },
                     {
                         data: 'transaction_id',
                         name: 'transaction_id',
-
                     },
                     {
                         data: 'payment_gateway',
@@ -97,8 +86,6 @@
                     {
                         data: 'get_order.total_amount',
                         name: 'get_order.total_amount',
-
-
                     },
                     {
                         data: 'currency',
@@ -114,9 +101,6 @@
                     // }
                 ]
             });
-
-
-
         });
     </script>
 @endsection

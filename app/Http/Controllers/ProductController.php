@@ -13,45 +13,33 @@ class ProductController extends Controller
 {
     public function Product(Request $request)
     {
-
         if ($request->method("POST")) {
             if ($request->edit_status) {
                 $id = $request->id;
-
                 Product::where('id', $id)->update([
                     'status' => $request->status,
                 ]);
-
                 session()->flash('success', 'Status Updated Successfully');
                 return redirect()->route('product');
             }
         }
 
-
-
-
         if ($request->ajax()) {
-
             if ($request->get_image) {
                 $id = $request->id;
                 $product = Product::with('get_product_images')->where('id', $id)->first();
                 return response()->json($product);
             }
-
             if ($request->get_status) {
                 $id = $request->id;
                 $product_status = Product::where('id', $id)->first();
                 return response()->json($product_status);
             }
-
             if ($request->delete_product) {
                 $id = $request->id;
                 $pro = Product::with('get_category')->where('id', $id)->delete();
-                // $pro->delete();
                 return response()->json($pro);
             }
-
-
             $data = Product::with('get_category','get_product_images')->get();
             return DataTables::of($data)
                 ->addIndexColumn()
@@ -90,7 +78,6 @@ class ProductController extends Controller
 
     public function UpdateProduct(Request $request)
     {
-
         if ($request->method("POST")) {
             if ($request->Product_update) {
                 try {
@@ -99,10 +86,8 @@ class ProductController extends Controller
                         "price" => "required",
                         "category_id" => "required",
                         "stock" => "required",
-
                     ]);
                     if ($validation) {
-
                         if ($request->id) {
                             Product::where('id', $request->id)->update([
                                 'product_name' => $request->product_name,
@@ -111,7 +96,6 @@ class ProductController extends Controller
                                 'discount_price' => $request->discount_price,
                                 'category_id' => $request->category_id,
                                 'stock' => $request->stock,
-
                             ]);
                             session()->flash("success", "Product Update Successfully");
                             return redirect()->route("product");
@@ -124,7 +108,6 @@ class ProductController extends Controller
                             $p->category_id = $request->category_id;
                             $p->stock = $request->stock;
                             $p->save();
-
                             if ($request->hasFile('image_path')) {
                                 $file = $request->file('image_path');
                                 $filename = time() . '_' . $file->getClientOriginalName();
@@ -135,7 +118,6 @@ class ProductController extends Controller
                                     'image_path' => 'images/' . $filename,
                                 ]);
                             }
-
                             session()->flash("success", "Product Added Successfully");
                             return redirect()->route("product");
                         }
@@ -146,7 +128,6 @@ class ProductController extends Controller
                 }
             }
         }
-
 
         if ($request->get_product) {
             $id = decrypt($request->id);
@@ -162,29 +143,22 @@ class ProductController extends Controller
 
     public function ProductList(Request $request)
     {
-
         $gender = session('user_gender');
-
         $categoryId = null;
         if ($gender === 'm') {
             $categoryId = Category::where('name', 'Men')->value('id');
         } elseif ($gender === 'f') {
             $categoryId = Category::where('name', 'Women')->value('id');
         }
-
-
+        
         if ($request->ajax()) {
             $query = $request->get('q');
             $products = Product::query()
                 ->when($query, function ($q) use ($query) {
                     $q->where('product_name', 'LIKE', "%{$query}%");
-                })
-                ->where('status', 1)
-                ->get();
-
+                })->where('status', 1)->get();
             return response()->json($products);
         }
-
         $data['products'] = Product::where('status', "1")->where('category_id', $categoryId)->get();
         return view('product.Product_list')->with($data);
     }

@@ -1,9 +1,8 @@
 @extends('layouts.admin.default')
 @section('content')
-
     <div class="container">
-
-        <form action="{{ route('configuration') }}" method="POST" enctype="multipart/form-data" autocomplete="off" class="needs-validation" novalidate>
+        <form action="{{ route('configuration') }}" method="POST" enctype="multipart/form-data" autocomplete="off"
+            class="needs-validation" novalidate>
             @csrf
             <input type="hidden" name="config" value="true">
             <input type="hidden" name="id" value="{{ $config->id ?? null }}">
@@ -19,7 +18,6 @@
                             <input type="text" name="company_name" id="company_name" class="form-control" required
                                 placeholder="Company Name" value="{{ $config->company_name ?? null }}">
                             <small class="text-dangers"></small>
-
                         </div>
                         <div class="col-6 form-field">
                             <label for="tag_line"><strong>Tag Line <span class="text-danger">*</span></strong></label>
@@ -28,7 +26,6 @@
                             <small class="text-dangers"></small>
                         </div>
                     </div>
-
                     <div class="row  mt-4">
                         <div class="col-6 form-field">
                             <label for="phone"><strong>Phone NO <span class="text-danger">*</span></strong></label>
@@ -43,14 +40,12 @@
                             <small class="text-dangers"></small>
                         </div>
                     </div>
-
                     <div class="row mt-4">
                         <div class="col-6 form-field">
                             <label for="email"><strong>Email-ID <span class="text-danger">*</span></strong></label>
                             <input type="email" name="email" id="email" class="form-control" required
                                 placeholder="Email-ID" value="{{ $config->email ?? null }}">
                             <small class="text-dangers"></small>
-
                         </div>
                         <div class="col-6 form-field">
                             <label for="support_email"><strong>Support Email-ID <span
@@ -58,19 +53,15 @@
                             <input type="email" name="support_email" id="support_email" placeholder="Support Email-ID"
                                 class="form-control" value="{{ $config->support_email ?? null }}">
                             <small class="text-dangers"></small>
-
                         </div>
                     </div>
-
                     <div class="row mt-4">
                         <div class="col-12 form-field">
                             <label for="address"><strong>Address <span class="text-danger">*</span></strong></label>
                             <textarea name="address" id="address" rows="5" placeholder="Address" class="form-control" required>{{ $config->address ?? null }}</textarea>
                             <small class="text-dangers"></small>
                         </div>
-
                     </div>
-
                     <div class="row mt-4">
                         <div class="col-4 form-field">
                             <label for="state_id"><strong>State <span class="text-danger">*</span></strong></label>
@@ -103,7 +94,6 @@
                             <small class="text-dangers"></small>
                         </div>
                     </div>
-
                     <div class="row  mt-4">
                         <div class="col-6 form-field">
                             <label for="website_url"><strong>Website URL <span class="text-danger">*</span></strong>
@@ -112,44 +102,32 @@
                                 placeholder="Website URL" value="{{ $config->website_url ?? null }}">
                             <small class="text-dangers"></small>
                         </div>
-
                         <div class="col-6 form-field">
                             <label for="facebook"><strong>Facebook <span class="text-danger">*</span></strong></label>
                             <input type="text" name="facebook" id="facebook" class="form-control" required
                                 placeholder="facebook" value="{{ $config->facebook ?? null }}">
                             <small class="text-dangers"></small>
-
-
                         </div>
-
-
-
                     </div>
-
                     <div class="row  mt-4">
                         <div class="col-6 form-field">
                             <label for="instagram"><strong>Instagram <span class="text-danger">*</span></strong></label>
                             <input type="text" name="instagram" id="instagram" class="form-control" required
                                 placeholder="Instagram" value="{{ $config->instagram ?? null }}">
                             <small class="text-dangers"></small>
-
                         </div>
-
                         <div class="col-6 form-field">
                             <label for="twitter"><strong>Twitter <span class="text-danger">*</span></strong></label>
                             <input type="text" name="twitter" id="twitter" class="form-control" required
                                 placeholder="Twitter" value="{{ $config->twitter ?? null }}">
                             <small class="text-dangers"></small>
-
                         </div>
-
                     </div>
                     <div class="row  mt-4">
                         <div class="col-5">
                             <label for="logo"><strong>Logo</strong></label>
                             <input type="file" name="logo" id="logo" accept="image/*" class="form-control">
                             <small id="logoError" style="color:red;"></small>
-
                             @if (!empty($config->logo))
                                 <div class="mt-1">
                                     <img src="{{ asset($config->logo) }}"
@@ -168,9 +146,8 @@
                 </div>
             </div>
         </form>
-
-        @include('layouts.footer')
     </div>
+    @include('layouts.footer')
 @endsection
 @section('script')
     <script>
@@ -179,12 +156,8 @@
                 placeholder: "Select an option",
             });
         });
-
-
-
         const logoInput = document.getElementById('logo');
         const logoError = document.getElementById('logoError');
-
         logoInput.addEventListener('change', function() {
             logoError.textContent = '';
             const file = this.files[0];
@@ -199,10 +172,7 @@
                 }
             }
         });
-    </script>
 
-
-    <script>
         $('#state_id').on('change', function() {
             var stateID = $(this).val();
             if (stateID) {
@@ -229,179 +199,4 @@
             }
         });
     </script>
-
-    {{-- <script>
-        document.addEventListener("DOMContentLoaded", function() {
-
-            const company = document.getElementById("company_name");
-            const tagline = document.getElementById("tag_line");
-            const phone = document.getElementById("phone");
-            const alterphone = document.getElementById("alter_phone");
-            const email = document.getElementById("email");
-            const supportemail = document.getElementById("support_email");
-            const address = document.getElementById("address");
-            const stateid = document.getElementById("state_id");
-            const cityid = document.getElementById("city_id");
-            const pincode = document.getElementById("pincode");
-            const websiteurl = document.getElementById("website_url");
-            const facebook = document.getElementById("facebook");
-            const twitter = document.getElementById("twitter");
-            const instagram = document.getElementById("instagram");
-
-            company.addEventListener("input", function() {
-                const value = this.value.trim();
-
-                if (value === "") {
-                    showError(this, "Field is required");
-                } else if (!/^[A-Za-z\s]+$/.test(value)) {
-                    showError(this, "Only letters allowed");
-                } else {
-                    clearError(this);
-                }
-            });
-
-
-            tagline.addEventListener("input", function() {
-                const value = this.value.trim();
-
-                if (value === "") {
-                    showError(this, "Field is required");
-                } else if (!/^[A-Za-z\s]+$/.test(value)) {
-                    showError(this, "Only letters allowed");
-                } else {
-                    clearError(this);
-                }
-            });
-
-            phone.addEventListener("input", function() {
-                const value = this.value;
-
-                if (!/^\d{10}$/.test(value)) {
-                    showError(this, "Enter valid 10 digit number");
-                } else {
-                    clearError(this);
-                }
-            });
-
-            alterphone.addEventListener("input", function() {
-                const value = this.value;
-
-                if (!/^\d{10}$/.test(value)) {
-                    showError(this, "Enter valid 10 digit number");
-                } else {
-                    clearError(this);
-                }
-            });
-
-            email.addEventListener("input", function() {
-                const value = this.value;
-
-                if (!/^\S+@\S+\.\S+$/.test(value)) {
-                    showError(this, "Enter valid email");
-                } else {
-                    clearError(this);
-                }
-            });
-
-            supportemail.addEventListener("input", function() {
-                const value = this.value;
-
-                if (!/^\S+@\S+\.\S+$/.test(value)) {
-                    showError(this, "Enter valid email");
-                } else {
-                    clearError(this);
-                }
-            });
-
-            address.addEventListener("input", function() {
-                const value = this.value.trim();
-
-                if (value === "") {
-                    showError(this, "Field is required");
-                } else {
-                    clearError(this);
-                }
-            });
-
-            stateid.addEventListener("input", function() {
-                const value = this.value.trim();
-
-                if (value === "") {
-                    showError(this, "Field is required");
-                } else {
-                    clearError(this);
-                }
-            });
-
-            cityid.addEventListener("input", function() {
-                const value = this.value.trim();
-
-                if (value === "") {
-                    showError(this, "Field is required");
-                } else {
-                    clearError(this);
-                }
-            });
-
-
-            pincode.addEventListener("input", function() {
-                const value = this.value;
-
-                if (!/^\d{6}$/.test(value)) {
-                    showError(this, "Pincode must be 6 digits");
-                } else {
-                    clearError(this);
-                }
-            });
-
-            websiteurl.addEventListener("input", function() {
-                const value = this.value.trim();
-
-                if (value === "") {
-                    showError(this, "Field is required");
-                    return;
-                } else {
-                    clearError(this);
-                }
-            });
-
-            facebook.addEventListener("input", function() {
-                const value = this.value;
-
-                if (value === "") {
-                    showError(this, "Field is required");
-                    return;
-                } else {
-                    clearError(this);
-                }
-
-            });
-
-            instagram.addEventListener("input", function() {
-                const value = this.value;
-
-                if (value === "") {
-                    showError(this, "Field is required");
-                    return;
-                } else {
-                    clearError(this);
-                }
-            });
-
-            twitter.addEventListener("input", function() {
-                const value = this.value;
-
-                if (value === "") {
-                    showError(this, "Field is required");
-                    return;
-                } else {
-                    clearError(this);
-                }
-            });
-
-
-
-
-        });
-    </script> --}}
 @endsection
