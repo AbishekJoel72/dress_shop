@@ -10,7 +10,6 @@
     </div>
 </div>
 
-
 <script>
     document.addEventListener("DOMContentLoaded", function() {
         @if (session('success'))
@@ -19,7 +18,6 @@
             var myModal = new bootstrap.Modal(document.getElementById('sessionModal'));
             myModal.show();
         @endif
-
         @if (session('error'))
             document.getElementById("modalMessage").innerText = "{{ session('error') }}";
             document.querySelector("#sessionModal .modal-content").classList.add("border-danger");
@@ -35,24 +33,19 @@
         const header = document.getElementById('mainHeader');
         const footer = document.getElementById('mainFooter');
         const main = document.querySelector('.main-container');
-
         menuOpen.addEventListener('click', () => {
             sidebar.classList.add('collapsed');
             header.classList.add('collapsed');
             footer.classList.add('collapsed');
             main.classList.add('collapsed');
-
             menuOpen.classList.add('d-none');
             menuClose.classList.remove('d-none');
         });
-
-
         menuClose.addEventListener('click', () => {
             sidebar.classList.remove('collapsed');
             header.classList.remove('collapsed');
             footer.classList.remove('collapsed');
             main.classList.remove('collapsed');
-
             menuClose.classList.add('d-none');
             menuOpen.classList.remove('d-none');
         });
@@ -68,19 +61,14 @@
         error.innerText = "";
     }
 
-
     document.addEventListener("DOMContentLoaded", function() {
         const forms = document.querySelectorAll(".needs-validation");
-
         forms.forEach(function(form) {
             form.addEventListener("submit", function(event) {
-
                 if (!form.checkValidity()) {
                     event.preventDefault();
                     event.stopPropagation();
-
                     const firstInvalid = form.querySelector(":invalid");
-
                     if (firstInvalid) {
                         firstInvalid.focus();
                         firstInvalid.scrollIntoView({
@@ -91,8 +79,6 @@
                 }
                 form.classList.add("was-validated");
             });
-
         });
-
     });
 </script>
