@@ -23,7 +23,6 @@ Route::any('/ajax_reset_password', [RegistrationController::class, "AjaxResetPas
 Route::any('/logout', [RegistrationController::class, "Logout"])->name("logout");
 
 Route::middleware([AdminMiddleware::class])->prefix('admin')->group(function () {
-
     Route::any('dashboard', [DashboardController::class, "Dashboard"])->name('dashboard');
     Route::any('configuration', [ConfigurationController::class, "Configuration"])->name('configuration');
     Route::any('categories', [CategoryController::class, "Categories"])->name('categories');
@@ -37,17 +36,13 @@ Route::middleware([AdminMiddleware::class])->prefix('admin')->group(function () 
     Route::any('user_list_details', [RegistrationController::class, 'UserList'])->name('user_list_details');
     Route::any('feedback_list', [FeedbackController::class, "FeedbackList"])->name('feedback_list');
     Route::any('contact_list', [ContactController::class, "ContactList"])->name('contact_list');
-
 });
 
 
 Route::middleware([UserMiddleware::class])->prefix('customer')->group(function () {
-
     Route::any('product_list', [ProductController::class, "ProductList"])->name('product_list');
     Route::any('order', [OrderController::class, "Order"])->name('order');
     Route::any('order_placed', [OrderController::class, "OrderPlaced"])->name('order_placed');
-
     Route::any('feedback', [FeedbackController::class, "Feedback"])->name('feedback');
     Route::any('contact', [ContactController::class, "Contact"])->name('contact');
-
 });

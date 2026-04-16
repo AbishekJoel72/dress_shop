@@ -10,7 +10,6 @@ class HomeController extends Controller
 {
     public function home(Request $request)
     {
-
         if ($request->method("POST")) {
             if ($request->contact_ss) {
                 try {
@@ -34,7 +33,6 @@ class HomeController extends Controller
                 }
             }
         }
-
         return view("home.home_page");
     }
 }
