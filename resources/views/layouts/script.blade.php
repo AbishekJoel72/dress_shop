@@ -10,6 +10,29 @@
     </div>
 </div>
 
+
+<div class="modal fade" id="confirmModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Confirmation</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <h5 id="confirmMessage"></h5>
+                <button type="button" class="btn btn-primary" id="confirmOkBtn">OK</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap-datepicker@1.9.0/dist/js/bootstrap-datepicker.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 <script>
     document.addEventListener("DOMContentLoaded", function() {
         @if (session('success'))
@@ -80,5 +103,26 @@
                 form.classList.add("was-validated");
             });
         });
+    });
+    
+    document.addEventListener("DOMContentLoaded", function() {
+        let messages = {};
+        fetch("/json/messages.json")
+            .then(response => response.json())
+            .then(data => {
+                messages = data;
+            });
+
+        function showConfirm(message, callback) {
+            $('#confirmMessage').text(message);
+            let confirmModal = new bootstrap.Modal(
+                document.getElementById('confirmModal')
+            );
+            confirmModal.show();
+            $('#confirmOkBtn').off('click').on('click', function() {
+                confirmModal.hide();
+                callback();
+            });
+        }
     });
 </script>
