@@ -61,7 +61,8 @@
         <div class="modal fade" id="Addmodel" tabindex="-1" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
-                    <form action="{{ route('categories') }}" method="POST" autocomplete="off" class="needs-validation" novalidate>
+                    <form action="{{ route('categories') }}" method="POST" autocomplete="off" class="needs-validation"
+                        novalidate>
                         @csrf
                         <input type="hidden" name="category" id="" value="true">
 
@@ -76,7 +77,7 @@
                                             class="text-danger">*</span></label>
                                     <input type="text" name="name" id="name" placeholder="Category"
                                         class="form-control" required>
-                                        {{-- <div class="invalid-feedback">Field is required</div> --}}
+                                    {{-- <div class="invalid-feedback">Field is required</div> --}}
                                     <small class="text-dangers"></small>
                                 </div>
                                 <div class="col form-field">
@@ -140,7 +141,8 @@
         <div class="modal fade" id="editmodel" tabindex="-1" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
-                    <form action="{{ route('categories') }}" method="POST" autocomplete="off" class="needs-validation" novalidate>
+                    <form action="{{ route('categories') }}" method="POST" autocomplete="off" class="needs-validation"
+                        novalidate>
                         @csrf
                         <input type="hidden" name="id" id="edit_id">
                         <input type="hidden" name="edit_category" value="true">
@@ -261,55 +263,60 @@
 
             $(document).on('click', '.editStatusRow', function(e) {
                 let id = $(this).data('id');
-                $.ajax({
-                    url: "{{ route('categories') }}",
-                    method: "GET",
-                    dataType: "json",
-                    data: {
-                        id: id,
-                        get_status: true,
-                    },
-                    success: function(data) {
-                        $('#edit_id').val(data.id);
+                showConfirm(messages.delete_confirm, function() {
+                    $.ajax({
+                        url: "{{ route('categories') }}",
+                        method: "GET",
+                        dataType: "json",
+                        data: {
+                            id: id,
+                            get_status: true,
+                        },
+                        success: function(data) {
+                            $('#edit_id').val(data.id);
 
-                        if (data.status === 'active') {
-                            $('#edit_status_active').prop('checked', true);
-                        } else {
-                            $('#edit_status_inactive').prop('checked', true);
+                            if (data.status === 'active') {
+                                $('#edit_status_active').prop('checked', true);
+                            } else {
+                                $('#edit_status_inactive').prop('checked', true);
+                            }
+                            $('#editstatusmodel').modal("show");
                         }
-                        $('#editstatusmodel').modal("show");
-                    }
+                    });
                 });
             });
 
 
             $(document).on('click', '.deleteRow', function() {
                 let id = $(this).data('id');
-                showConfirm(messages.delete_confirm, function() {
-                    $.ajax({
-                        url: "{{ route('categories') }}",
-                        type: "DELETE",
-                        data: {
-                            id: id,
-                            _token: "{{ csrf_token() }}",
-                            delete_cate: true,
-                        },
-                        success: function(data) {
-                            $('#modalMessage').text("Delete Successfully");
-                            var modal = new bootstrap.Modal(document.getElementById(
+                $.ajax({
+                    url: "{{ route('categories') }}",
+                    type: "DELETE",
+                    data: {
+                        id: id,
+                        _token: "{{ csrf_token() }}",
+                        delete_cate: true,
+                    },
+                    success: function(data) {
+                        $('#modalMessage').text("Delete Successfully");
+                        var modal = new bootstrap.Modal(document
+                            .getElementById(
                                 'sessionModal'));
-                            modal.show();
-                            $('#sessionModal').on('hidden.bs.modal', function() {
-                                $('#datatable').DataTable().ajax.reload();
+                        modal.show();
+                        $('#sessionModal').on('hidden.bs.modal',
+                            function() {
+                                $('#datatable').DataTable().ajax
+                                    .reload();
                             });
-                        },
-                        error: function() {
-                            $("#modalMessage").text("Something went wrong!");
-                            var modal = new bootstrap.Modal(document.getElementById(
+                    },
+                    error: function() {
+                        $("#modalMessage").text(
+                            "Something went wrong!");
+                        var modal = new bootstrap.Modal(document
+                            .getElementById(
                                 'sessionModal'));
-                            modal.show();
-                        }
-                    });
+                        modal.show();
+                    }
                 });
 
             });
