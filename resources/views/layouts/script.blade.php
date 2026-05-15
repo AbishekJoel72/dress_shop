@@ -18,7 +18,7 @@
                 <h5 class="modal-title">Confirmation</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
-            <div class="modal-body">
+            <div class="modal-body text-center p-3">
                 <h5 id="confirmMessage"></h5>
                 <button type="button" class="btn btn-primary" id="confirmOkBtn">OK</button>
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
@@ -104,8 +104,8 @@
             });
         });
     });
-    
-    document.addEventListener("DOMContentLoaded", function() {
+
+
         let messages = {};
         fetch("/json/messages.json")
             .then(response => response.json())
@@ -124,5 +124,5 @@
                 callback();
             });
         }
-    });
+ 
 </script>
