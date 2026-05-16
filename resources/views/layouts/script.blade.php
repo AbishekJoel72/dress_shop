@@ -1,10 +1,10 @@
 <!-- Modal -->
 <div class="modal fade" id="sessionModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-dialog modal-dialog-centered modal-sm">
         <div class="modal-content text-center p-3">
             <div class="modal-body">
-                <h5 id="modalMessage"></h5>
-                <button type="button" class="btn btn-primary mt-3" data-bs-dismiss="modal">OK</button>
+                <h5 id="modalMessage" style="font-size: 15px;"></h5>
+                <button type="button" class="btn custom-btn mt-4" data-bs-dismiss="modal">OK</button>
             </div>
         </div>
     </div>
@@ -12,16 +12,17 @@
 
 
 <div class="modal fade" id="confirmModal" tabindex="-1">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Confirmation</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+    <div class="modal-dialog modal-dialog-centered modal-sm">
+        <div class="modal-content border-0 shadow rounded-1">
+            <div class="modal-header py-2 px-3 border-0">
+                <h6 class="modal-title fw-semibold text-dark">Confirmation</h6>
             </div>
-            <div class="modal-body text-center p-3">
-                <h5 id="confirmMessage"></h5>
-                <button type="button" class="btn btn-primary" id="confirmOkBtn">OK</button>
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+            <div class="modal-body text-center pt-1 pb-4 px-3">
+                <p id="confirmMessage" class="mb-4 text-secondary" style="font-size: 15px;"></p>
+                <div class="d-flex justify-content-center gap-2">
+                    <button type="button" class="btn custom-btn" id="confirmOkBtn">OK</button>
+                    <button type="button" class="btn custom-btn" data-bs-dismiss="modal">Cancel</button>
+                </div>
             </div>
         </div>
     </div>
@@ -106,23 +107,22 @@
     });
 
 
-        let messages = {};
-        fetch("/json/messages.json")
-            .then(response => response.json())
-            .then(data => {
-                messages = data;
-            });
+    let messages = {};
+    fetch("/json/messages.json")
+        .then(response => response.json())
+        .then(data => {
+            messages = data;
+        });
 
-        function showConfirm(message, callback) {
-            $('#confirmMessage').text(message);
-            let confirmModal = new bootstrap.Modal(
-                document.getElementById('confirmModal')
-            );
-            confirmModal.show();
-            $('#confirmOkBtn').off('click').on('click', function() {
-                confirmModal.hide();
-                callback();
-            });
-        }
- 
+    function showConfirm(message, callback) {
+        $('#confirmMessage').text(message);
+        let confirmModal = new bootstrap.Modal(
+            document.getElementById('confirmModal')
+        );
+        confirmModal.show();
+        $('#confirmOkBtn').off('click').on('click', function() {
+            confirmModal.hide();
+            callback();
+        });
+    }
 </script>

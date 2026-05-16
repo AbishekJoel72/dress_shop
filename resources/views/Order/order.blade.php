@@ -52,7 +52,7 @@
                             </div>
                         </div>
                         <div class="col-md-4">
-                            <img src="{{ asset($product_items->image_path) }}" alt="Product Image"
+                            <img src="{{ asset($product_items->get_product_images->image_path) }}" alt="Product Image"
                                 class="img-fluid rounded shadow-sm product-img">
                         </div>
                     </div>

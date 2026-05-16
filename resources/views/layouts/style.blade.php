@@ -234,30 +234,45 @@
     .form-control,
     .form-select,
     textarea {
-        border: 1px solid black
+        border: 1px solid rgb(190, 188, 188)
     }
     .form-field {
         display: flex;
         flex-direction: column;
         justify-content: flex-start;
-        height: 85px;
+        height: 80px;
     }
-    .col-6,
-    .col-4,
-    .col-3,
-    .col-5.col-2,col {
-        min-height: 90px;
-    }
+    /* .col-6,.col-4,.col-3,.col-5.col-2,col {
+        min-height: 40px;
+    } */
     .form-field small {
         height: 10px;
         display: block;
-        font-size: 15px;
+        font-size: 14px;
         color: red;
     }
     .text-dangers {
         font-size: 13px;
     }
     /* --------------------------Button color size Adjust------------------------------------ */
+
+    .custom-btn {
+        background: transparent;
+        border: 1px solid #dcdcdc;
+        color: #444;
+        font-size: 13px;
+        width: 90px;
+        height: 38px;
+        border-radius: 8px;
+        transition: 0.2s ease;
+    }
+
+    .custom-btn:hover {
+        background: #f5f5f5;
+        border-color: #bdbdbd;
+        color: #000;
+    }
+
     .text-bg-primary {
         background-color: #0092ca;
         border-radius: 2;

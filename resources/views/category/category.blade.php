@@ -289,37 +289,41 @@
 
             $(document).on('click', '.deleteRow', function() {
                 let id = $(this).data('id');
-                $.ajax({
-                    url: "{{ route('categories') }}",
-                    type: "DELETE",
-                    data: {
-                        id: id,
-                        _token: "{{ csrf_token() }}",
-                        delete_cate: true,
-                    },
-                    success: function(data) {
-                        $('#modalMessage').text("Delete Successfully");
-                        var modal = new bootstrap.Modal(document
-                            .getElementById(
-                                'sessionModal'));
-                        modal.show();
-                        $('#sessionModal').on('hidden.bs.modal',
-                            function() {
-                                $('#datatable').DataTable().ajax
-                                    .reload();
-                            });
-                    },
-                    error: function() {
-                        $("#modalMessage").text(
-                            "Something went wrong!");
-                        var modal = new bootstrap.Modal(document
-                            .getElementById(
-                                'sessionModal'));
-                        modal.show();
-                    }
+                showConfirm(messages.delete_confirm, function() {
+                    $.ajax({
+                        url: "{{ route('categories') }}",
+                        type: "DELETE",
+                        data: {
+                            id: id,
+                            _token: "{{ csrf_token() }}",
+                            delete_cate: true,
+                        },
+                        success: function(data) {
+                            $('#modalMessage').text("Delete Successfully");
+                            var modal = new bootstrap.Modal(document
+                                .getElementById(
+                                    'sessionModal'));
+                            modal.show();
+                            $('#sessionModal').on('hidden.bs.modal',
+                                function() {
+                                    $('#datatable').DataTable().ajax
+                                        .reload();
+                                });
+                        },
+                        error: function() {
+                            $("#modalMessage").text(
+                                "Something went wrong!");
+                            var modal = new bootstrap.Modal(document
+                                .getElementById(
+                                    'sessionModal'));
+                            modal.show();
+                        }
+                    });
                 });
 
             });
         });
+
+        
     </script>
 @endsection

@@ -145,12 +145,14 @@ class ProductController extends Controller
     {
         $gender = session('user_gender');
         $categoryId = null;
-        if ($gender === 'm') {
-            $categoryId = Category::where('name', 'Men')->value('id');
-        } elseif ($gender === 'f') {
-            $categoryId = Category::where('name', 'Women')->value('id');
+        if ($gender == 'm') {
+            $categoryId = Category::where('name', 'Man')->value('id');
+        }elseif ($gender == 'f') {
+            $categoryId = Category::where('name', 'Woman')->value('id');
+        }else {
+            $categoryId = Category::where('name', 'Kids')->value('id');
         }
-        
+
         if ($request->ajax()) {
             $query = $request->get('q');
             $products = Product::query()
