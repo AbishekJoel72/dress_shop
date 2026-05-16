@@ -26,7 +26,7 @@
                             <small class="text-dangers"></small>
                         </div>
                     </div>
-                    <div class="row  mt-4">
+                    <div class="row  mt-3">
                         <div class="col-6 form-field">
                             <label for="phone"><strong>Phone NO <span class="text-danger">*</span></strong></label>
                             <input type="text" name="phone" id="phone" class="form-control" required
@@ -40,7 +40,7 @@
                             <small class="text-dangers"></small>
                         </div>
                     </div>
-                    <div class="row mt-4">
+                    <div class="row mt-3">
                         <div class="col-6 form-field">
                             <label for="email"><strong>Email-ID <span class="text-danger">*</span></strong></label>
                             <input type="email" name="email" id="email" class="form-control" required
@@ -55,14 +55,14 @@
                             <small class="text-dangers"></small>
                         </div>
                     </div>
-                    <div class="row mt-4">
+                    <div class="row mt-3">
                         <div class="col-12 form-field">
                             <label for="address"><strong>Address <span class="text-danger">*</span></strong></label>
                             <textarea name="address" id="address" rows="5" placeholder="Address" class="form-control" required>{{ $config->address ?? null }}</textarea>
                             <small class="text-dangers"></small>
                         </div>
                     </div>
-                    <div class="row mt-4">
+                    <div class="row mt-3">
                         <div class="col-4 form-field">
                             <label for="state_id"><strong>State <span class="text-danger">*</span></strong></label>
                             <select name="state_id" id="state_id" class="form-select select2" required>
@@ -94,7 +94,7 @@
                             <small class="text-dangers"></small>
                         </div>
                     </div>
-                    <div class="row  mt-4">
+                    <div class="row  mt-3">
                         <div class="col-6 form-field">
                             <label for="website_url"><strong>Website URL <span class="text-danger">*</span></strong>
                             </label>
@@ -109,7 +109,7 @@
                             <small class="text-dangers"></small>
                         </div>
                     </div>
-                    <div class="row  mt-4">
+                    <div class="row  mt-3">
                         <div class="col-6 form-field">
                             <label for="instagram"><strong>Instagram <span class="text-danger">*</span></strong></label>
                             <input type="text" name="instagram" id="instagram" class="form-control" required
@@ -123,7 +123,7 @@
                             <small class="text-dangers"></small>
                         </div>
                     </div>
-                    <div class="row  mt-4">
+                    <div class="row  mt-3">
                         <div class="col-5">
                             <label for="logo"><strong>Logo</strong></label>
                             <input type="file" name="logo" id="logo" accept="image/*" class="form-control">
@@ -197,6 +197,191 @@
                 $('#city_id').empty();
                 $('#city_id').append('<option value="" selected disabled>Select City</option>');
             }
+        });
+    </script>
+      <script>
+        document.addEventListener("DOMContentLoaded", function() {
+
+            function showError(input, message) {
+                let error = input.parentElement.querySelector("small");
+                error.innerText = message;
+            }
+
+            function clearError(input) {
+                let error = input.parentElement.querySelector("small");
+                error.innerText = "";
+            }
+
+
+            const company = document.getElementById("company_name");
+            const tagline = document.getElementById("tag_line");
+            const phone = document.getElementById("phone");
+            const alterphone = document.getElementById("alter_phone");
+            const email = document.getElementById("email");
+            const supportemail = document.getElementById("support_email");
+            const address = document.getElementById("address");
+            const stateid = document.getElementById("state_id");
+            const cityid = document.getElementById("city_id");
+            const pincode = document.getElementById("pincode");
+            const websiteurl = document.getElementById("website_url");
+            const facebook = document.getElementById("facebook");
+            const twitter = document.getElementById("twitter");
+            const instagram = document.getElementById("instagram");
+
+            company.addEventListener("input", function() {
+                const value = this.value.trim();
+
+                if (value === "") {
+                    showError(this, "Field is required");
+                } else if (!/^[A-Za-z\s]+$/.test(value)) {
+                    showError(this, "Only letters allowed");
+                } else {
+                    clearError(this);
+                }
+            });
+
+
+            tagline.addEventListener("input", function() {
+                const value = this.value.trim();
+
+                if (value === "") {
+                    showError(this, "Field is required");
+                } else if (!/^[A-Za-z\s]+$/.test(value)) {
+                    showError(this, "Only letters allowed");
+                } else {
+                    clearError(this);
+                }
+            });
+
+            phone.addEventListener("input", function() {
+                const value = this.value;
+
+                if (!/^\d{10}$/.test(value)) {
+                    showError(this, "Enter valid 10 digit number");
+                } else {
+                    clearError(this);
+                }
+            });
+
+            alterphone.addEventListener("input", function() {
+                const value = this.value;
+
+                if (!/^\d{10}$/.test(value)) {
+                    showError(this, "Enter valid 10 digit number");
+                } else {
+                    clearError(this);
+                }
+            });
+
+            email.addEventListener("input", function() {
+                const value = this.value;
+
+                if (!/^\S+@\S+\.\S+$/.test(value)) {
+                    showError(this, "Enter valid email");
+                } else {
+                    clearError(this);
+                }
+            });
+
+            supportemail.addEventListener("input", function() {
+                const value = this.value;
+
+                if (!/^\S+@\S+\.\S+$/.test(value)) {
+                    showError(this, "Enter valid email");
+                } else {
+                    clearError(this);
+                }
+            });
+
+            address.addEventListener("input", function() {
+                const value = this.value.trim();
+
+                if (value === "") {
+                    showError(this, "Field is required");
+                } else {
+                    clearError(this);
+                }
+            });
+
+            stateid.addEventListener("input", function() {
+                const value = this.value.trim();
+
+                if (value === "") {
+                    showError(this, "Field is required");
+                } else {
+                    clearError(this);
+                }
+            });
+
+            cityid.addEventListener("input", function() {
+                const value = this.value.trim();
+
+                if (value === "") {
+                    showError(this, "Field is required");
+                } else {
+                    clearError(this);
+                }
+            });
+
+
+            pincode.addEventListener("input", function() {
+                const value = this.value;
+
+                if (!/^\d{6}$/.test(value)) {
+                    showError(this, "Pincode must be 6 digits");
+                } else {
+                    clearError(this);
+                }
+            });
+
+            websiteurl.addEventListener("input", function() {
+                const value = this.value.trim();
+
+                if (value === "") {
+                    showError(this, "Field is required");
+                    return;
+                } else {
+                    clearError(this);
+                }
+            });
+
+            facebook.addEventListener("input", function() {
+                const value = this.value;
+
+                if (value === "") {
+                    showError(this, "Field is required");
+                    return;
+                } else {
+                    clearError(this);
+                }
+
+            });
+
+            instagram.addEventListener("input", function() {
+                const value = this.value;
+
+                if (value === "") {
+                    showError(this, "Field is required");
+                    return;
+                } else {
+                    clearError(this);
+                }
+            });
+
+            twitter.addEventListener("input", function() {
+                const value = this.value;
+
+                if (value === "") {
+                    showError(this, "Field is required");
+                    return;
+                } else {
+                    clearError(this);
+                }
+            });
+
+
+
+
         });
     </script>
 @endsection

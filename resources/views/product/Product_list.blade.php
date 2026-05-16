@@ -7,7 +7,7 @@
                     <div class="col-md-3 mb-4">
                         <div class="card h-100 shadow-sm border-0 ">
                             <div class="text-center p-3">
-                                <img src="{{ asset($p->image_path) }}" alt="Product Image" class="img-fluid rounded"
+                                <img src="{{ asset($p->get_product_images->image_path) }}" alt="Product Image" class="img-fluid rounded"
                                     style="height: 220px; object-fit: cover;">
                             </div>
                             <div class="card-body text-center">
