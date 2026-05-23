@@ -24,15 +24,21 @@
     {{-- Navigation Menu --}}
     <ul class="nav me-3 ">
         <li class="nav-item">
-            <a href="{{ route('order_placed') }}" class="nav-link text-light">
-                <i class="fa-solid fa-cart-shopping"></i> Order
+            <a href="{{ route('cart') }}" class="nav-link text-light">
+                <i class="fa-solid fa-shopping-cart"></i> Cart
+                <span class="badge bg-danger rounded-circle">{{ count(session('cart', [])) }}</span>
             </a>
         </li>
-        {{-- <li class="nav-item">
+        <li class="nav-item">
+            <a href="{{ route('order_placed') }}" class="nav-link text-light">
+                <i class="fa-solid fa-box"></i> Order
+            </a>
+        </li>
+        <li class="nav-item">
             <a href="#" class="nav-link text-light">
                 <i class="fa-solid fa-rotate-left"></i> Return
             </a>
-        </li> --}}
+        </li>
         <li class="nav-item">
             <a href="{{ route('feedback') }}" class="nav-link text-light">
                 <i class="fa-solid fa-comment-dots"></i> Feedback
