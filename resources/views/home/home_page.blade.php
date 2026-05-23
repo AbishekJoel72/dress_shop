@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 @include('layouts.head')
-@include('home.home-page_style')
+<link rel="stylesheet" href="{{ asset('css/style.css') }}">
 <body>
     @php
         use App\Models\Configuration;
