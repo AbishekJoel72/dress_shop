@@ -162,25 +162,6 @@ class OrderController extends Controller
         return view('Order.orderplaced');
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     public function OrderList(Request $request)
     {
         if ($request->method("POST")) {
