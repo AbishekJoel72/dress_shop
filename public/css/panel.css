@@ -1,4 +1,4 @@
-<style>
+
     :root {
         --sidebar-w: 250px;
         --header-h: 64px;
@@ -424,7 +424,7 @@
 
     }
     #datatable thead th {
-        background: #ebe9e956;
+        background: #fff;
         padding: 10px 12px;
         border: 1px solid #5a5f68;
         white-space: nowrap;
@@ -477,4 +477,4 @@
     .select2-container--default .select2-selection--single:focus {
         outline: none !important;
     }
-</style>
+
