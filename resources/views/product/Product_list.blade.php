@@ -18,9 +18,13 @@
                                     <p class="text-danger fw-bold">Discount: <i class="fa-solid fa-indian-rupee-sign"></i> {{ number_format($p->discount_price, 2) }}</p>
                                 @endif
                             </div>
-                            <div class="card-footer bg-white text-center ">
-                                <a href="{{ route('order', ['id' => encrypt($p->id)]) }}" class="btn btn-primary w-100">
-                                    <i class="fa fa-shopping-cart"></i> Buy Now
+                            <div class="card-footer bg-white text-center d-flex justify-content-between align-items-center">
+                                <a href="{{ route('add_to_cart', ['id' => encrypt($p->id), 'get_cart' => true]) }}" class="btn btn-warning w-50 me-2">
+                                     Add to Cart
+                                </a>
+
+                                <a href="{{ route('order', ['id' => encrypt($p->id)]) }}" class="btn btn-primary w-50 ">
+                                   Buy Now
                                 </a>
                             </div>
                         </div>

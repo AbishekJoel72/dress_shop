@@ -40,7 +40,7 @@ class ProductController extends Controller
                 $pro = Product::with('get_category')->where('id', $id)->delete();
                 return response()->json($pro);
             }
-            $data = Product::with('get_category','get_product_images')->get();
+            $data = Product::with('get_category', 'get_product_images')->get();
             return DataTables::of($data)
                 ->addIndexColumn()
                 ->addColumn('action', function ($row) {
@@ -96,7 +96,25 @@ class ProductController extends Controller
                                 'discount_price' => $request->discount_price,
                                 'category_id' => $request->category_id,
                                 'stock' => $request->stock,
+
                             ]);
+                            if ($request->hasFile('image_path')) {
+                                $oldImage = ProductImages::where('product_id', $request->id)->first();
+                                if ($oldImage) {
+                                    $oldPath = public_path($oldImage->image_path);
+                                    if (file_exists($oldPath)) {
+                                        unlink($oldPath);
+                                    }
+                                    $oldImage->delete();
+                                }
+                                $file = $request->file('image_path');
+                                $filename = time() . '_' . $file->getClientOriginalName();
+                                $file->move(public_path('images'), $filename);
+                                ProductImages::create([
+                                    'product_id' => $request->id,
+                                    'image_path' => 'images/' . $filename,
+                                ]);
+                            }
                             session()->flash("success", "Product Update Successfully");
                             return redirect()->route("product");
                         } else {
@@ -147,9 +165,9 @@ class ProductController extends Controller
         $categoryId = null;
         if ($gender == 'm') {
             $categoryId = Category::where('name', 'Man')->value('id');
-        }elseif ($gender == 'f') {
+        } elseif ($gender == 'f') {
             $categoryId = Category::where('name', 'Woman')->value('id');
-        }else {
+        } else {
             $categoryId = Category::where('name', 'Kids')->value('id');
         }
 

@@ -13,6 +13,7 @@ use Yajra\DataTables\Facades\DataTables;
 
 class OrderController extends Controller
 {
+
     public function Order(Request $request)
     {
         if ($request->method("POST")) {
@@ -133,25 +134,25 @@ class OrderController extends Controller
                                 <li>
                                     <a href="javascript:void(0)" class="ViewRow dropdown-item" data-id="' . $row->id . '">View</a>
                                 </li>';
-                                    if ($row->get_payment->payment_status == "1") {
-                                        $actions .= '
+                    if ($row->get_payment->payment_status == "1") {
+                        $actions .= '
                                         <li>
                                             <a href="javascript:void(0)" class="PaymentRow dropdown-item" data-id="' . $row->id . '">Payment</a>
                                         </li>';
-                                    }
-                                    if (in_array($row->delivery_status, ['pending'])) {
-                                        $actions .= '
+                    }
+                    if (in_array($row->delivery_status, ['pending'])) {
+                        $actions .= '
                                             <li>
                                                 <a href="javascript:void(0)" class="deleteRow dropdown-item text-danger" data-id="' . $row->id . '">Delete</a>
                                             </li>';
-                                    }
-                                    if ($row->delivery_status === 'delivered') {
-                                        $actions .= '
+                    }
+                    if ($row->delivery_status === 'delivered') {
+                        $actions .= '
                                 <li>
                                     <a href="javascript:void(0)" class="returnRow dropdown-item text-danger" data-id="' . $row->id . '">Return</a>
                                 </li>';
-                                    }
-                                    $actions .= '
+                    }
+                    $actions .= '
                             </ul>
                         </div>';
                     return $actions;
@@ -161,25 +162,6 @@ class OrderController extends Controller
         }
         return view('Order.orderplaced');
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     public function OrderList(Request $request)
     {

@@ -1,221 +1,346 @@
 @extends('layouts.user.default')
 @section('content')
-    <div class="container">
-        <style>
-            .custom-card-header {
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                text-align: center;
-            }
-            .custom-card-header p {
-                margin: 6px 0;
-            }
-            .product-img {
-                max-width: 210px;
-                height: 210px;
-                object-fit: cover;
-                display: block;
-                margin: 0 auto;
-            }
-            .label-width {
-                display: inline-block;
-                width: 90px;
+<div class="container my-5">
+    <style>
+        .checkout-card {
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            background: #fff;
+            margin-bottom: 20px;
+        }
+        .checkout-header {
+            background-color: #f8f9fa;
+            border-bottom: 1px solid #e0e0e0;
+            padding: 15px 20px;
+            font-weight: 700;
+            color: #212529;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+            letter-spacing: 0.5px;
+        }
+        .product-sidebar-img {
+            max-width: 100%;
+            max-height: 180px;
+            object-fit: contain;
+            display: block;
+            margin: 0 auto 15px;
+        }
+        .payment-method-box {
+            border: 1px solid #dee2e6;
+            border-radius: 6px;
+            padding: 15px;
+            margin-bottom: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .payment-method-box:hover {
+            border-color: #0d6efd;
+            background-color: #f8f9ff;
+        }
+        .price-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            font-size: 0.95rem;
+        }
+        .price-total {
+            border-top: 1px dashed #dee2e6;
+            padding-top: 12px;
+            margin-top: 12px;
+            font-weight: 700;
+            font-size: 1.2rem;
+        }
+        .sticky-sidebar {
+            position: sticky;
+            top: 20px;
+        }
+        /* Quantity Button Controls */
+        .qty-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+            overflow: hidden;
+            background: #fff;
+        }
+        .qty-btn {
+            background: #f8f9fa;
+            border: none;
+            padding: 5px 12px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.2s;
+            height: 31px;
+            display: flex;
+            align-items: center;
+        }
+        .qty-btn:hover {
+            background: #e9ecef;
+        }
+        .qty-input {
+            width: 45px;
+            border: none;
+            text-align: center;
+            font-weight: bold;
+            font-size: 0.95rem;
+            height: 31px;
+            -moz-appearance: textfield;
+        }
+        .qty-input::-webkit-outer-spin-button,
+        .qty-input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+    </style>
 
-            }
-        </style>
-        <form action="{{ route('order') }}" method="POST" id="orderForm">
-            @csrf
-            <input type="hidden" name="order_items" value="true">
-            <div class="card ">
-                <div class="card-header bg-light custom-card-header">
-                    <div class="row align-items-center justify-content-center text-center">
-                        <div class="col-md-6 text-start">
-                            <h5 class="fw-bold mb-3 text-primary">{{ $product_items->product_name }}</h5>
-                            <div class="d-flex mb-2">
-                                <span class="fw-semibold text-secondary me-2 label-width">Category</span>
-                                <span class="text-dark">: {{ $product_items->get_category->name }}</span>
+    <form action="{{ route('order') }}" method="POST" id="orderForm">
+        @csrf
+        <input type="hidden" name="order_items" value="true">
+
+        <input type="hidden" name="product_id" id="product_id" required value="{{ $product_items->id }}">
+        <input type="hidden" name="date" id="date" required value="{{ date('Y-m-d') }}">
+        <input type="hidden" name="price" id="price" value="{{ $product_items->price }}" oninput="addcalculation()">
+        <input type="hidden" name="discount" id="discount" value="{{ $product_items->discount_price }}" oninput="addcalculation()">
+
+        <div class="row g-4">
+            <div class="col-lg-8">
+
+                <div class="checkout-card">
+                    <div class="checkout-header">
+                        <span class="badge bg-primary me-2">1</span> Delivery Address
+                    </div>
+                    <div class="card-body p-4">
+                        <div class="row g-3">
+                            <div class="col-12">
+                                <label for="address" class="form-label fw-semibold">Flat, House no., Building, Company, Apartment / Street Address</label>
+                                <textarea name="address" id="address" rows="3" class="form-control" placeholder="Eg. No 12, Main Street, Area Name" required></textarea>
                             </div>
-                            <div class="d-flex mb-2">
-                                <span class="fw-semibold text-secondary me-2 label-width">Price</span>
-                                <span class="text-success">: ₹{{ number_format($product_items->price, 2) }}</span>
+                            <div class="col-md-4">
+                                <label for="state_id" class="form-label fw-semibold">State</label>
+                                <select name="state_id" id="state_id" required class="form-select select2">
+                                    <option value="" selected disabled>Select State</option>
+                                    @foreach ($state as $s)
+                                        <option value="{{ $s->id }}">{{ $s->state_name }}</option>
+                                    @endforeach
+                                </select>
                             </div>
-                            <div class="d-flex mb-2">
-                                <span class="fw-semibold text-secondary me-2 label-width">Discount</span>
-                                <span class="text-danger">: ₹{{ number_format($product_items->discount_price, 2) }}</span>
+                            <div class="col-md-4">
+                                <label for="city_id" class="form-label fw-semibold">City</label>
+                                <select name="city_id" id="city_id" required class="form-select select2">
+                                    <option value="" selected disabled>Select City</option>
+                                </select>
                             </div>
-                            <div class="mt-3">
-                                <a href="javascript:void(0)" data-bs-toggle="modal" data-bs-target="#descModal"
-                                    class="btn btn-sm btn-warning shadow-sm rounded-pill px-4">
-                                    View Description
+                            <div class="col-md-4">
+                                <label for="pincode" class="form-label fw-semibold">Pincode</label>
+                                <input type="number" name="pincode" id="pincode" class="form-control" placeholder="6-digit Pincode" required>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="checkout-card">
+                    <div class="checkout-header">
+                        <span class="badge bg-primary me-2">2</span> Select Payment Method
+                    </div>
+                    <div class="card-body p-4">
+                        <div class="payment-options">
+                            <label class="payment-method-box d-flex align-items-center w-100" for="gpay">
+                                <input type="radio" name="payment_gateway" id="gpay" value="gpay" class="form-check-input me-3" required>
+                                <div>
+                                    <span class="fw-bold d-block">Google Pay (UPI)</span>
+                                    <small class="text-muted">Pay instantly using your UPI app</small>
+                                </div>
+                            </label>
+
+                            <label class="payment-method-box d-flex align-items-center w-100" for="phonepe">
+                                <input type="radio" name="payment_gateway" id="phonepe" value="phonepe" class="form-check-input me-3" required>
+                                <div>
+                                    <span class="fw-bold d-block">PhonePe</span>
+                                    <small class="text-muted">Fast and secure checkout via PhonePe</small>
+                                </div>
+                            </label>
+
+                            <label class="payment-method-box d-flex align-items-center w-100" for="paytm">
+                                <input type="radio" name="payment_gateway" id="paytm" value="paytm" class="form-check-input me-3" required>
+                                <div>
+                                    <span class="fw-bold d-block">Paytm Wallet / UPI</span>
+                                    <small class="text-muted">Pay using linked Paytm wallet or UPI</small>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="d-none">
+                    <button type="submit" id="hiddenSubmitBtn"></button>
+                    <button type="reset" id="hiddenResetBtn"></button>
+                </div>
+
+            </div>
+
+            <div class="col-lg-4">
+                <div class="sticky-sidebar">
+
+                    <div class="checkout-card">
+                        <div class="card-body p-4 text-center">
+                            <img src="{{ asset($product_items->get_product_images->image_path) }}" alt="Product Image" class="product-sidebar-img img-fluid rounded">
+                            <h6 class="fw-bold text-start text-dark mb-1">{{ $product_items->product_name }}</h6>
+                            <p class="text-muted text-start small mb-3">Category: {{ $product_items->get_category->name }}</p>
+
+                            <div class="text-start mb-3">
+                                <a href="javascript:void(0)" data-bs-toggle="modal" data-bs-target="#descModal" class="text-decoration-none small text-primary fw-semibold">
+                                    <i class="fa-solid fa-circle-info"></i> View Full Description
                                 </a>
                             </div>
-                        </div>
-                        <div class="col-md-4">
-                            <img src="{{ asset($product_items->get_product_images->image_path) }}" alt="Product Image"
-                                class="img-fluid rounded shadow-sm product-img">
-                        </div>
-                    </div>
-                </div>
 
-                <div class="modal fade" id="descModal" tabindex="-1" aria-labelledby="descModalLabel" aria-hidden="true">
-                    <div class="modal-dialog modal-dialog-centered">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h6 class="modal-title" id="descModalLabel">Product Description</h6>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                    aria-label="Close"></button>
-                            </div>
-                            <div class="modal-body text-start">
-                                {{ $product_items->description }}
-                            </div>
-
-                        </div>
-                    </div>
-                </div>
-
-                <div class="card-body">
-                    <input type="hidden" name="product_id" id="product_id" required value="{{ $product_items->id }}">
-                    <input type="hidden" name="date" id="date" required value="{{ date('Y-m-d') }}">
-                    <input type="hidden" name="price" id="price" value="{{ $product_items->price }}"
-                        oninput="addcalculation()">
-                    <input type="hidden" name="discount" id="discount" value="{{ $product_items->discount_price }}"
-                        oninput="addcalculation()">
-
-                    <div class="row">
-                        <div class="col-md-3">
-                            <label for="quantity">Quantity</label>
-                            <input type="number" name="quantity" id="quantity" value="1" class="form-control"
-                                oninput="addcalculation()">
-                        </div>
-                        <div class="col-md-3">
-                            <label for="total_amount">Total Amount</label>
-                            <input type="number" name="total_amount" id="total_amount" class="form-control" readonly>
-                        </div>
-                        <div class="col-md-3">
-                            <label for="size_id">Size</label>
-
-                            <select name="size_id" id="size_id" required class="form-select">
-                                <option value="" selected disabled> Select Size</option>
-                                @foreach ($size as $s)
-                                    <option value="{{ $s->id }}">{{ $s->size_name }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                    </div>
-                    <div class="row mt-3">
-                        <div class="col-md-6">
-                            <label for="address">Address</label>
-                            <textarea name="address" id="address" cols="70" rows="3" class="form-control" required></textarea>
-                        </div>
-                        <div class="col-2">
-                            <label for="city_id">State</label>
-                            <select name="state_id" id="state_id" required class="form-select select2">
-                                <option value="" selected disabled>Select State</option>
-                                @foreach ($state as $s)
-                                    <option value="{{ $s->id }}">{{ $s->state_name }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                        <div class="col-2">
-                            <label for="city_id">City</label>
-                            <select name="city_id" id="city_id" required class="form-select select2">
-                            </select>
-                        </div>
-                        <div class="col-2">
-                            <label for="pincode">Pincode</label>
-                            <input type="number" name="pincode" id="pincode" class="form-select" required>
-                        </div>
-                    </div>
-                    <div class="row mt-3">
-                        <div class="col-4">
-                            <label class="form-label d-block">Payment </label>
-                            <div class="d-flex align-items-center gap-5 form-control">
-                                <div class="form-check ">
-                                    <input type="radio" name="payment_gateway" id="gpay" value="gpay"
-                                        class="form-check-input" required>
-                                    <label for="gpay" class="form-check-label">Gpay</label>
+                            <div class="row g-2 text-start align-items-end">
+                                <div class="col-6">
+                                    <label class="form-label small fw-semibold text-secondary mb-1">Quantity</label>
+                                    <div class="qty-container">
+                                        <button type="button" class="qty-btn" onclick="decrementQty()">-</button>
+                                        <input type="number" name="quantity" id="quantity" value="1" min="1" class="qty-input" oninput="addcalculation()" readonly>
+                                        <button type="button" class="qty-btn" onclick="incrementQty()">+</button>
+                                    </div>
                                 </div>
-                                <div class="form-check">
-                                    <input type="radio" name="payment_gateway" id="phonepe" value="phonepe"
-                                        class="form-check-input" required>
-                                    <label for="phonepe" class="form-check-label">Phone Pay</label>
+                                <div class="col-6">
+                                    <label for="size_id" class="form-label small fw-semibold text-secondary mb-1">Size</label>
+                                    <select name="size_id" id="size_id" required class="form-select form-select-sm" style="height: 31px;">
+                                        <option value="" selected disabled>Size</option>
+                                        @foreach ($size as $s)
+                                            <option value="{{ $s->id }}">{{ $s->size_name }}</option>
+                                        @endforeach
+                                    </select>
                                 </div>
-                                <div class="form-check">
-                                    <input type="radio" name="payment_gateway" id="paytm" value="paytm"
-                                        class="form-check-input" required>
-                                    <label for="paytm" class="form-check-label"> Pay TM</label>
-                                </div>
-
-                                {{-- <div class="form-check">
-                                    <input type="radio" name="payment_gateway" id="netbanking" value="netbanking"
-                                        class="form-check-input" required>
-                                    <label for="netbanking" class="form-check-label"> Net Banking</label>
-                                </div> --}}
-
-                                {{-- <div class="form-check">
-                                    <input type="radio" name="payment_gateway" id="card" value="card"
-                                        class="form-check-input" required>
-                                    <label for="card" class="form-check-label">Cards</label>
-                                </div> --}}
-
-                                {{-- <div class="form-check">
-                                    <input type="radio" name="payment_gateway" id="cash_on_delivery"
-                                        value="cash_on_delivery" class="form-check-input" required>
-                                    <label for="cash_on_delivery" class="form-check-label"> Cash On Delivery</label>
-                                </div> --}}
                             </div>
                         </div>
                     </div>
-                </div>
-                <div class="card-footer  bg-transparent text-center">
-                    <button type="submit" class="btn btn-primary" id="payment"><i class="fa-solid fa-floppy-disk">
-                        </i> Submit</button>
-                    <button type="reset" class="btn btn-secondary"><i class="fa-solid fa-rotate-left"></i>
-                        Reset</button>
+
+                    <div class="checkout-card shadow-sm">
+                        <div class="checkout-header bg-white text-secondary fw-bold" style="border-bottom: 1px dashed #dee2e6;">
+                            Price Details
+                        </div>
+                        <div class="card-body p-4">
+                            <div class="price-row">
+                                <span class="text-muted">Price (<span id="summary-qty">1</span> item)</span>
+                                <span>₹{{ number_format($product_items->price, 2) }}</span>
+                            </div>
+                            <div class="price-row">
+                                <span class="text-muted">Discount</span>
+                                <span class="text-danger">- ₹{{ number_format($product_items->discount_price, 2) }}</span>
+                            </div>
+                            <div class="price-row">
+                                <span class="text-muted">Delivery Charges</span>
+                                <span class="text-success">FREE</span>
+                            </div>
+
+                            <div class="price-total d-flex justify-content-between align-items-center">
+                                <span>Total Amount</span>
+                                <div class="d-flex align-items-center">
+                                    <span class="text-dark fw-bold me-1">₹</span>
+                                    <input type="text" name="total_amount" id="total_amount" class="fw-bold text-end border-0 p-0 text-dark bg-transparent" style="width: 120px; font-size: 1.25rem;" readonly>
+                                </div>
+                            </div>
+
+                            <div class="mt-4">
+                                <button type="button" class="btn btn-warning w-100 py-2.5 fw-bold text-dark shadow-sm rounded" id="payment">
+                                    <i class="fa-solid fa-lock me-1"></i> Proceed to Checkout
+                                </button>
+                                <button type="button" class="btn btn-light w-100 mt-2 btn-sm text-muted" onclick="document.getElementById('hiddenResetBtn').click(); setTimeout(addcalculation, 50);">
+                                    Reset Details
+                                </button>
+                                <button type="button" class="btn btn-light w-100 mt-2 btn   sm text-muted" onclick="window.location.href='{{ route('product_list') }}';">
+                                     <i class="fa-solid fa-arrow-left me-1"></i> Back to Product List
+                                </button>
+
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
             </div>
+        </div>
 
-            <div class="modal fade" id="paymentModal" tabindex="-1" aria-hidden="true">
-                <div class="modal-dialog modal-lg">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title">Payment Details</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body"></div>
-                        <div class="modal-footer">
-                            <button type="submit" class="btn btn-primary"> <i class="fa-solid fa-floppy-disk">
-                                </i> Submit</button>
-                        </div>
+        <div class="modal fade" id="descModal" tabindex="-1" aria-labelledby="descModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h6 class="modal-title fw-bold" id="descModalLabel">Product Description</h6>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body text-start">
+                        {{ $product_items->description }}
                     </div>
                 </div>
             </div>
-        </form>
-    </div>
-    @include('layouts.user.footer')
+        </div>
+
+        <div class="modal fade" id="paymentModal" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-md">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title fw-bold text-dark">Confirm Your Order</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body p-4"></div>
+                    <div class="modal-footer bg-light">
+                        <button type="button" class="btn border btn-sm" data-bs-dismiss="modal">Cancel</button>
+                        <button type="button" class="btn btn-success px-4 fw-semibold" onclick="document.getElementById('orderForm').submit();">
+                            <i class="fa-solid fa-check me-1"></i> Place Order
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+@include('layouts.user.footer')
 @endsection
+
 @section('script')
     @include('layouts.datatable')
     <script>
         $(document).ready(function() {
             $('.select2').select2({
                 placeholder: "Select an option",
+                width: '100%'
             });
         });
+
+        // Quantity Increase Function
+        function incrementQty() {
+            let qtyInput = document.getElementById("quantity");
+            let currentVal = parseInt(qtyInput.value) || 1;
+            qtyInput.value = currentVal + 1;
+            addcalculation();
+        }
+
+        // Quantity Decrease Function
+        function decrementQty() {
+            let qtyInput = document.getElementById("quantity");
+            let currentVal = parseInt(qtyInput.value) || 1;
+            if (currentVal > 1) {
+                qtyInput.value = currentVal - 1;
+                addcalculation();
+            }
+        }
 
         function addcalculation() {
             let price = parseFloat(document.getElementById("price").value) || 0;
             let discount = parseFloat(document.getElementById("discount").value) || 0;
             let quantity = parseFloat(document.getElementById("quantity").value) || 1;
+
+            // Right Side summary quantity text update
+            document.getElementById("summary-qty").innerText = quantity;
+
             let netprice = price - discount;
             if (netprice < 0) {
                 netprice = 0;
             }
             let amt = netprice * quantity;
             document.getElementById("total_amount").value = amt.toFixed(2);
-
         }
         addcalculation();
 
@@ -233,12 +358,9 @@
                         },
                         success: function(data) {
                             $('#city_id').empty();
-                            $('#city_id').append(
-                                '<option value="" selected disabled>Select City</option>');
+                            $('#city_id').append('<option value="" selected disabled>Select City</option>');
                             $.each(data, function(key, value) {
-                                $('#city_id').append('<option value="' + value.id +
-                                    '">' + value
-                                    .city_name + '</option>');
+                                $('#city_id').append('<option value="' + value.id + '">' + value.city_name + '</option>');
                             });
                         }
                     });
@@ -250,42 +372,36 @@
 
             $(document).on("click", "#payment", function(e) {
                 e.preventDefault();
+
+                // Form HTML5 validation check
+                if (!document.getElementById('orderForm').checkValidity()) {
+                    document.getElementById('orderForm').reportValidity();
+                    return;
+                }
+
                 var gateway = $("input[name='payment_gateway']:checked").val();
                 var amount = $("#total_amount").val();
+
+                if(!gateway) {
+                    alert('Please select a payment method.');
+                    return;
+                }
+
                 let modalBody = `
-                    <h5 class="text-success mb-3">Confirm Your Payment</h5>
-                    <table class="table table-bordered">
+                    <div class="text-center mb-4">
+                        <i class="fa-solid fa-circle-check text-success fa-3x mb-2"></i>
+                        <h5 class="text-success fw-bold">₹ ${amount}</h5>
+                        <p class="text-muted small">Final payable amount including discounts</p>
+                    </div>
+                    <table class="table table-sm table-borderless border-top pt-2">
                         <tr>
-                            <th>Payment Gateway</th>
-                            <td>${gateway.toUpperCase()}</td>
+                            <th class="text-muted fw-normal">Payment Mode:</th>
+                            <td class="text-end fw-bold text-dark">${gateway.toUpperCase()}</td>
                         </tr>
                         <tr>
-                            <th>Total Amount</th>
-                            <td> ${amount}</td>
+                            <th class="text-muted fw-normal">Currency:</th>
+                            <td class="text-end fw-bold text-dark">INR <input type="hidden" name="currency" id="currency" value="INR"></td>
                         </tr>
-                        <tr>
-                            <th>Currency</th>
-                            <td><input type="text" name="currency" id="currency" value="INR"> </td>
-                        </tr>
-                        ${
-                            gateway === "card"
-                            ? `
-                                                <tr>
-                                                    <th>Card Type</th>
-                                                    <td>
-                                                        <div class="form-check form-check-inline">
-                                                            <input type="radio" name="card_type" id="debit_card" value="debit_card" class="form-check-input" required>
-                                                            <label for="debit_card" class="form-check-label">Debit Card</label>
-                                                        </div>
-                                                        <div class="form-check form-check-inline">
-                                                            <input type="radio" name="card_type" id="credit_card" value="credit_card" class="form-check-input" required>
-                                                            <label for="credit_card" class="form-check-label">Credit Card</label>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                                `
-                            : ""
-                        }
                     </table>
                 `;
                 $("#paymentModal .modal-body").html(modalBody);

@@ -1,6 +1,7 @@
 <html>
     @include("layouts.head")
-    @include("layouts.style")
+    {{-- @include("layouts.style") --}}
+      <link rel="stylesheet" href="{{ asset('css/panel.css') }}" >
     <body>
         @include("layouts.admin.header")
         @include("layouts.admin.sidebar")
