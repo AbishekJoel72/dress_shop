@@ -151,7 +151,7 @@
                     <button type="submit">Login</button>
                 </div>
                 <p class="mt-3 text-center">New to Fashion? <a href="{{ route('registration') }}" class="login">
-                        Jointhe Style Club </a></p>
+                        Join the Style Club </a></p>
             </div>
         </form>
     </div>

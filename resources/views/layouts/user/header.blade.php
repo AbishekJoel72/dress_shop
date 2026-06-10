@@ -5,6 +5,8 @@
     @php
         use App\Models\Configuration;
         $config = Configuration::first();
+        use App\Models\CartList;
+        $cartCount = CartList::where('user_id', session('user_id'))->count();
     @endphp
     @if (empty($config->logo))
         <h5 class="mb-0">My Company</h5>
@@ -26,7 +28,7 @@
         <li class="nav-item">
             <a href="{{ route('cart') }}" class="nav-link text-light">
                 <i class="fa-solid fa-shopping-cart"></i> Cart
-                <span class="badge bg-danger rounded-circle">{{ count(session('cart', [])) }}</span>
+                <sup class="badge bg-danger rounded-circle">{{ $cartCount }}</sup>
             </a>
         </li>
         <li class="nav-item">
@@ -44,11 +46,11 @@
                 <i class="fa-solid fa-comment-dots"></i> Feedback
             </a>
         </li>
-        <li class="nav-item">
+        {{-- <li class="nav-item">
             <a href="{{ route('contact') }}" class="nav-link text-light ">
                 <i class="fa-solid fa-envelope"></i> Contact
             </a>
-        </li>
+        </li> --}}
     </ul>
 
     {{-- Admin Dropdown --}}

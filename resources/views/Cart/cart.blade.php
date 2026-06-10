@@ -1,41 +1,69 @@
 @extends('layouts.user.default')
 @section('content')
-    <div class="container mt-5">
-        <h3 class="mb-4 fw-bold">Shopping Cart</h3>
+    <div class="container ">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+
+            <h3 class="fw-bold mb-0">Shopping Cart</h3>
+
+            <a href="{{ route('product_list') }}" class="btn btn-outline-dark">
+                <i class="fa fa-arrow-left"></i> Back
+            </a>
+
+        </div>
 
         <div class="row">
             {{-- Left Side: Products List --}}
-            <div class="col-lg-8 mb-4">
+            <div class="col-lg-12 mb-4">
                 <div class="card shadow-sm p-3">
                     @php $grandTotal = 0; @endphp
                     @forelse ($cart as $item)
                         @php
-                            $total = $item['price'] * $item['quantity'];
-                            $grandTotal += $total;
+                            $finalPrice = $item->discount_price > 0 ? $item->price - $item->discount_price : $item->price;
+                            $grandTotal += $finalPrice * $item->quantity;
                         @endphp
 
                         <div class="row align-items-center py-3 {{ !$loop->last ? 'border-bottom' : '' }}">
                             <div class="col-3 col-md-2 text-center">
-                                <img src="{{ asset($item['image']) }}" class="img-fluid rounded"
-                                    style="max-height: 100px; object-fit: contain;">
+                                <img src="{{ asset($item->get_product->get_product_images->image_path ?? null) }}"
+                                    class="img-fluid rounded" style="max-height: 100px; object-fit: contain;">
                             </div>
                             <div class="col-9 col-md-6">
-                                <h5 class="fw-bold mb-1">{{ $item['name'] }}</h5>
+                                <h5 class="fw-bold mb-1">{{ $item->get_product->product_name }}</h5>
                                 <p class="text-muted small mb-2">In Stock</p>
-                                <div class="d-flex align-items-center">
-                                    <div class="d-flex align-items-center border rounded me-3 bg-light"
-                                        style="height: 35px;">
+                                <div class="d-flex align-items-center flex-wrap gap-2">
+                                    <!-- Quantity -->
+                                    <div class="d-flex align-items-center border rounded  bg-light" style="height: 35px;">
                                         <button class="btn btn-sm btn-light border-0 px-2 decreaseQty"
-                                            data-id="{{ $item['id'] }}"><i class="fa fa-minus small"></i></button>
-                                        <input type="text" value="{{ $item['quantity'] }}"
+                                            data-id="{{ $item->id }}"><i class="fa fa-minus small"></i></button>
+                                        <input type="text" value="{{ $item->quantity }}"
                                             class="form-control form-control-sm text-center border-0 bg-transparent qtyInput"
-                                            data-id="{{ $item['id'] }}" style="width: 40px; font-weight: bold;" readonly>
+                                            data-id="{{ $item->id }}" style="width: 40px; font-weight: bold;" readonly>
                                         <button class="btn btn-sm btn-light border-0 px-2 increaseQty"
-                                            data-id="{{ $item['id'] }}"><i class="fa fa-plus small"></i></button>
+                                            data-id="{{ $item->id }}"><i class="fa fa-plus small"></i></button>
                                     </div>
+
                                     <span class="text-muted">|</span>
-                                    <button class="btn btn-link btn-sm text-danger text-decoration-none ms-3 deleteCart"
-                                        data-id="{{ $item['id'] }}">
+
+                                    <!-- Size Selection -->
+
+                                    <select name="size" id="size" class="form-select form-select-sm  sizeSelected"
+                                        data-id="{{ $item->id }}" style="width: 100px; font-weight: bold;height: 35px;"
+                                        required>
+                                        <option value="" selected disabled>Select </option>
+                                        @foreach ($sizes as $size)
+                                            <option value="{{ $size->id }}"
+                                                {{ $item->size_id == $size->id ? 'selected' : '' }}>
+                                                {{ $size->size_name }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+
+
+                                    <span class="text-muted">|</span>
+
+                                    <!-- Delete Button -->
+                                    <button class="btn btn-link btn-sm text-danger text-decoration-none  deleteCart"
+                                        data-id="{{ $item->id }}">
                                         Delete
                                     </button>
                                 </div>
@@ -44,22 +72,19 @@
                             <div class="col-12 col-md-4 text-md-end mt-2 mt-md-0">
                                 <span class="text-muted small">Price:</span>
                                 <span class="fw-bold d-block">
-                                    @php
-                                        $productModel = \App\Models\Product::find($item['id']);
-                                    @endphp
-
-                                    @if ($productModel && $productModel->discount_price > 0)
+                                    @if ($item->discount_price > 0)
                                         <small class="text-decoration-line-through text-muted">₹
-                                            {{ number_format($productModel->price, 2) }}</small>
-                                        <span class="text-danger">₹ {{ number_format($item['price'], 2) }}</span>
+                                            {{ number_format($item->price, 2) }}</small>
+                                        <span class="text-danger">₹
+                                            {{ number_format($item->price - $item->discount_price, 2) }}</span>
                                     @else
-                                        ₹ {{ number_format($item['price'], 2) }}
+                                        ₹ {{ number_format($item->price, 2) }}
                                     @endif
                                 </span>
-                                <span class="text-success small d-block">Total: ₹ {{ number_format($total, 2) }}</span>
+                                <span class="text-success small d-block">Total: ₹
+                                    {{ number_format($item->total_amount, 2) }}</span>
                             </div>
                         </div>
-
                     @empty
                         <div class="text-center py-5 col-12">
                             <h5 class="text-muted">Your Cart is empty.</h5>
@@ -93,8 +118,7 @@
 
                         {{-- Proceed to Order Form --}}
                         <form action="{{ route('checkout') }}" method="GET">
-                            <button type="submit"
-                                class="btn btn-warning w-100 py-2 rounded-pill fw-bold shadow-sm text-dark">
+                            <button type="submit" class="btn btn-warning w-100 py-2 rounded-pill  shadow-sm text-dark">
                                 Proceed to Buy
                             </button>
                         </form>
@@ -108,46 +132,42 @@
 
 @section('script')
     <script>
-        // Increase Quantity
-        $('.increaseQty').click(function() {
+        $(document).on('click', '.increaseQty, .decreaseQty', function() {
             let id = $(this).data('id');
             let input = $('.qtyInput[data-id="' + id + '"]');
             let qty = parseInt(input.val());
-            qty++;
-            input.val(qty);
-            updateCart(id, qty);
-        });
-
-        // Decrease Quantity
-        $('.decreaseQty').click(function() {
-            let id = $(this).data('id');
-            let input = $('.qtyInput[data-id="' + id + '"]');
-            let qty = parseInt(input.val());
-            if (qty > 1) {
+            if ($(this).hasClass('increaseQty')) {
+                qty++;
+            } else {
+                if (qty <= 1) return;
                 qty--;
-                input.val(qty);
-                updateCart(id, qty);
             }
-        });
-
-        // AJAX Update Cart
-        function updateCart(id, qty) {
             $.ajax({
                 url: "{{ route('add_to_cart') }}",
                 type: "POST",
                 data: {
                     _token: "{{ csrf_token() }}",
                     id: id,
-                    quantity: qty
+                    quantity: qty,
+                    get_increasecart: true
                 },
                 success: function(response) {
-                    location.reload();
+                    if (response.status) {
+                        location.reload();
+                    } else {
+                        alert(response.message);
+                    }
+                },
+                error: function(xhr) {
+                    console.log(xhr.responseText);
                 }
             });
-        }
+        });
+
+
 
         // AJAX Delete Cart Item
-        $('.deleteCart').click(function() {
+        $(document).on('click', '.deleteCart', function() {
             let id = $(this).data('id');
             $.ajax({
                 url: "{{ route('cart') }}",
@@ -159,6 +179,29 @@
                 },
                 success: function() {
                     location.reload();
+                }
+            });
+        });
+
+        // AJAX Update Size
+        $(document).on('change', '.sizeSelected', function() {
+            let id = $(this).data('id');
+            let sizeId = $(this).val();
+            $.ajax({
+                url: "{{ route('cart') }}",
+                type: "POST",
+                data: {
+                    _token: "{{ csrf_token() }}",
+                    id: id,
+                    size_id: sizeId,
+                    get_updatesize: true
+                },
+                success: function(response) {
+                    if (response.status) {
+                        location.reload();
+                    } else {
+                        alert(response.message);
+                    }
                 }
             });
         });

@@ -1,14 +1,9 @@
 @extends('layouts.user.default')
 @section('content')
 <div class="container mt-5">
-    <!-- Amazon style minimalist header line -->
     <h2 class="mb-4 fw-normal text-dark border-bottom pb-3">Checkout</h2>
-
     <div class="row">
-        {{-- Left Side: Checkout Main Sections (Amazon Style) --}}
         <div class="col-lg-8 mb-4">
-
-            {{-- Section 1: Delivery Address --}}
             <div class="card shadow-sm p-4 mb-3 border-0 rounded-3 bg-white">
                 <div class="row">
                     <div class="col-md-3">
@@ -27,7 +22,6 @@
                 </div>
             </div>
 
-            {{-- Section 2: Payment Method --}}
             <div class="card shadow-sm p-4 mb-3 border-0 rounded-3 bg-white">
                 <div class="row">
                     <div class="col-md-3">
@@ -52,7 +46,7 @@
                 </div>
             </div>
 
-            {{-- Section 3: Review Items and Delivery --}}
+
             <div class="card shadow-sm p-4 border-0 rounded-3 bg-white">
                 <h5 class="fw-bold text-dark mb-3"><span class="text-secondary me-2">3</span> Review Items and Delivery</h5>
 
@@ -87,11 +81,11 @@
             </div>
         </div>
 
-        {{-- Right Side: Amazon Style Sticky Order Summary Box --}}
+
         <div class="col-lg-4">
             <div class="card shadow-sm border p-4 bg-white position-sticky rounded-3" style="top: 20px; border-color: #ddd !important;">
 
-                {{-- Final Place Order Button at Top --}}
+   
                 <form action="#" method="POST">
                     @csrf
                     <button type="submit" class="btn btn-warning w-100 py-2.5 rounded-3 fw-bold shadow-sm text-dark border-0 mb-3"
