@@ -1,6 +1,6 @@
 @extends('layouts.user.default')
 @section('content')
-<div class="container my-5">
+<div class="container">
     <style>
         .checkout-card {
             border: 1px solid #e0e0e0;
@@ -57,6 +57,7 @@
         }
         /* Quantity Button Controls */
         .qty-container {
+            width: max-content;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -66,7 +67,8 @@
             background: #fff;
         }
         .qty-btn {
-            background: #f8f9fa;
+            background: #212529;
+            color: #fff;
             border: none;
             padding: 5px 12px;
             font-size: 1rem;
@@ -79,6 +81,7 @@
         }
         .qty-btn:hover {
             background: #e9ecef;
+            color: #212529;
         }
         .qty-input {
             width: 45px;
@@ -110,13 +113,17 @@
 
                 <div class="checkout-card">
                     <div class="checkout-header">
-                        <span class="badge bg-primary me-2">1</span> Delivery Address
+                        <span class="badge bg-primary rounded-circle me-2">1</span> Delivery Address
                     </div>
                     <div class="card-body p-4">
                         <div class="row g-3">
                             <div class="col-12">
-                                <label for="address" class="form-label fw-semibold">Flat, House no., Building, Company, Apartment / Street Address</label>
-                                <textarea name="address" id="address" rows="3" class="form-control" placeholder="Eg. No 12, Main Street, Area Name" required></textarea>
+                                <label for="address" class="form-label fw-semibold">Address 1 <span class="text-danger small">*</span></label>
+                                <textarea name="address" id="address" rows="3" class="form-control" placeholder="Address 1" required></textarea>
+                            </div>
+                            <div class="col-12">
+                                <label for="address2" class="form-label fw-semibold">Address 2 <span class="text-muted small">(Optional)</span></label>
+                                <textarea name="address2" id="address2" rows="3" class="form-control" placeholder="Address 2"></textarea>
                             </div>
                             <div class="col-md-4">
                                 <label for="state_id" class="form-label fw-semibold">State</label>
@@ -135,7 +142,7 @@
                             </div>
                             <div class="col-md-4">
                                 <label for="pincode" class="form-label fw-semibold">Pincode</label>
-                                <input type="number" name="pincode" id="pincode" class="form-control" placeholder="6-digit Pincode" required>
+                                <input type="number" name="pincode" id="pincode" class="form-control" placeholder="Pincode" required>
                             </div>
                         </div>
                     </div>
@@ -143,11 +150,11 @@
 
                 <div class="checkout-card">
                     <div class="checkout-header">
-                        <span class="badge bg-primary me-2">2</span> Select Payment Method
+                        <span class="badge bg-primary rounded-circle me-2">2</span> Select Payment Method
                     </div>
                     <div class="card-body p-4">
                         <div class="payment-options">
-                            <label class="payment-method-box d-flex align-items-center w-100" for="gpay">
+                            <label  for="gpay" class="payment-method-box d-flex align-items-center w-100">
                                 <input type="radio" name="payment_gateway" id="gpay" value="gpay" class="form-check-input me-3" required>
                                 <div>
                                     <span class="fw-bold d-block">Google Pay (UPI)</span>
@@ -155,7 +162,7 @@
                                 </div>
                             </label>
 
-                            <label class="payment-method-box d-flex align-items-center w-100" for="phonepe">
+                            <label for="phonepe" class="payment-method-box d-flex align-items-center w-100">
                                 <input type="radio" name="payment_gateway" id="phonepe" value="phonepe" class="form-check-input me-3" required>
                                 <div>
                                     <span class="fw-bold d-block">PhonePe</span>
@@ -163,11 +170,18 @@
                                 </div>
                             </label>
 
-                            <label class="payment-method-box d-flex align-items-center w-100" for="paytm">
+                            <label for="paytm" class="payment-method-box d-flex align-items-center w-100">
                                 <input type="radio" name="payment_gateway" id="paytm" value="paytm" class="form-check-input me-3" required>
                                 <div>
                                     <span class="fw-bold d-block">Paytm Wallet / UPI</span>
                                     <small class="text-muted">Pay using linked Paytm wallet or UPI</small>
+                                </div>
+                            </label>
+                            <label for="cod" class="payment-method-box d-flex align-items-center w-100">
+                                <input type="radio" name="payment_gateway" id="cod" value="cod" class="form-check-input me-3" required>
+                                <div>
+                                    <span class="fw-bold d-block">Cash on Delivery</span>
+                                    <small class="text-muted">Pay when you receive the product</small>
                                 </div>
                             </label>
                         </div>
@@ -245,13 +259,11 @@
                             </div>
 
                             <div class="mt-4">
-                                <button type="button" class="btn btn-warning w-100 py-2.5 fw-bold text-dark shadow-sm rounded" id="payment">
-                                    <i class="fa-solid fa-lock me-1"></i> Proceed to Checkout
+                                <button type="button" class="btn btn-warning w-100 py-2.5  text-dark shadow-sm rounded" id="payment">
+                                     Proceed to Checkout
                                 </button>
-                                <button type="button" class="btn btn-light w-100 mt-2 btn-sm text-muted" onclick="document.getElementById('hiddenResetBtn').click(); setTimeout(addcalculation, 50);">
-                                    Reset Details
-                                </button>
-                                <button type="button" class="btn btn-light w-100 mt-2 btn   sm text-muted" onclick="window.location.href='{{ route('product_list') }}';">
+
+                                <button type="button" class="btn btn-light w-100 mt-2 btn  border-0 sm text-muted" onclick="window.location.href='{{ route('product_list') }}';">
                                      <i class="fa-solid fa-arrow-left me-1"></i> Back to Product List
                                 </button>
 
@@ -304,7 +316,7 @@
     <script>
         $(document).ready(function() {
             $('.select2').select2({
-                placeholder: "Select an option",
+                placeholder: "Select  option",
                 width: '100%'
             });
         });

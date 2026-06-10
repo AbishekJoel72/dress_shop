@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
 @include('layouts.head')
+@include('layouts.script')
 <style>
     body {
         background: linear-gradient(90deg, #e62a49 0%, #9b87f2 100%);
@@ -336,7 +337,7 @@
                     if (value === "") {
                         setError(id, "Select DOB");
                     } else {
-                        calculateAge(value); 
+                        calculateAge(value);
                     }
                 }
                 if (id === "age") {

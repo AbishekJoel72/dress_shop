@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Category;
+use App\Models\Favourites;
 use App\Models\Product;
 use App\Models\ProductImage;
 use App\Models\ProductImages;
@@ -172,14 +173,30 @@ class ProductController extends Controller
         }
 
         if ($request->ajax()) {
-            $query = $request->get('q');
-            $products = Product::query()
-                ->when($query, function ($q) use ($query) {
-                    $q->where('product_name', 'LIKE', "%{$query}%");
-                })->where('status', 1)->get();
-            return response()->json($products);
+            if ($request->get_favourite) {
+
+                $userId = session('user_id');
+                $productId = $request->product_id;
+                $fav = Favourites::where('user_id', $userId)->where('product_id', $productId)->first();
+                if (isset($fav) && !empty($fav)) {
+                    $fav->delete();
+                    return response()->json(['favourited' => false]);
+                } else {
+                    try {
+                        Favourites::create([
+                            'user_id' => $userId,
+                            'product_id' => $productId,
+                        ]);
+                        return response()->json(['favourited' => true]);
+                    } catch (\Throwable $th) {
+                        return response()->json(['error' => $th->getMessage()], 500);
+                    }
+
+                }
+            }
         }
-        $data['products'] = Product::where('status', "1")->where('category_id', $categoryId)->get();
+
+        $data['products'] = Product::where('category_id', $categoryId)->get();
         return view('product.Product_list')->with($data);
     }
 }
