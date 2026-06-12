@@ -23,8 +23,8 @@ class CartList extends Model
         return $this->belongsTo(Product::class, 'product_id', 'id');
     }
 
-    // public function get_size()
-    // {
-    //     return $this->belongsTo(SizeType::class, 'size_id', 'id');
-    // }
+    public function get_size()
+    {
+        return $this->belongsTo(SizeType::class, 'size_id', 'id');
+    }
 }
