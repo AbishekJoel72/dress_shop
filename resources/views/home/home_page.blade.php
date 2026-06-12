@@ -2,6 +2,7 @@
 <html>
 @include('layouts.head')
 <link rel="stylesheet" href="{{ asset('css/style.css') }}">
+
 <body>
     @php
         use App\Models\Configuration;

@@ -5,24 +5,28 @@
 
             <h3 class="fw-bold mb-0">Shopping Cart</h3>
 
-            <a href="{{ route('product_list') }}" class="btn btn-outline-dark">
-                <i class="fa fa-arrow-left"></i> Back
-            </a>
+            @if (count($cart) > 0)
+                <a href="{{ route('product_list') }}" class="btn btn-outline-dark">
+                    <i class="fa fa-arrow-left"></i> Back
+                </a>
+            @endif
 
         </div>
 
         <div class="row">
             {{-- Left Side: Products List --}}
-            <div class="col-lg-12 mb-4">
+            <div class="col-lg-8 mb-4">
                 <div class="card shadow-sm p-3">
                     @php $grandTotal = 0; @endphp
                     @forelse ($cart as $item)
                         @php
-                            $finalPrice = $item->discount_price > 0 ? $item->price - $item->discount_price : $item->price;
+                            $finalPrice =
+                                $item->discount_price > 0 ? $item->price - $item->discount_price : $item->price;
                             $grandTotal += $finalPrice * $item->quantity;
                         @endphp
 
-                        <div class="row align-items-center py-3 {{ !$loop->last ? 'border-bottom' : '' }}">
+                        <div class="row align-items-center cartRow py-3 {{ !$loop->last ? 'border-bottom' : '' }}"
+                            data-id="{{ $item->id }}">
                             <div class="col-3 col-md-2 text-center">
                                 <img src="{{ asset($item->get_product->get_product_images->image_path ?? null) }}"
                                     class="img-fluid rounded" style="max-height: 100px; object-fit: contain;">
@@ -81,15 +85,15 @@
                                         ₹ {{ number_format($item->price, 2) }}
                                     @endif
                                 </span>
-                                <span class="text-success small d-block">Total: ₹
+                                <span class="text-success small d-block itemTotal " data-id="{{ $item->id }}">Total: ₹
                                     {{ number_format($item->total_amount, 2) }}</span>
                             </div>
                         </div>
                     @empty
                         <div class="text-center py-5 col-12">
-                            <h5 class="text-muted">Your Cart is empty.</h5>
+                            <h5 class="text-muted text-center">Your Cart is empty.</h5>
                             <a href="{{ route('product_list') }}"
-                                class="btn btn-warning px-4 mt-3 rounded-pill fw-bold">Continue Shopping</a>
+                                class="btn btn-warning px-4 mt-3 text-center rounded-pill fw-bold">Continue Shopping</a>
                         </div>
                     @endforelse
                 </div>
@@ -102,7 +106,7 @@
 
                         <div class="d-flex justify-content-between mb-2">
                             <span>Items ({{ count($cart) }}):</span>
-                            <span>₹ {{ number_format($grandTotal, 2) }}</span>
+                            <span id="cartGrandTotal">₹ {{ number_format($grandTotal, 2) }}</span>
                         </div>
                         <div class="d-flex justify-content-between mb-2 text-success">
                             <span>Delivery:</span>
@@ -113,11 +117,12 @@
 
                         <div class="d-flex justify-content-between align-items-center mb-4">
                             <span class="h5 fw-bold mb-0">Order Total:</span>
-                            <span class="h4 fw-bold text-danger mb-0">₹ {{ number_format($grandTotal, 2) }}</span>
+                            <span class="h4 fw-bold text-danger mb-0" id="orderTotal">₹
+                                {{ number_format($grandTotal, 2) }}</span>
                         </div>
 
                         {{-- Proceed to Order Form --}}
-                        <form action="{{ route('checkout') }}" method="GET">
+                        <form action="{{ route('checkout') }}" method="GET" id="checkoutForm">
                             <button type="submit" class="btn btn-warning w-100 py-2 rounded-pill  shadow-sm text-dark">
                                 Proceed to Buy
                             </button>
@@ -132,7 +137,8 @@
 
 @section('script')
     <script>
-        $(document).on('click', '.increaseQty, .decreaseQty', function() {
+        $(document).on('click', '.increaseQty, .decreaseQty', function(e) {
+            e.preventDefault();
             let id = $(this).data('id');
             let input = $('.qtyInput[data-id="' + id + '"]');
             let qty = parseInt(input.val());
@@ -153,10 +159,15 @@
                 },
                 success: function(response) {
                     if (response.status) {
-                        location.reload();
-                    } else {
-                        alert(response.message);
+                        input.val(response.quantity);
+                        $('.itemTotal[data-id="' + id + '"]').text('Total: ₹ ' + response.total_amount
+                            .toFixed(2));
+                        $('#cartGrandTotal').text('₹ ' + parseFloat(response.cart_grand_total).toFixed(
+                            2));
+                        $('#orderTotal').text('₹ ' + parseFloat(response.cart_grand_total).toFixed(2));
+
                     }
+
                 },
                 error: function(xhr) {
                     console.log(xhr.responseText);
@@ -167,7 +178,8 @@
 
 
         // AJAX Delete Cart Item
-        $(document).on('click', '.deleteCart', function() {
+        $(document).on('click', '.deleteCart', function(event) {
+            event.preventDefault();
             let id = $(this).data('id');
             $.ajax({
                 url: "{{ route('cart') }}",
@@ -177,8 +189,8 @@
                     _token: "{{ csrf_token() }}",
                     id: id
                 },
-                success: function() {
-                    location.reload();
+                success: function(response) {
+                    window.location.reload();
                 }
             });
         });
@@ -197,13 +209,25 @@
                     get_updatesize: true
                 },
                 success: function(response) {
-                    if (response.status) {
-                        location.reload();
-                    } else {
-                        alert(response.message);
-                    }
+                    response = true;
                 }
             });
+        });
+
+        $('#checkoutForm').on('submit', function(e) {
+            let sizeMissing = false;
+            $('.sizeSelected').each(function() {
+                if ($(this).val() == '' || $(this).val() == null) {
+                    sizeMissing = true;
+                    $(this).focus();
+                    return false;
+                }
+            });
+            if (sizeMissing) {
+                e.preventDefault();
+                return false;
+            }
+
         });
     </script>
 @endsection

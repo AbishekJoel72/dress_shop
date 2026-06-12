@@ -53,7 +53,7 @@ Route::middleware([UserMiddleware::class])->prefix('customer')->group(function (
     Route::any('product_list', [ProductController::class, "ProductList"])->name('product_list');
     Route::any('add_to_cart', [CartController::class, "AddToCart"])->name('add_to_cart');
     Route::any('cart', [CartController::class, "Cart"])->name('cart');
-    Route::get('checkout', [CartController::class, 'checkout'])->name('checkout');
+    Route::any('checkout', [CartController::class, 'checkout'])->name('checkout');
     Route::any('order', [OrderController::class, "Order"])->name('order');
     Route::any('order_placed', [OrderController::class, "OrderPlaced"])->name('order_placed');
     Route::any('feedback', [FeedbackController::class, "Feedback"])->name('feedback');

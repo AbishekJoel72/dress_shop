@@ -35,12 +35,13 @@ class SizeTypeController extends Controller
                 }
             }
             if ($request->edit_size_list) {
+                $id = $request->id;
                 try {
                     $validation = $request->validate([
                         'size_type' => "required"
                     ]);
                     if ($validation) {
-                        Sizetype::where("id", $request->id)->update([
+                        Sizetype::where("id", $id)->update([
                             'size_name' => $request->size_type
                         ]);
                         session()->flash("success", "Size Updated Successfully");
@@ -53,11 +54,12 @@ class SizeTypeController extends Controller
             }
             if ($request->edit_status) {
                 try {
-                    $validation = $request->validate([
+                    $validation = $request->validate([      
                         'status' => "required"
                     ]);
                     if ($validation) {
-                        Sizetype::where('id', $request->id)->update([
+                        $id = $request->id;
+                        Sizetype::where('id', $id)->update([
                             'status' => $request->status,
                         ]);
                         session()->flash("success", "Status Updated Successfully");

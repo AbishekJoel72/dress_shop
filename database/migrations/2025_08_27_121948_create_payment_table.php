@@ -11,18 +11,18 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('payment', function (Blueprint $table) {
+        Schema::create('payments', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->unsignedBigInteger('order_id');
-            $table->enum('payment_gateway', ['gpay', 'phonepe', 'paytm', 'netbanking', 'cash_on_delivery', 'card']);
-            $table->enum('card_type', ['debit_card','credit_card'])->nullable();
             $table->string('transaction_id')->nullable();
-            $table->timestamp('paid_at')->nullable();
+            $table->enum('payment_gateway', ['gpay', 'phonepe', 'paytm', 'cash_on_delivery']);
+            $table->decimal('amount', 10, 2);
             $table->string('currency')->default('INR');
-            $table->enum('payment_status', ['0', '1'])->default('1');
+            $table->enum('payment_status', ['pending', 'success', 'failed', 'refunded'])->default('pending');
+            $table->timestamp('paid_at')->nullable();
             $table->timestamps();
 
-            $table->foreign('order_id')->references('id')->on('order')->onDelete('no action');
+            $table->foreign('order_id')->references('id')->on('orders')->onDelete('no action');
         });
     }
 

@@ -13,7 +13,7 @@ class CategoryController extends Controller
 {
     public function Categories(Request $request)
     {
-        if ($request->method("POST")) {
+        if ($request->method() == "POST") {
             if ($request->category) {
                 try {
                     $validation = $request->validate([

@@ -6,48 +6,20 @@ use Illuminate\Database\Eloquent\Model;
 
 class Order extends Model
 {
-    protected $table = "order";
+    protected $table = "orders";
     protected $fillable = [
-        'order_id',
-        'date',
-        'product_id',
-        'size_id',
-        'quantity',
-        'total_amount',
-        'address',
-        'state_id',
-        'city_id',
-        'pincode',
-        'payment_method',
+        'order_no ',
+        'order_date',
+        'user_id',
+        'sub_total',
+        'discount_amount',
+        'delivery_charge',
+        'grand_total',
         'delivery_status'
     ];
 
-
-
-
-    public function get_payment()
+    public function get_orderitems()
     {
-        return $this->hasOne(Payment::class, 'order_id', 'id');
-    }
-
-
-    public function get_product()
-    {
-        return $this->belongsTo(Product::class, 'product_id');
-    }
-
-    public function get_size()
-    {
-        return $this->belongsTo(Sizetype::class, 'size_id');
-    }
-
-    public function get_state()
-    {
-        return $this->belongsTo(State::class, 'state_id');
-    }
-
-    public function get_cities()
-    {
-        return $this->belongsTo(City::class, 'city_id');
+        return $this->hasMany(OrderItems::class,'order_id');
     }
 }
