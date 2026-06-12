@@ -11,27 +11,17 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('order', function (Blueprint $table) {
+        Schema::create('orders', function (Blueprint $table) {
             $table->bigIncrements("id");
-            $table->string('order_id')->unique();
-            $table->date('date');
+            $table->string('order_no')->unique();
+            $table->date('order_date');
             $table->unsignedBigInteger('user_id');
-            $table->unsignedBigInteger('product_id');
-            $table->unsignedBigInteger('size_id');
-            $table->integer('quantity');
-            $table->string('total_amount');
-            $table->text('address');
-            $table->unsignedBigInteger('state_id');
-            $table->unsignedBigInteger('city_id');
-            $table->string('pincode');
-            $table->enum('delivery_status', ['pending', 'shipped', 'out_for_delivery', 'delivered', 'cancelled'])->default('pending');
-
-            $table->foreign('user_id')->references('id')->on('registration')->onDelete('no action');
-            $table->foreign('product_id')->references('id')->on('product')->onDelete('no action');
-            $table->foreign('size_id')->references('id')->on('size')->onDelete('no action');
-            $table->foreign('state_id')->references('id')->on('state')->onDelete('no action');
-            $table->foreign('city_id')->references('id')->on('cities')->onDelete('no action');
+            $table->decimal('delivery_charge', 10, 2)->default(0);
+            $table->decimal('grand_total', 10, 2);
+            $table->enum('delivery_status', ['pending','confirmed', 'shipped', 'out_for_delivery', 'delivered', 'cancelled'])->default('pending');
             $table->timestamps();
+            $table->foreign('user_id')->references('id')->on('registration')->onDelete('no action');
+
         });
     }
 
