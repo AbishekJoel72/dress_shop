@@ -3,14 +3,32 @@
     <style>
         .product-image-container {
             width: 100%;
-            height: 300px;
+            height: 200px;
+            /* 300 -> 180 */
             overflow: hidden;
         }
-
         .product-image {
             width: 100%;
             height: 100%;
-            object-fit: cover;
+            object-fit: contain;
+        }
+        .product-card {
+            margin-bottom: 15px;
+        }
+        .product-card .card-body {
+            padding: 10px;
+        }
+        .product-card .card-title {
+            font-size: 15px;
+            margin-bottom: 5px;
+        }
+        .product-card p {
+            margin-bottom: 3px;
+            font-size: 13px;
+        }
+        .product-card .btn {
+            font-size: 13px;
+            padding: 6px;
         }
     </style>
     <div class="container ">
@@ -22,7 +40,7 @@
                         <!-- Favourite Heart -->
                         <a href="#" class="position-absolute top-0 start-0 m-2 fs-4 favourite-toggle"
                             data-product-id="{{ $p->id }}">
-                            <i class="fa-regular fa-heart text-danger"></i>
+                            <i class="{{ in_array($p->id, $favouriteIds) ? 'fa-solid' : 'fa-regular'  }} fa-regular fa-heart text-danger"></i>
                         </a>
 
                         <div class="product-image-container">
@@ -60,12 +78,11 @@
 @section('script')
     @include('layouts.datatable')
     <script>
-        $(document).on('click', '.favourite-toggle', function() {
-
+        $(document).on('click', '.favourite-toggle', function(event) {
+            event.preventDefault();
             let btn = $(this);
             let heartIcon = btn.find('i');
             let productId = btn.data('product-id');
-
             $.ajax({
                 url: "{{ route('product_list') }}",
                 type: "POST",
@@ -75,20 +92,15 @@
                     get_favourite: true
                 },
                 success: function(response) {
-
                     if (response.favourited) {
-
                         heartIcon.removeClass('fa-regular text-danger')
                             .addClass('fa-solid text-danger');
-
                     } else {
-
                         heartIcon.removeClass('fa-solid text-danger')
                             .addClass('fa-regular text-danger');
                     }
                 }
             });
-
         });
     </script>
 @endsection

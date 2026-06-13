@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use App\Models\Category;
 use App\Models\Contact;
+use App\Models\Favourites;
 use App\Models\Feedback;
 use App\Models\Order;
 use App\Models\Payment;
@@ -23,11 +24,12 @@ class DashboardController extends Controller
         $data['men_products'] = Product::whereHas('get_category', function ($q) {$q->where('name', 'Men');})->count();
         $data['women_products'] = Product::whereHas('get_category', function ($q) {$q->where('name', 'Women');})->count();
         $data['total_orders'] = Order::count();
-        $data['today_orders'] = Order::whereDate('date', Carbon::today())->count();
+        $data['today_orders'] = Order::whereDate('order_date', Carbon::today())->count();
         $data['feedback'] = Feedback::count();
         $data['user'] = Registration::where('role', 'user')->count();
         $data['payment'] = Payment::count();
         $data['contact'] = Contact::count();
+        $data['favourites'] = Favourites::count();
         return view("dashboard.dashboard")->with($data);
     }
 }

@@ -16,7 +16,7 @@ class SizeTypeExport implements FromView
     public function view(): View
     {
         return view('size.size_type_excel', [
-            'size_types' => Sizetype::all()
+            'size_types' => Sizetype::get()
         ]);
     }
 }

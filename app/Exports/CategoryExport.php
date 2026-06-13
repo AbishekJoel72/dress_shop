@@ -11,7 +11,7 @@ class CategoryExport implements FromView
     public function view(): View
     {
         return view('category.category_excel', [
-            'categories' => Category::all()
+            'categories' => Category::get()
         ]);
     }
 }

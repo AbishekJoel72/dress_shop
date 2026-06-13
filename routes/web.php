@@ -41,9 +41,11 @@ Route::middleware([AdminMiddleware::class])->prefix('admin')->group(function () 
     Route::get('size.export', [SizeTypeController::class, "SizeTypeExport"])->name('size.export');
     Route::any('product', [ProductController::class, "Product"])->name('product');
     Route::any('update_products', [ProductController::class, "UpdateProduct"])->name('update_products');
+    Route::any('Products.export', [ProductController::class, "ProductExport"])->name('Products.export');
     Route::any('order_list', [OrderController::class, "OrderList"])->name('order_list');
     Route::any('payment_list', [PaymentController::class, "PaymentList"])->name('payment_list');
     Route::any('user_list_details', [RegistrationController::class, 'UserList'])->name('user_list_details');
+    Route::any('favourites', [FeedbackController::class, "FavouritesList"])->name('favourites');
     Route::any('feedback_list', [FeedbackController::class, "FeedbackList"])->name('feedback_list');
     Route::any('contact_list', [ContactController::class, "ContactList"])->name('contact_list');
 });

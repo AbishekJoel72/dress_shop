@@ -15,7 +15,11 @@ class Favourites extends Model
 
     public function get_product()
     {
-        return $this->belongsTo(Product::class, 'product_id');
+        return $this->belongsTo(Product::class, 'product_id', 'id');
     }
-    
+
+    public function get_user()
+    {
+        return $this->belongsTo(Registration::class, 'user_id', 'id');
+    }
 }

@@ -7,7 +7,7 @@
             </div>
             <div class="card-body">
                 <div class="row">
-                    <div class="col-3">
+                    <div class="col-2">
                         <div class="card text-bg-primary mb-3" style="height:130px">
                             <div class="card-header bg-transparent text-center">
                                 <h6>Category</h6>
@@ -19,7 +19,8 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-3">
+
+                    <div class="col-2">
                         <div class="card text-bg-secondary mb-3" style="height:130px">
                             <div class="card-header bg-transparent text-center">
                                 <h6>Size Type</h6>
@@ -31,7 +32,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-3">
+                    <div class="col-2">
                         <div class="card text-bg-success mb-3" style="height:130px">
                             <div class="card-header bg-transparent text-center">
                                 <h6>Feedback</h6>
@@ -44,7 +45,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-3">
+                    <div class="col-2">
                         <div class="card text-bg-light  mb-3" style="height:130px">
                             <div class="card-header bg-transparent text-center">
                                 <h6>Contact</h6>
@@ -57,9 +58,7 @@
                             </div>
                         </div>
                     </div>
-                </div>
-                <div class="row">
-                    <div class="col-3">
+                    <div class="col-2">
                         <div class="card text-bg-info mb-3" style="height:130px">
                             <div class="card-header bg-transparent text-center">
                                 <h6>Product</h6>
@@ -80,7 +79,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-3">
+                    <div class="col-2">
                         <div class="card text-bg-warning mb-3" style="height:130px">
                             <div class="card-header bg-transparent text-center">
                                 <h6>Order</h6>
@@ -101,7 +100,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-3">
+                    <div class="col-2">
                         <div class="card text-bg-danger mb-3" style="height:130px">
                             <div class="card-header bg-transparent text-center">
                                 <h6>Payment</h6>
@@ -114,7 +113,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-3">
+                    <div class="col-2">
                         <div class="card text-bg-dark mb-3" style="height:130px">
                             <div class="card-header bg-transparent text-center">
                                 <h6>User</h6>
@@ -127,9 +126,23 @@
                             </div>
                         </div>
                     </div>
+                <div class="col-2">
+                        <div class="card text-bg-primary mb-3" style="height:130px">
+                            <div class="card-header bg-transparent text-center">
+                                <h6>Favourites</h6>
+                            </div>
+                            <div class="card-body d-flex flex-column justify-content-between align-items-center text-center">
+                                <label for="category">Count</label>
+                                <a href="{{ route('favourites') }}" class="text-light"
+                                    id="category">{{ $favourites }}</a>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
+
+
         <div class="row mt-3">
             <div class="col-6">
                 <div class="card">
