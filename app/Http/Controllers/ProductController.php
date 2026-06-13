@@ -2,12 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\ProductExport;
 use App\Models\Category;
 use App\Models\Favourites;
 use App\Models\Product;
 use App\Models\ProductImage;
 use App\Models\ProductImages;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
 use Yajra\DataTables\Facades\DataTables;
 
 class ProductController extends Controller
@@ -158,7 +161,18 @@ class ProductController extends Controller
         return view('product.productlist')->with($data);
     }
 
-
+    public function ProductExport(Request $request)
+    {
+        $type = $request->type;
+        if ($type == 'excel') {
+            return Excel::download(new ProductExport, 'products.xlsx');
+        }
+        if ($type == 'pdf') {
+            $product = Product::with('get_category')->get();
+            $pdf = Pdf::loadView('product.product_pdf',['product' => $product]);
+            return $pdf->download('products.pdf');
+        }
+    }
 
     public function ProductList(Request $request)
     {
@@ -178,7 +192,7 @@ class ProductController extends Controller
                 $userId = session('user_id');
                 $productId = $request->product_id;
                 $fav = Favourites::where('user_id', $userId)->where('product_id', $productId)->first();
-                if (isset($fav) && !empty($fav)) {
+                if ($fav) {
                     $fav->delete();
                     return response()->json(['favourited' => false]);
                 } else {
@@ -191,12 +205,12 @@ class ProductController extends Controller
                     } catch (\Throwable $th) {
                         return response()->json(['error' => $th->getMessage()], 500);
                     }
-
                 }
             }
         }
 
         $data['products'] = Product::where('category_id', $categoryId)->get();
+        $data['favouriteIds'] = Favourites::where('user_id', session('user_id'))->pluck('product_id')->toArray();
         return view('product.Product_list')->with($data);
     }
 }
