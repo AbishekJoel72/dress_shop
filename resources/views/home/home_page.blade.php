@@ -3,6 +3,7 @@
 @include('layouts.head')
 <link rel="stylesheet" href="{{ asset('css/style.css') }}">
 
+
 <body>
     @php
         use App\Models\Configuration;
@@ -182,9 +183,10 @@
                     <form method="POST" autocomplete="off">
                         @csrf
                         <input type="hidden" name="contact_ss" value="true">
+                        <input class="form-control mb-3" type="text" name="name" placeholder="Name" required>
                         <input class="form-control mb-3" type="email" name="email" placeholder="Email" required>
                         <input class="form-control mb-3" type="text" name="phone" placeholder="Phone" required>
-                        <textarea class="form-control mb-3" rows="10" name="message" placeholder="Message" required></textarea>
+                        <textarea class="form-control mb-3" rows="5" name="message" placeholder="Message" required></textarea>
                         <button class="btn submit-btn">Submit</button>
                     </form>
                 </div>
@@ -314,6 +316,7 @@
         </div>
     </div>
 </footer>
+@include('layouts.script')
 <script>
     function toggleMenu(el) {
         const menu = document.getElementById("mobileMenu");
