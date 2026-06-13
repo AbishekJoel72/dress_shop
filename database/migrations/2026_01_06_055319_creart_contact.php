@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create("contact", function(Blueprint $table){
             $table->bigIncrements('id');
-            $table->string('user_id')->nullable();
+            $table->string('name');
             $table->string('email');
             $table->string('phone');
             $table->string('message');
