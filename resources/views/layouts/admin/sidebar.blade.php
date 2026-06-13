@@ -45,12 +45,17 @@
                 <i class="fa-solid fa-indian-rupee-sign me-2"></i>
                 <span class="sidebar-text">Payment</span></a>
         </li>
-
+      <li>
+            <a href="{{ route('favourites') }}">
+                <i class="fa-solid fa-heart me-2"></i>
+                <span class="sidebar-text">Favourites</span></a>
+        </li>
         <li>
             <a href="{{ route('user_list_details') }}">
                 <i class="fa-solid fa-users me-2"></i>
                 <span class="sidebar-text">User List</span></a>
         </li>
+
         <li>
             <a href="{{ route('feedback_list') }}">
                 <i class="fa-solid fa-comment-dots me-2"></i>
