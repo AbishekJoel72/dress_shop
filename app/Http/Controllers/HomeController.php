@@ -20,11 +20,12 @@ class HomeController extends Controller
                     ]);
                     if ($validation) {
                         $c = new Contact();
+                        $c->name = $request->name;
                         $c->email = $request->email;
                         $c->phone = $request->phone;
                         $c->message = $request->message;
                         $c->save();
-                        session()->flash("success", "Conteact Added Successfully");
+                        session()->flash("success", "Your Contact Details Added Successfully");
                         return redirect()->route("home_page");
                     }
                 } catch (\Throwable $th) {

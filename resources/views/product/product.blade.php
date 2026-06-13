@@ -4,9 +4,25 @@
         <div class="card">
             <div class="card-header bg-transparent d-flex justify-content-between align-items-center py-2">
                 <h5 class="mb-0">List Product</h5>
-                <a href="{{ route('update_products') }}" class="btn btn-sm btn-primary">
-                    <i class="fa-solid fa-plus"></i> Add New
-                </a>
+                <div class="d-flex align-items-center gap-2 ms-auto">
+                    <a href="{{ route('update_products') }}" class="btn btn-sm btn-primary">
+                        <i class="fa-solid fa-plus"></i> Add New
+                    </a>
+                    <div class="dropdown">
+                        <button class="btn btn-sm btn-warning" type="button" data-bs-toggle="dropdown">
+                            Download
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <a class="dropdown-item" href="{{ route('Products.export', ['type' => 'excel']) }}">Excel
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" href="{{ route('Products.export', ['type' => 'pdf']) }}"> PDF </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
             </div>
             <div class="card-body">
                 <table id="datatable" class="table table-bordered">
@@ -239,7 +255,7 @@
                     error: function() {
                         $("#modalMessage").text("Something went wrong!");
                         var modal = new bootstrap.Modal(document.getElementById(
-                        'sessionModal'));
+                            'sessionModal'));
                         modal.show();
                     }
                 });

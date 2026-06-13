@@ -11,7 +11,7 @@
                     <thead>
                         <tr>
                             <th>S.NO</th>
-                            {{-- <th>Name</th> --}}
+                            <th>Name</th>
                             <th>Email</th>
                             <th>Phone</th>
                             <th>Message</th>
@@ -39,6 +39,10 @@
                         searchable: false,
                         width: '5%',
                         className: 'text-center'
+                    },
+                    {
+                        data: 'name',
+                        name: 'name',
                     },
                     {
                         data: 'email',
