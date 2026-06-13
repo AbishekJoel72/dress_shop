@@ -2,12 +2,27 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Favourites;
 use App\Models\Feedback;
 use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
 
 class FeedbackController extends Controller
 {
+
+    public function FavouritesList(Request $request)
+    {
+        if ($request->ajax()) {
+
+
+            $data = Favourites::with('get_user', 'get_product','get_product.get_category')->get();
+            return DataTables::of($data)
+                ->addIndexColumn()
+                ->make(true);
+        }
+        return view('feedback.favourites');
+    }
+
 
 
     public function Feedback(Request $request)
