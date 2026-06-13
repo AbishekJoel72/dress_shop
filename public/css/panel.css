@@ -259,10 +259,10 @@ body {
 #footer h6,
 #footer p {
     background: var(--theme-gradient);
-    /* -webkit-background-clip: text; */
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;
     -webkit-text-fill-color: transparent;
-    font-weight: 500;
-    margin: 0;
 }
 
 
