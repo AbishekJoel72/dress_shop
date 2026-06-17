@@ -10,27 +10,27 @@ use Maatwebsite\Excel\Facades\Excel;
 // use Maatwebsite\Excel\Excel;
 use Yajra\DataTables\Facades\DataTables;
 
-use function Symfony\Component\String\s;
-
 class SizeTypeController extends Controller
 {
     public function SizeType(Request $request)
     {
-        if ($request->method("POST")) {
+        if ($request->method('POST')) {
             if ($request->size_list) {
                 try {
                     $validation = $request->validate([
-                        'size_type' => "required"
+                        'size_type' => 'required',
                     ]);
                     if ($validation) {
-                        $s = new Sizetype();
+                        $s = new Sizetype;
                         $s->size_name = $request->size_type;
                         $s->save();
-                        session()->flash("success", "Size Added Successfully");
-                        return redirect()->route("size_type");
+                        session()->flash('success', 'Size Added Successfully');
+
+                        return redirect()->route('size_type');
                     }
                 } catch (\Throwable $th) {
-                    session()->flash("error", $th->getMessage());
+                    session()->flash('error', $th->getMessage());
+
                     return redirect()->back();
                 }
             }
@@ -38,35 +38,39 @@ class SizeTypeController extends Controller
                 $id = $request->id;
                 try {
                     $validation = $request->validate([
-                        'size_type' => "required"
+                        'size_type' => 'required',
                     ]);
                     if ($validation) {
-                        Sizetype::where("id", $id)->update([
-                            'size_name' => $request->size_type
+                        Sizetype::where('id', $id)->update([
+                            'size_name' => $request->size_type,
                         ]);
-                        session()->flash("success", "Size Updated Successfully");
-                        return redirect()->route("size_type");
+                        session()->flash('success', 'Size Updated Successfully');
+
+                        return redirect()->route('size_type');
                     }
                 } catch (\Throwable $th) {
-                    session()->flash("error", $th->getMessage());
+                    session()->flash('error', $th->getMessage());
+
                     return redirect()->back();
                 }
             }
             if ($request->edit_status) {
                 try {
-                    $validation = $request->validate([      
-                        'status' => "required"
+                    $validation = $request->validate([
+                        'status' => 'required',
                     ]);
                     if ($validation) {
                         $id = $request->id;
                         Sizetype::where('id', $id)->update([
                             'status' => $request->status,
                         ]);
-                        session()->flash("success", "Status Updated Successfully");
-                        return redirect()->route("size_type");
+                        session()->flash('success', 'Status Updated Successfully');
+
+                        return redirect()->route('size_type');
                     }
                 } catch (\Throwable $th) {
-                    session()->flash("error", $th->getMessage());
+                    session()->flash('error', $th->getMessage());
+
                     return redirect()->back();
                 }
             }
@@ -75,22 +79,26 @@ class SizeTypeController extends Controller
             if ($request->get_size) {
                 $id = $request->id;
                 $s = Sizetype::where('id', $id)->first();
+
                 return response()->json($s);
             }
             if ($request->get_status) {
                 $id = $request->id;
                 $s = Sizetype::where('id', $id)->first();
+
                 return response()->json($s);
             }
             if ($request->delete_size) {
                 $id = $request->id;
                 $s = Sizetype::where('id', $id)->delete();
+
                 return response()->json($s);
             }
             $query = Sizetype::select(['id', 'size_name', 'status']);
             if ($request->size_name) {
-                $query->where('size_name', 'LIKE', '%' . $request->size_name . '%');
+                $query->where('size_name', 'LIKE', '%'.$request->size_name.'%');
             }
+
             return DataTables::of($query)
                 ->addIndexColumn()
                 ->addColumn('action', function ($row) {
@@ -101,13 +109,13 @@ class SizeTypeController extends Controller
                     </a>
                     <ul class="dropdown-menu">
                         <li>
-                            <a href="#" class="editRow dropdown-item" data-id="' . $row->id . '">Edit</a>
+                            <a href="#" class="editRow dropdown-item" data-id="'.$row->id.'">Edit</a>
                         </li>
                         <li>
-                            <a href="#" class="editStatusRow dropdown-item" data-id="' . $row->id . '">Status</a>
+                            <a href="#" class="editStatusRow dropdown-item" data-id="'.$row->id.'">Status</a>
                         </li>
                         <li>
-                            <a href="#" class="deleteRow dropdown-item text-danger" data-id="' . $row->id . '">Delete</a>
+                            <a href="#" class="deleteRow dropdown-item text-danger" data-id="'.$row->id.'">Delete</a>
                         </li>
                     </ul>
                 </div>
@@ -116,19 +124,24 @@ class SizeTypeController extends Controller
                 ->rawColumns(['action'])
                 ->make(true);
         }
-        return view("size.size_type");
+
+        return view('size.size_type');
     }
 
     public function SizeTypeExport(Request $request)
     {
-        $type = $request->type;
-        if ($type == "excel") {
-            return Excel::download(new SizeTypeExport, 'size_type.xlsx');
+        $query = Sizetype::query();
+        if ($request->size_name) {
+            $query->where('size_name', 'LIKE', '%'.$request->size_name.'%');
         }
-        if ($type == "pdf") {
-            $size_types = Sizetype::get();
-            $pdf = Pdf::loadView('size.size_type_pdf', ['size_types' => $size_types]);
+        $size_types = $query->get();
+        if ($request->type == 'excel') {
+            return Excel::download(new SizeTypeExport($size_types), 'size_type.xlsx');
+        }
+        if ($request->type == 'pdf') {
+            $pdf = Pdf::loadView('Export.pdf.size_type_pdf', ['size_types' => $size_types]);
             return $pdf->download('size_types.pdf');
         }
+
     }
 }

@@ -32,54 +32,34 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-2">
-                        <div class="card text-bg-success mb-3" style="height:130px">
-                            <div class="card-header bg-transparent text-center">
-                                <h6>Feedback</h6>
-                            </div>
-                            <div
-                                class="card-body d-flex flex-column justify-content-between align-items-center text-center">
-                                <label for="feedback">Count</label>
-                                <a href="{{ route('feedback_list') }}" class="text-light"
-                                    id="feedback">{{ $feedback }}</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-2">
-                        <div class="card text-bg-light  mb-3" style="height:130px">
-                            <div class="card-header bg-transparent text-center">
-                                <h6>Contact</h6>
-                            </div>
-                            <div
-                                class="card-body d-flex flex-column justify-content-between align-items-center text-center">
-                                <label for="contact">Count</label>
-                                <a href="{{ route('contact_list') }}" class="text-dark"
-                                    id="contact">{{ $contact }}</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-2">
+                    <div class="col-4">
                         <div class="card text-bg-info mb-3" style="height:130px">
                             <div class="card-header bg-transparent text-center">
                                 <h6>Product</h6>
                             </div>
                             <div class="card-body  ">
                                 <div class="row text-center">
-                                    <div class="col-6 d-flex flex-column align-items-center">
-                                        <label for="men">Men</label>
+                                    <div class="col-4 d-flex flex-column align-items-center">
+                                        <label for="men">Man</label>
                                         <a href="{{ route('product') }}" class="text-dark"
-                                            id="men">{{ $men_products }}</a>
+                                            id="men">{{ $man_products }}</a>
                                     </div>
-                                    <div class="col-6 d-flex flex-column align-items-center">
+                                    <div class="col-4 d-flex flex-column align-items-center">
                                         <label for="women">Women</label>
                                         <a href="{{ route('product') }}" class="text-dark"
                                             id="women">{{ $women_products }}</a>
+                                    </div>
+
+                                    <div class="col-4 d-flex flex-column align-items-center">
+                                        <label for="kids">Kids</label>
+                                        <a href="{{ route('product') }}" class="text-dark"
+                                            id="kids">{{ $kids_products }}</a>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="col-2">
+                    <div class="col-4">
                         <div class="card text-bg-warning mb-3" style="height:130px">
                             <div class="card-header bg-transparent text-center">
                                 <h6>Order</h6>
@@ -113,6 +93,17 @@
                             </div>
                         </div>
                     </div>
+                      <div class="col-2">
+                        <div class="card text-bg-warning mb-3" style="height:130px">
+                            <div class="card-header bg-transparent text-center">
+                                <h6>Return</h6>
+                            </div>
+                            <div class="card-body d-flex flex-column justify-content-between align-items-center text-center">
+                                <label for="category">Count</label>
+                                <a href="#" class="text-dark" id="category">0</a>
+                            </div>
+                        </div>
+                    </div>
                     <div class="col-2">
                         <div class="card text-bg-dark mb-3" style="height:130px">
                             <div class="card-header bg-transparent text-center">
@@ -126,15 +117,43 @@
                             </div>
                         </div>
                     </div>
-                <div class="col-2">
+                    <div class="col-2">
                         <div class="card text-bg-primary mb-3" style="height:130px">
                             <div class="card-header bg-transparent text-center">
                                 <h6>Favourites</h6>
                             </div>
-                            <div class="card-body d-flex flex-column justify-content-between align-items-center text-center">
+                            <div
+                                class="card-body d-flex flex-column justify-content-between align-items-center text-center">
                                 <label for="category">Count</label>
                                 <a href="{{ route('favourites') }}" class="text-light"
                                     id="category">{{ $favourites }}</a>
+                            </div>
+                        </div>
+                    </div>
+
+                     <div class="col-2">
+                        <div class="card text-bg-success mb-3" style="height:130px">
+                            <div class="card-header bg-transparent text-center">
+                                <h6>Feedback</h6>
+                            </div>
+                            <div
+                                class="card-body d-flex flex-column justify-content-between align-items-center text-center">
+                                <label for="feedback">Count</label>
+                                <a href="{{ route('feedback_list') }}" class="text-light"
+                                    id="feedback">{{ $feedback }}</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-2">
+                        <div class="card text-bg-light  mb-3" style="height:130px">
+                            <div class="card-header bg-transparent text-center">
+                                <h6>Contact</h6>
+                            </div>
+                            <div
+                                class="card-body d-flex flex-column justify-content-between align-items-center text-center">
+                                <label for="contact">Count</label>
+                                <a href="{{ route('contact_list') }}" class="text-dark"
+                                    id="contact">{{ $contact }}</a>
                             </div>
                         </div>
                     </div>
@@ -143,7 +162,7 @@
         </div>
 
 
-        <div class="row mt-3">
+        {{-- <div class="row mt-3">
             <div class="col-6">
                 <div class="card">
                     <div class="card-header bg-transparent">
@@ -158,7 +177,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-6">
+            <div class="col-12">
                 <div class="card">
                     <div class="card-header bg-transparent">
                         <h5>Order</h5>
@@ -172,12 +191,12 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div> --}}
     </div>
     @include('layouts.footer')
 @endsection
 @section('script')
-    <script>
+    {{-- <script>
         @if ($men_products + $women_products > 0)
             const ctx = document.getElementById('productPie').getContext('2d');
             new Chart(ctx, {
@@ -212,5 +231,5 @@
                 }
             });
         @endif
-    </script>
+    </script> --}}
 @endsection

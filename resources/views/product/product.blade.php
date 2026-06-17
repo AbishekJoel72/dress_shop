@@ -1,6 +1,45 @@
 @extends('layouts.admin.default')
 @section('content')
     <div class="container">
+
+        <div class="card mb-3">
+            <div class="card-header bg-transparent">
+                <h5 class="mb-0">Product Filter</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-4">
+                        <label for="product_name">Product Name</label>
+                        <input type="text" id="product_name" class="form-control" placeholder="Enter Product Name">
+                    </div>
+                    <div class="col-md-4">
+                        <label for="category_id">Category</label>
+                        <select id="category_id" class="form-select">
+                            <option value="">All Categories</option>
+                            @foreach ($categories as $category)
+                                <option value="{{ $category->id }}">
+                                    {{ $category->name }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label>Status</label>
+                        <select id="status" class="form-select">
+                            <option value="" >All Status</option>
+                            <option value="1">Active</option>
+                            <option value="0">In active</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer d-flex justify-content-center bg-transparent">
+                <button class="btn  btn-primary" id="filterBtn"> <i class="fa-solid fa-filter"></i>
+                    Show Filter</button>
+            </div>
+        </div>
+
+
         <div class="card">
             <div class="card-header bg-transparent d-flex justify-content-between align-items-center py-2">
                 <h5 class="mb-0">List Product</h5>
@@ -14,11 +53,10 @@
                         </button>
                         <ul class="dropdown-menu">
                             <li>
-                                <a class="dropdown-item" href="{{ route('Products.export', ['type' => 'excel']) }}">Excel
-                                </a>
+                                <a href="#" class="dropdown-item exportBtn" data-type="excel">Excel</a>
                             </li>
                             <li>
-                                <a class="dropdown-item" href="{{ route('Products.export', ['type' => 'pdf']) }}"> PDF </a>
+                                <a href="#" class="dropdown-item exportBtn" data-type="pdf">PDF</a>
                             </li>
                         </ul>
                     </div>
@@ -117,10 +155,17 @@
     @include('layouts.datatable')
     <script>
         $(document).ready(function() {
-            $('#datatable').DataTable({
+            var table = $('#datatable').DataTable({
                 processing: true,
                 serverSide: true,
-                ajax: "{{ route('product') }}",
+                ajax: {
+                    url: "{{ route('product') }}",
+                    data: function(d) {
+                        d.product_name = $('#product_name').val();
+                        d.category_id = $('#category_id').val();
+                        d.status = $('#status').val();
+                    }
+                },
                 columns: [{
                         data: 'DT_RowIndex',
                         name: 'DT_RowIndex',
@@ -180,6 +225,9 @@
                         className: 'text-center'
                     }
                 ]
+            });
+            $('#filterBtn').click(function() {
+                table.draw();
             });
 
             $(document).on('click', '.ViewimageRow', function() {
@@ -259,6 +307,21 @@
                         modal.show();
                     }
                 });
+            });
+
+            $(document).on('click', '.exportBtn', function(e) {
+                e.preventDefault();
+                let type = $(this).data('type');
+                let product_name = $('#product_name').val();
+                let category_id = $('#category_id').val();
+                let status = $('#status').val();
+                let url = "{{ route('products.export') }}";
+                window.location.href =
+                    url +
+                    '?type=' + type +
+                    '&product_name=' + encodeURIComponent(product_name) +
+                    '&category_id=' + encodeURIComponent(category_id) +
+                    '&status=' + encodeURIComponent(status);
             });
         });
     </script>

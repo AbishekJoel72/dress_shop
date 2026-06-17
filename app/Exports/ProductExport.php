@@ -2,22 +2,51 @@
 
 namespace App\Exports;
 
-use App\Models\Product;
 use Illuminate\Contracts\View\View;
-// use Illuminate\Contracts\View\View;
 use Maatwebsite\Excel\Concerns\FromView;
+use Maatwebsite\Excel\Concerns\WithEvents;
+use Maatwebsite\Excel\Events\AfterSheet;
+use PhpOffice\PhpSpreadsheet\Style\Border;
 
-class ProductExport implements FromView
+class ProductExport implements FromView ,WithEvents
 {
-    /**
-     * @return \Illuminate\Support\Collection
-     */
 
+  protected $products;
+
+    public function __construct($products)
+    {
+        $this->products = $products;
+    }
 
     public function view(): View
     {
-        return view('product.product_excel', [
-            'product' => Product::with('get_category')->get()
-        ]);
+        return view('Export.excel.product_excel', ['product' => $this->products]);
+    }
+
+     public function registerEvents(): array
+    {
+        return [
+            AfterSheet::class => function ($event) {
+                $startRow = 2;
+                $lastRow = count($this->products) + $startRow;
+                $event->sheet
+                    ->getStyle('A2:G'.$lastRow)
+                    ->getBorders()
+                    ->getAllBorders()
+                    ->setBorderStyle(
+                        Border::BORDER_THIN
+                    );
+                $event->sheet
+                    ->getStyle('A2:G2')
+                    ->getFont()
+                    ->setBold(true);
+                foreach (range('A','G') as $column) {
+                    $event->sheet
+                        ->getDelegate()
+                        ->getColumnDimension($column)
+                        ->setAutoSize(true);
+                }
+            },
+        ];
     }
 }

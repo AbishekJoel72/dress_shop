@@ -2,70 +2,94 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\OrderExport;
+use App\Models\Address;
 use App\Models\City;
 use App\Models\Order;
+use App\Models\OrderItems;
 use App\Models\Payment;
 use App\Models\Product;
 use App\Models\Sizetype;
 use App\Models\State;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
 use Yajra\DataTables\Facades\DataTables;
 
 class OrderController extends Controller
 {
-
     public function Order(Request $request)
     {
-        if ($request->method("POST")) {
+
+        if ($request->method('POST')) {
             if ($request->order_items) {
                 try {
                     $validation = $request->validate([
-                        "size_id" => "required",
-                        "address" => "required",
-                        "state_id" => "required",
-                        "city_id" => "required",
-                        "pincode" => "required",
+                        'address' => 'required',
+                        'state_id' => 'required',
+                        'city_id' => 'required',
+                        'pincode' => 'required',
+                        'product_id' => 'required',
+                        'size_id' => 'required',
+                        'quantity' => 'required',
+                        'payment_gateway' => 'required',
+                        'total_amount' => 'required',
                     ]);
                     if ($validation) {
-                        $lastOrder = Order::latest()->first();
-                        $newOrderId = 'ORD' . str_pad(($lastOrder?->id + 1 ?? 1), 5, '0', STR_PAD_LEFT);
-                        $o = new Order();
-                        $o->order_id =  $newOrderId;
-                        $o->date = $request->date;
-                        $o->user_id = session('user_id');
-                        $o->product_id = $request->product_id;
-                        $o->size_id = $request->size_id;
-                        $o->quantity = $request->quantity;
-                        $o->total_amount = $request->total_amount;
-                        $o->address = $request->address;
-                        $o->state_id = $request->state_id;
-                        $o->city_id = $request->city_id;
-                        $o->pincode = $request->pincode;
-                        $o->save();
-                        $lastOrder = Payment::latest()->first();
-                        $transaction = 'TRA' . str_pad(($lastOrder?->id + 1 ?? 1), 5, '0', STR_PAD_LEFT);
-                        $data = [
-                            'order_id'        => $o->id,
-                            'payment_gateway' => $request->payment_gateway,
-                            'currency' => $request->currency,
-                        ];
+                        $lastOrder = Order::latest('id')->first();
+                        $orderNo = 'ORD'.str_pad(($lastOrder?->id + 1 ?? 1), 5, '0', STR_PAD_LEFT);
+                        $order = new Order;
+                        $order->order_no = $orderNo;
+                        $order->order_date = $request->order_date ?? now();
+                        $order->user_id = session('user_id');
+                        $order->delivery_charge = 0;
+                        $order->grand_total = $request->total_amount;
+                        $order->delivery_status = 'pending';
+                        $order->save();
 
-                        if ($request->payment_gateway != 'cash_on_delivery') {
-                            $data['card_type']      = $request->card_type ?? null;
-                            $data['transaction_id'] = $transaction ?? null;
-                            $data['paid_at']        = now();
+                        $item = new OrderItems;
+                        $item->order_id = $order->id;
+                        $item->product_id = $request->product_id;
+                        $item->size_id = $request->size_id;
+                        $item->quantity = $request->quantity;
+                        $item->price = $request->price;
+                        $item->discount_price = $request->discount;
+                        $item->total_amount = $request->total_amount;
+                        $item->save();
+
+                        $address = new Address;
+                        $address->user_id = session('user_id');
+                        $address->order_id = $order->id;
+                        $address->address_line1 = $request->address;
+                        $address->address_line2 = $request->address2;
+                        $address->state_id = $request->state_id;
+                        $address->city_id = $request->city_id;
+                        $address->pincode = $request->pincode;
+                        $address->save();
+
+                        $payment = new Payment;
+                        $payment->order_id = $order->id;
+                        $payment->payment_gateway = $request->payment_gateway;
+                        $payment->amount = $request->total_amount;
+                        $payment->currency = 'INR';
+                        if ($request->payment_gateway == 'cash_on_delivery') {
+                            $payment->transaction_id = null;
+                            $payment->payment_status = 'pending';
+                            $payment->paid_at = null;
                         } else {
-                            $data['card_type']      = null;
-                            $data['transaction_id'] = null;
-                            $data['paid_at']        = null;
-                            $data['payment_status'] = '0';
+                            $payment->transaction_id = 'TXN'.time();
+                            $payment->payment_status = 'success';
+                            $payment->paid_at = now();
                         }
-                        Payment::create($data);
-                        session()->flash("success", "Order Placed Successfully");
-                        return redirect()->route("product_list");
+                        $payment->save();
+                        session()->flash('success', 'Order Placed Successfully');
+
+                        return redirect()->route('product_list');
                     }
                 } catch (\Throwable $th) {
                     session()->flash('error', $th->getMessage());
+
                     return redirect()->back();
                 }
             }
@@ -74,7 +98,8 @@ class OrderController extends Controller
         if ($request->ajax()) {
             if ($request->get_city) {
                 $state = $request->stateID;
-                $city = City::where("state_id", $state)->get();
+                $city = City::where('state_id', $state)->get();
+
                 return response()->json($city);
             }
         }
@@ -85,11 +110,14 @@ class OrderController extends Controller
         }
         $data['size'] = Sizetype::get();
         $data['state'] = State::get();
+        $data['address'] = Address::where('user_id', session('user_id'))->first();
+
         return view('Order.order')->with($data);
     }
 
     public function OrderPlaced(Request $request)
     {
+
         $user = session('user_id');
         if ($request->ajax()) {
             if ($request->get_view_item) {
@@ -97,6 +125,7 @@ class OrderController extends Controller
                 $order = Order::with('get_product', 'get_product.get_category', 'get_state', 'get_size', 'get_cities')
                     ->where('id', $id)
                     ->first();
+
                 return response()->json($order);
             }
             if ($request->get_payment_list) {
@@ -108,21 +137,144 @@ class OrderController extends Controller
                     })
                     ->with('get_payment')
                     ->first();
+
                 return response()->json($order);
             }
             if ($request->delete_order) {
                 $id = $request->id;
                 Payment::where('order_id', $id)->delete();
                 $order = Order::where('id', $id)->delete();
+
                 return response()->json($order);
             }
-            $data = Order::with('get_product', 'get_product.get_category', 'get_state', 'get_size', 'get_cities', 'get_payment')
-                ->where('user_id', $user)
+            $data = Order::where('user_id', $user)
                 ->get();
+
             return DataTables::of($data)
                 ->addIndexColumn()
-                ->addColumn('payment_gateway', function ($row) {
-                    return $row->get_payment->payment_gateway ?? '-';
+                ->addColumn('action', function ($row) {
+                    $actions = '
+                        <div class="dropdown">
+                            <a href="#" class="text-dark" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fas fa-ellipsis-v"></i>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <a href="javascript:void(0)" class="ViewRow dropdown-item" data-id="'.$row->id.'">View</a>
+                                </li>
+                            </ul>
+                        </div>';
+
+                    return $actions;
+                })
+                ->rawColumns(['action'])
+                ->make(true);
+        }
+
+        return view('Order.orderplaced');
+    }
+
+    public function OrderList(Request $request)
+    {
+        if ($request->method('POST')) {
+            if ($request->edit_status) {
+
+                $validation = $request->validate([
+                    'delivery_status' => 'required',
+                ]);
+                if ($validation) {
+                    $id = $request->id;
+                    Order::where('id', $id)->update([
+                        'delivery_status' => $request->delivery_status,
+                    ]);
+                    if ($request->delivery_status == 'delivered') {
+                        Payment::where('order_id', $id)->where('payment_gateway', 'cash_on_delivery')->update([
+                            'transaction_id' => 'TXN'.time(),
+                            'payment_status' => 'success',
+                            'paid_at' => now(),
+                        ]);
+                    }
+                    session()->flash('success', 'Status Updated Successfully');
+
+                    return redirect()->route('order_list');
+                }
+            }
+        }
+
+        if ($request->get_invoice_bill) {
+            $id = $request->id;
+            $order = Order::with([
+                'get_user',
+                'get_address.get_city',
+                'get_address.get_state',
+                'get_orderitems.get_product.get_product_images',
+                'get_orderitems.get_size',
+                'get_payment',
+            ])->where('id',$id)->first();
+            $pdf = Pdf::loadView('Export.pdf.order_invoice_bill', ['order' => $order]);
+            return $pdf->download('Invoice_'.$order->order_no.'.pdf');
+        }
+
+        if ($request->ajax()) {
+            if ($request->get_view_item) {
+                $id = $request->id;
+                $order = Order::with(['get_user', 'get_payment', 'get_address.get_state', 'get_address.get_city',
+                    'get_orderitems.get_product',
+                    'get_orderitems.get_product.get_product_images',
+                    'get_orderitems.get_size',
+                ])->where('id', $id)->first();
+
+                return response()->json($order);
+            }
+
+            if ($request->get_status) {
+                $id = $request->id;
+                $order = Order::where('id', $id)->first();
+
+                return response()->json($order);
+            }
+
+            $query = Order::with('get_user', 'get_payment');
+            if ($request->order_no) {
+                $query->where('order_no', 'LIKE', '%'.$request->order_no.'%');
+            }
+            if ($request->customer_name) {
+                $query->whereHas('get_user',
+                    function ($q) use ($request) {
+                        $q->where('first_name', 'LIKE', '%'.$request->customer_name.'%');
+                    }
+                );
+            }
+            if ($request->payment_gateway) {
+                $query->whereHas('get_payment',
+                    function ($q) use ($request) {
+                        $q->where('payment_gateway', $request->payment_gateway);
+                    }
+                );
+            }
+            if ($request->payment_status) {
+                $query->whereHas('get_payment',
+                    function ($q) use ($request) {
+                        $q->where('payment_status', $request->payment_status);
+                    }
+                );
+            }
+            if ($request->delivery_status) {
+                $query->where('delivery_status', $request->delivery_status);
+            }
+            if ($request->from_date) {
+                $from = Carbon::createFromFormat('d-m-Y', $request->from_date)->format('Y-m-d');
+                $query->whereDate('created_at', '>=', $from);
+            }
+            if ($request->to_date) {
+                $to = Carbon::createFromFormat('d-m-Y', $request->to_date)->format('Y-m-d');
+                $query->whereDate('created_at', '<=', $to);
+            }
+
+            return DataTables::of($query)
+                ->addIndexColumn()
+                ->addColumn('customer_name', function ($row) {
+                    return ($row->get_user->first_name ?? '').' '.($row->get_user->last_name ?? '');
                 })
                 ->addColumn('action', function ($row) {
                     $actions = '
@@ -132,137 +284,73 @@ class OrderController extends Controller
                             </a>
                             <ul class="dropdown-menu">
                                 <li>
-                                    <a href="javascript:void(0)" class="ViewRow dropdown-item" data-id="' . $row->id . '">View</a>
-                                </li>';
-                    if ($row->get_payment->payment_status == "1") {
-                        $actions .= '
-                                        <li>
-                                            <a href="javascript:void(0)" class="PaymentRow dropdown-item" data-id="' . $row->id . '">Payment</a>
-                                        </li>';
-                    }
-                    if (in_array($row->delivery_status, ['pending'])) {
-                        $actions .= '
-                                            <li>
-                                                <a href="javascript:void(0)" class="deleteRow dropdown-item text-danger" data-id="' . $row->id . '">Delete</a>
-                                            </li>';
-                    }
-                    if ($row->delivery_status === 'delivered') {
-                        $actions .= '
+                                    <a href="javascript:void(0)" class="ViewRow dropdown-item" data-id="'.$row->id.'">View</a>
+                                </li>
                                 <li>
-                                    <a href="javascript:void(0)" class="returnRow dropdown-item text-danger" data-id="' . $row->id . '">Return</a>
-                                </li>';
-                    }
-                    $actions .= '
+                                    <a href="javascript:void(0)" class="EditStatusRow dropdown-item" data-id="'.$row->id.'">Status</a>
+                                </li>
                             </ul>
                         </div>';
+
                     return $actions;
                 })
-                ->rawColumns(['action'])
                 ->make(true);
         }
-        return view('Order.orderplaced');
+
+        return view('Order.order_list');
     }
 
-    public function OrderList(Request $request)
+    public function OrderExport(Request $request)
     {
-        if ($request->method("POST")) {
-            if ($request->edit_status) {
-                $id = $request->id;
+        $query = Order::with(['get_user', 'get_payment']);
 
-                Order::where('id', $id)->update([
-                    'delivery_status' => $request->delivery_status,
-                ]);
-
-                session()->flash('success', 'Status Updated Successfully');
-                return redirect()->route('order_list');
-            }
+        if ($request->order_no) {
+            $query->where('order_no', 'LIKE', '%'.$request->order_no.'%');
         }
 
-        if ($request->ajax()) {
-
-            if ($request->get_payment) {
-                $id = $request->id;
-                $payment = Payment::where('order_id', $id)->first();
-
-                $updateData = [
-                    'payment_status' => '1',
-                    'paid_at'        => now(),
-                ];
-
-                if (empty($payment->transaction_id)) {
-                    $lastPayment = Payment::latest()->first();
-                    $transaction = 'TRA' . str_pad(($lastPayment?->id + 1 ?? 1), 5, '0', STR_PAD_LEFT);
-                    $updateData['transaction_id'] = $transaction;
-                }
-
-                $p = Payment::where('order_id', $id)->update($updateData);
-                Order::where('id', $id)->update([
-                    'delivery_status' => 'delivered'
-                ]);
-                session()->flash('success', 'Payment updated successfully for the customer.');
-                return response()->json($p);
-            }
-
-            if ($request->get_status) {
-                $id = $request->id;
-                $order = Order::where('id', $id)->first();
-                return response()->json($order);
-            }
-
-            if ($request->get_view_item) {
-                $id = $request->id;
-                $order = Order::with('get_product', 'get_product.get_category', 'get_state', 'get_size', 'get_cities')
-                    ->where('id', $id)
-                    ->first();
-                return response()->json($order);
-            }
-
-
-
-            $data = Order::with('get_product', 'get_product.get_category', 'get_state', 'get_size', 'get_cities', 'get_payment')
-                ->get();
-
-            return DataTables::of($data)
-                ->addIndexColumn()
-                ->addColumn('payment_gateway', function ($row) {
-                    return $row->get_payment->payment_gateway ?? '-';
-                })
-                ->addColumn('action', function ($row) {
-                    $actions = '
-
-                    <div class="dropdown">
-                        <a href="#" class="text-dark " role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            <i class="fas fa-ellipsis-v"></i>
-                        </a>
-                        <ul class="dropdown-menu">
-                            <li>
-                                <a href="javascript:void(0)"  class="ViewRow dropdown-item" data-id="' . $row->id . '">View </a>
-                            </li>
-                            <li>
-                                <a href="javascript:void(0)"  class="EditStatusRow dropdown-item" data-id="' . $row->id . '">Edit Status </a>
-                            </li>';
-
-
-                    // if ($row->get_payment && strtolower($row->get_payment->payment_gateway) == 'cash_on_delivery') {
-
-                    //     if (strtolower($row->delivery_status) == 'delivered') {
-
-                    //     } else {
-                    //         $actions .= '
-                    //         <li>
-                    //             <a href="javascript:void(0)" class="AddPaymentRow dropdown-item" data-id="' . $row->id . '">Payment Update</a>
-                    //         </li>';
-                    //     }
-                    // }
-                    $actions .= '
-
-                        </ul>
-                    </div>';
-                    return $actions;
-                })
-                ->rawColumns(['action'])
-                ->make(true);
+        if ($request->customer_name) {
+            $query->whereHas('get_user', function ($q) use ($request) {
+                $q->whereRaw("CONCAT(COALESCE(first_name,''),' ',COALESCE(last_name,'')) LIKE ?", ['%'.$request->customer_name.'%']);
+            });
         }
-        return view("Order.order_list");
+
+        if ($request->payment_gateway) {
+            $query->whereHas('get_payment', function ($q) use ($request) {
+                $q->where('payment_gateway', $request->payment_gateway);
+            });
+        }
+
+        if ($request->payment_status) {
+            $query->whereHas('get_payment', function ($q) use ($request) {
+                $q->where('payment_status', $request->payment_status);
+            });
+
+        }
+
+        if ($request->delivery_status) {
+            $query->where('delivery_status', $request->delivery_status);
+        }
+
+        if ($request->from_date) {
+            $from = Carbon::createFromFormat('d-m-Y', $request->from_date)->format('Y-m-d');
+            $query->whereDate('order_date', '>=', $from);
+        }
+
+        if ($request->to_date) {
+            $to = Carbon::createFromFormat('d-m-Y', $request->to_date)->format('Y-m-d');
+            $query->whereDate('order_date', '<=', $to);
+        }
+
+        $orders = $query->get();
+        if ($request->type == 'excel') {
+            return Excel::download(new OrderExport($orders), 'orders.xlsx');
+        }
+
+        if ($request->type == 'pdf') {
+            $pdf = Pdf::loadView('Export.pdf.order_pdf', ['orders' => $orders]);
+
+            return $pdf->download('orders.pdf');
+
+        }
     }
 }

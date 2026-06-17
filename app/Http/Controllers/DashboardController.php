@@ -21,13 +21,14 @@ class DashboardController extends Controller
     {
         $data['category'] = Category::count();
         $data['size'] = Sizetype::count();
-        $data['men_products'] = Product::whereHas('get_category', function ($q) {$q->where('name', 'Men');})->count();
-        $data['women_products'] = Product::whereHas('get_category', function ($q) {$q->where('name', 'Women');})->count();
+        $data['man_products'] = Product::whereHas('get_category', function ($q) {$q->where('name', 'Man');})->count();
+        $data['women_products'] = Product::whereHas('get_category', function ($q) {$q->where('name', 'Woman');})->count();
+        $data['kids_products'] = Product::whereHas('get_category', function ($q) {$q->where('name', 'Kids');})->count();
         $data['total_orders'] = Order::count();
         $data['today_orders'] = Order::whereDate('order_date', Carbon::today())->count();
         $data['feedback'] = Feedback::count();
         $data['user'] = Registration::where('role', 'user')->count();
-        $data['payment'] = Payment::count();
+        $data['payment'] = Payment::where('payment_status', 'success')->count();
         $data['contact'] = Contact::count();
         $data['favourites'] = Favourites::count();
         return view("dashboard.dashboard")->with($data);

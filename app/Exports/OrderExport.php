@@ -8,43 +8,37 @@ use Maatwebsite\Excel\Concerns\WithEvents;
 use Maatwebsite\Excel\Events\AfterSheet;
 use PhpOffice\PhpSpreadsheet\Style\Border;
 
-// use Maatwebsite\Excel\Concerns\FromCollection;
-
-class SizeTypeExport implements FromView,WithEvents
+class OrderExport implements FromView, WithEvents
 {
-
-    protected $size_types;
-
-    public function __construct($size_types)
+    protected $orders;
+    public function __construct($orders)
     {
-        $this->size_types = $size_types;
+        $this->orders = $orders;
     }
+
     public function view(): View
     {
-        return view('Export.excel.size_type_excel', ['size_types' => $this->size_types]);
+        return view('Export.excel.order_excel', ['orders' => $this->orders]);
     }
 
-        public function registerEvents(): array
+    public function registerEvents(): array
     {
         return [
             AfterSheet::class => function ($event) {
                 $startRow = 2;
-                $lastRow = count($this->size_types) + $startRow;
+                $lastRow = count($this->orders) + $startRow;
                 $event->sheet
-                    ->getStyle('A2:B'.$lastRow)
+                    ->getStyle('A2:H'.$lastRow)
                     ->getBorders()
                     ->getAllBorders()
                     ->setBorderStyle(
                         Border::BORDER_THIN
                     );
-
                 $event->sheet
-                    ->getStyle('A2:B2')
+                    ->getStyle('A2:H2')
                     ->getFont()
                     ->setBold(true);
-
-
-                foreach (range('A', 'B') as $column) {
+                foreach (range('A', 'H') as $column) {
                     $event->sheet
                         ->getDelegate()
                         ->getColumnDimension($column)

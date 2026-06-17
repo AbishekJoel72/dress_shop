@@ -2,9 +2,85 @@
 @section('content')
     <div class="container">
 
+        <div class="card mb-3">
+            <div class="card-header bg-transparent">
+                <h5 class="mb-0">Order Filter</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-4">
+                        <label for="order_no">Order No</label>
+                        <input type="text" id="order_no" class="form-control" placeholder="Enter Order No">
+                    </div>
+                    <div class="col-md-4">
+                        <label for="customer_name">Customer Name</label>
+                        <input type="text" id="customer_name" class="form-control" placeholder="Enter Customer Name">
+                    </div>
+                    <div class="col-md-4">
+                        <label for="payment_gateway">Payment Method</label>
+                        <select id="payment_gateway" class="form-select">
+                            <option value="">Select payment method</option>
+                            <option value="gpay">Google Pay</option>
+                            <option value="phonepe">PhonePe</option>
+                            <option value="paytm">Paytm</option>
+                            <option value="cash_on_delivery">Cash On Delivery</option>
+                        </select>
+                    </div>
+
+                </div>
+                <div class="row mt-3">
+                    <div class="col-md-4">
+                        <label for="payment_status">Payment Status</label>
+                        <select id="payment_status" class="form-select">
+                            <option value="">select payment status</option>
+                            <option value="pending">Pending</option>
+                            <option value="success">Success</option>
+                            <option value="failed">Failed</option>
+                            <option value="refunded">Refunded</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="delivery_status">Delivery Status</label>
+                        <select id="delivery_status" class="form-select">
+                            <option value="">Select Delivery Status</option>
+                            <option value="pending">Pending</option>
+                            <option value="confirmed">Confirmed</option>
+                            <option value="shipped">Shipped</option>
+                            <option value="out_for_delivery">Out For Delivery</option>
+                            <option value="delivered">Delivered</option>
+                            <option value="cancelled">Cancelled</option>
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <label for="from_date">From Date</label>
+                        <input type="text" id="from_date" class="form-control filter_date" placeholder="From Date">
+                    </div>
+                    <div class="col-md-2">
+                        <label for="to_date">To Date</label>
+                        <input type="text" id="to_date" class="form-control filter_date" placeholder="To Date">
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer d-flex justify-content-center bg-transparent">
+                <button class="btn  btn-primary" id="filterBtn"> <i class="fa-solid fa-filter"></i>
+                    Show Filter</button>
+            </div>
+        </div>
+
+
         <div class="card">
             <div class="card-header bg-transparent d-flex justify-content-between align-items-center py-2">
                 <h5 class="mb-0">Ordered List</h5>
+                <div class="d-flex align-items-center gap-2 ms-auto">
+
+                    <div class="dropdown">
+                        <button class="btn btn-sm btn-warning" type="button" data-bs-toggle="dropdown"> Download</button>
+                        <ul class="dropdown-menu">
+                            <li><a href="#" class="dropdown-item exportBtn" data-type="excel">Excel</a></li>
+                            <li><a href="#" class="dropdown-item exportBtn" data-type="pdf">PDF </a></li>
+                        </ul>
+                    </div>
+                </div>
             </div>
             <div class="card-body">
 
@@ -13,12 +89,12 @@
                         <tr>
                             <th>S.NO</th>
                             <th>Date</th>
-                            <th>Order ID</th>
-                            <th>Product</th>
-                            <th>Category</th>
-                            <th>Amount</th>
-                            <th>Status</th>
-                            <th>Payment</th>
+                            <th>Order No</th>
+                            <th>Customer Name</th>
+                            <th>Grand Total</th>
+                            <th>Payment Status</th>
+                            <th>Delivery Status</th>
+                            <th>Payment Method</th>
                             <th>Action</th>
                         </tr>
                     </thead>
@@ -27,51 +103,63 @@
             </div>
 
         </div>
+
         <div class="modal fade" id="viewStateModal" tabindex="-1" aria-hidden="true">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
-                    <form action="">
+                    <form action="{{ route('order_list') }}" method="POST">
                         @csrf
                         <input type="hidden" name="id" id="edit_id">
                         <input type="hidden" name="edit_status" value="true">
 
                         <div class="modal-header">
-                            <h5 class="modal-title">Status</h5>
+                            <h5 class="modal-title"> Delivery Status</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
                             <div class="row ">
-                                <div class="col">
-                                    <label class="form-label d-block">Delivery Status</label>
-
-                                    <div class="d-flex align-items-center gap-4 form-control">
-                                        <div class="form-check">
-                                            <input type="radio" name="delivery_status" id="pending" value="pending"
-                                                class="form-check-input" required>
-                                            <label for="pending" class="form-check-label">Pending</label>
-                                        </div>
-                                        <div class="form-check">
-                                            <input type="radio" name="delivery_status" id="shipped" value="shipped"
-                                                class="form-check-input" required>
-                                            <label for="shipped" class="form-check-label">Shipping</label>
-                                        </div>
-                                        <div class="form-check">
-                                            <input type="radio" name="delivery_status" id="out_for_delivery"
-                                                value="out_for_delivery" class="form-check-input" required>
-                                            <label for="out_for_delivery" class="form-check-label">Out For Delivery</label>
-                                        </div>
-                                        <div class="form-check">
-                                            <input type="radio" name="delivery_status" id="delivered" value="delivered"
-                                                class="form-check-input" required>
-                                            <label for="delivered" class="form-check-label">Delivery</label>
-                                        </div>
-
-                                        <div class="form-check">
-                                            <input type="radio" name="delivery_status" id="cancelled" value="cancelled"
-                                                class="form-check-input" required>
-                                            <label for="cancelled" class="form-check-label">Cancelled</label>
-                                        </div>
+                                <div class="col-md-4 mb-2">
+                                    <div class="form-check">
+                                        <input type="radio" name="delivery_status" id="pending" value="pending"
+                                            class="form-check-input" required>
+                                        <label for="pending">Pending</label>
                                     </div>
+                                </div>
+                                <div class="col-md-4 mb-2">
+                                    <div class="form-check">
+                                        <input type="radio" name="delivery_status" id="confirmed" value="confirmed"
+                                            class="form-check-input" required>
+                                        <label for="confirmed">Confirmed</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 mb-2">
+                                    <div class="form-check">
+                                        <input type="radio" name="delivery_status" id="shipped" value="shipped"
+                                            class="form-check-input" required>
+                                        <label for="shipped">Shipping</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 mb-2">
+                                    <div class="form-check">
+                                        <input type="radio" name="delivery_status" id="out_for_delivery"
+                                            value="out_for_delivery" class="form-check-input" required>
+                                        <label for="out_for_delivery">Out For Delivery</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 mb-2">
+                                    <div class="form-check">
+                                        <input type="radio" name="delivery_status" id="delivered" value="delivered"
+                                            class="form-check-input" required>
+                                        <label for="delivered">Delivery</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 mb-2">
+                                    <div class="form-check">
+                                        <input type="radio" name="delivery_status" id="cancelled" value="cancelled"
+                                            class="form-check-input" required>
+                                        <label for="cancelled">Cancelled</label>
+                                    </div>
+
                                 </div>
 
                             </div>
@@ -79,7 +167,6 @@
                         </div>
                         <div class="modal-footer d-flex justify-content-center">
                             <button type="submit" class="btn btn-primary"> <i class="fa-solid fa-pen">
-
                                 </i> Update</button>
                         </div>
                     </form>
@@ -87,117 +174,109 @@
             </div>
         </div>
 
-        <div class="modal fade" id="viewModal" tabindex="-1" aria-hidden="true">
-            <div class="modal-dialog modal-lg">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">Product Details</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <div class="offcanvas offcanvas-end" tabindex="-1" id="viewOrderCanvas" style="width: 600px">
+            <div class="offcanvas-header">
+                <h5>Order Details</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
+            </div>
+
+            <div class="offcanvas-body">
+                <a href="javascript:void(0)" id="invoiceBtn" class="btn btn-danger" style="border: 0">
+                    Download Invoice
+                </a>
+
+
+                <!-- Customer Details -->
+                <div class="card mb-3 mt-3">
+                    <div class="card-header">
+                        <strong>Customer Details</strong>
                     </div>
-                    <div class="modal-body">
+
+                    <div class="card-body">
+                        <p><b>Name :</b> <span id="view_customer_name"></span></p>
+                        <p><b>Email :</b> <span id="customer_email"></span></p>
+                        <p><b>Phone :</b> <span id="customer_phone"></span></p>
+                    </div>
+                </div>
+
+                <!-- Address -->
+                <div class="card mb-3">
+                    <div class="card-header">
+                        <strong>Delivery Address</strong>
+                    </div>
+
+                    <div class="card-body">
+                        <p><b>Address :</b> <span id="address_line"></span></p>
+                        <p><b>State :</b> <span id="state"></span></p>
+                        <p><b>City :</b> <span id="city"></span></p>
+                        <p><b>Pincode :</b> <span id="pincode"></span></p>
+                    </div>
+                </div>
+
+                <!-- Products -->
+                <div class="card">
+                    <div class="card-header">
+                        <strong>Products</strong>
+                    </div>
+
+                    <div class="card-body">
                         <table class="table table-bordered">
-                            <tbody>
-                                <tr>
-                                    <th>Date</th>
-                                    <td><span id="date"></span></td>
-                                </tr>
-                                <tr>
-                                    <th>Order</th>
-                                    <td><span id="order_id"></span></td>
-                                </tr>
-                                <tr>
-                                    <th>Product Name</th>
-                                    <td><span id="product_id"></span></td>
-                                </tr>
-                                <tr>
-                                    <th>Category Name</th>
-                                    <td><span id="category_id"></span></td>
-                                </tr>
+                            <thead>
                                 <tr>
                                     <th>Image</th>
-                                    <td>
-                                        <div class="row" id="product_images"></div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <th>Price</th>
-                                    <td><span id="price"></span></td>
-                                </tr>
-                                <tr>
-                                    <th>Quantity</th>
-                                    <td><span id="quantity"></span></td>
-                                </tr>
-                                <tr>
+                                    <th>Product</th>
                                     <th>Size</th>
-                                    <td><span id="size_id"></span></td>
+                                    <th>Qty</th>
+                                    <th>Price</th>
+                                    <th>Total</th>
                                 </tr>
-                                <tr>
-                                    <th>Total Amount</th>
-                                    <td><span id="total_amount"></span></td>
-                                </tr>
-                                <tr>
-                                    <th>Address</th>
-                                    <td><span id="address"></span></td>
-                                </tr>
-                                <tr>
-                                    <th>State</th>
-                                    <td><span id="state"></span></td>
-                                </tr>
-                                <tr>
-                                    <th>City</th>
-                                    <td><span id="city_id"></span></td>
-                                </tr>
-                                <tr>
-                                    <th>Pincode</th>
-                                    <td><span id="pin_no"></span></td>
-                                </tr>
-                            </tbody>
+                            </thead>
+                            <tbody id="product_table"></tbody>
                         </table>
+
+                        <div class="text-end">
+                            <strong>
+                                Grand Total :
+                                ₹<span id="grand_total"></span>
+                            </strong>
+                        </div>
                     </div>
                 </div>
+
             </div>
         </div>
-
-        <div class="modal fade" id="viewPaymentModal" tabindex="-1" aria-hidden="true">
-            <div class="modal-dialog modal-lg">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">Product Details</h5>
-                    </div>
-                    <form action="{{ route('order_list') }}">
-                        @csrf
-                        <input type="hidden" id="payment_id" name="id">
-                        <input type="hidden" name="edit_payment" value="true">
-                        <div class="modal-body">
-                            <p>Cash Was received update this payment to the Customer</p>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="submit" class="btn btn-primary "> <i
-                                    class="fa-solid fa-pen"></i> Update</button>
-                        </div>
-
-                    </form>
-                </div>
-            </div>
-        </div>
-
-
-
-
 
     </div>
     @include('layouts.footer')
 @endsection
 @section('script')
     @include('layouts.datatable')
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script>
         $(document).ready(function() {
 
-            $('#datatable').DataTable({
+            $('.filter_date').datepicker({
+                format: 'dd-mm-yyyy',
+                autoclose: true,
+                todayHighlight: true,
+                endDate: new Date()
+            });
+
+            var table = $('#datatable').DataTable({
                 processing: true,
                 serverSide: true,
-                ajax: "{{ route('order_list') }}",
-
+                ajax: {
+                    url: "{{ route('order_list') }}",
+                    data: function(d) {
+                        d.order_no = $('#order_no').val();
+                        d.customer_name = $('#customer_name').val();
+                        d.payment_gateway = $('#payment_gateway').val();
+                        d.payment_status = $('#payment_status').val();
+                        d.delivery_status = $('#delivery_status').val();
+                        d.from_date = $('#from_date').val();
+                        d.to_date = $('#to_date').val();
+                    }
+                },
                 columns: [{
                         data: 'DT_RowIndex',
                         name: 'DT_RowIndex',
@@ -207,41 +286,58 @@
                         className: 'text-center'
                     },
                     {
-                        data: 'date',
-                        name: 'date',
+                        data: 'order_date',
+                        name: 'order_date',
                         render: function(data) {
-                            if (!data) return "-";
-                            let dateObj = new Date(data);
-                            return dateObj.toLocaleDateString('en-GB');
+                            if (!data) return '-';
+                            let date = new Date(data);
+                            let day = String(date.getDate()).padStart(2, '0');
+                            let month = String(date.getMonth() + 1).padStart(2, '0');
+                            let year = date.getFullYear();
+                            return `${day}-${month}-${year}`;
                         }
+                    },
+                    {
+                        data: 'order_no',
+                        name: 'order_no',
 
                     },
                     {
-                        data: 'order_id',
-                        name: 'order_id',
+                        data: 'customer_name',
+                        name: 'customer_name',
 
                     },
                     {
-                        data: 'get_product.product_name',
-                        name: 'get_product.product_name',
+                        data: 'grand_total',
+                        name: 'grand_total',
 
                     },
                     {
-                        data: 'get_product.get_category.name',
-                        name: 'get_product.get_category.name',
+                        data: 'get_payment.payment_status',
+                        name: 'get_payment.payment_status',
+                        render: function(data, type, row) {
 
-                    },
-                    {
-                        data: 'total_amount',
-                        name: 'total_amount',
+                            if (data == 'pending') {
+                                return '<span class="badge bg-info">Pending</span>';
+                            } else if (data == 'success') {
+                                return '<span class="badge bg-success">Sucess</span>';
+                            } else if (data == 'failed') {
+                                return '<span class="badge bg-danger">Failed</span>'
+                            } else {
+                                return '<span class="badge bg-warning">Refunded</span>';
+                            }
+                        }
 
                     },
                     {
                         data: 'delivery_status',
                         name: 'delivery_status',
                         render: function(data, type, row) {
+
                             if (data == 'pending') {
                                 return '<span class="badge bg-info">Pending</span>';
+                            } else if (data == 'confirmed') {
+                                return '<span class="badge bg-primary">Confirmed</span>';
                             } else if (data == 'shipped') {
                                 return '<span class="badge bg-warning">Shipping</span>'
                             } else if (data == 'out_for_delivery') {
@@ -255,21 +351,18 @@
 
                     },
                     {
-                        data: 'payment_gateway',
-                        name: 'payment_gateway',
+                        data: 'get_payment.payment_gateway',
+                        name: 'get_payment.payment_gateway',
                         render: function(data, type, row) {
+
                             if (data == 'gpay') {
-                                return '<span  >G Pay</span>';
+                                return '<span>Google Pay</span>';
                             } else if (data == 'phonepe') {
-                                return '<span >Phonepe</span>'
+                                return '<span>Phone Pe</span>';
                             } else if (data == 'paytm') {
-                                return '<span  >Pay TM</span>'
-                            } else if (data == 'netbanking') {
-                                return '<span >Net Banking</span>'
-                            } else if (data == 'card') {
-                                return '<span >Card</span>'
-                            } else if (data == 'cash_on_delivery') {
-                                return '<span >Cash On Delivery</span>'
+                                return '<span>PAYTM</span>'
+                            } else {
+                                return '<span>Cash On Delivery</span>';
                             }
                         }
                     },
@@ -279,9 +372,13 @@
                         orderable: false,
                         searchable: false,
                         width: '5%',
-                        className: 'text-center'
+                        className: 'text-center',
+
                     }
                 ]
+            });
+            $('#filterBtn').click(function() {
+                table.draw();
             });
 
 
@@ -299,6 +396,8 @@
                         $('#edit_id').val(data.id);
                         if (data.delivery_status == 'pending') {
                             $('#pending').prop('checked', true);
+                        } else if (data.delivery_status == 'confirmed') {
+                            $('#confirmed').prop('checked', true)
                         } else if (data.delivery_status == 'shipped') {
                             $('#shipped').prop('checked', true);
                         } else if (data.delivery_status == 'out_for_delivery') {
@@ -316,66 +415,97 @@
                 })
             });
 
-            $(document).on('click', '.AddPaymentRow', function() {
-                let id = $(this).data('id');
-                $.ajax({
-                    url: "{{ route('order_list') }}",
-                    method: "GET",
-                    data: {
-                        id: id,
-                        get_payment: true,
-                    },
-                    success: function(data) {
-                         $('#payment_id').val(data.id);
-                        $('#viewPaymentModal').modal('show');
-                    }
-                });
-
-            });
 
             $(document).on('click', '.ViewRow', function() {
                 let id = $(this).data('id');
-
                 $.ajax({
                     url: "{{ route('order_list') }}",
-                    method: "GET",
+                    type: "GET",
                     data: {
                         id: id,
-                        get_view_item: true,
+                        get_view_item: true
                     },
                     success: function(data) {
-                        $('#date').text(data.date ?? "-");
-                        $('#order_id').text(data.order_id ?? "-");
-                        $('#product_id').text(data.get_product?.product_name ?? "-");
-                        $('#category_id').text(data.get_product?.get_category?.name ?? "-");
+                        // Customer
+                        $('#view_customer_name').text((data.get_user?.first_name ?? '') + ' ' +
+                            (data
+                                .get_user?.last_name ?? ''));
+                        $('#customer_email').text(data.get_user?.email ?? '-');
+                        $('#customer_phone').text(data.get_user?.phone_no ?? '-');
 
-                        if (data.get_product?.image_path) {
-                            $('#product_images').html(`
-                    <div class="col-md-3 mb-3">
-                        <img src="/${data.get_product.image_path}" class="img-fluid rounded border" />
-                    </div>
-                `);
-                        } else {
-                            $('#product_images').html(
-                                '<p class="text-muted">No Images Found</p>');
-                        }
+                        // Address
+                        $('#address_line').text((data.get_address?.address_line1 ?? '') + ' ' +
+                            (data.get_address?.address_line2 ?? ''));
+                        $('#city').text(data.get_address?.get_city?.city_name ?? '-');
+                        $('#state').text(data.get_address?.get_state?.state_name ?? '-');
+                        $('#pincode').text(data.get_address?.pincode ?? '-');
 
-                        $('#price').text(data.get_product?.price ?? "-");
-                        $('#size_id').text(data.get_size?.size_name ?? "-");
-                        $('#quantity').text(data.quantity ?? "-");
-                        $('#total_amount').text(data.total_amount ?? "-");
-                        $('#address').text(data.address ?? "-");
-                        $('#state').text(data.get_state?.state_name ?? "-");
-                        $('#city_id').text(data.get_cities?.city_name ?? "-");
-                        $('#pin_no').text(data.pincode ?? "-");
+                        // Products
+                        let html = '';
+                        $.each(data.get_orderitems, function(index, item) {
+                            let image = '-';
+                            if (item.get_product?.get_product_images?.image_path) {
+                                image = `
+                                    <img
+                                        src="/${item.get_product.get_product_images.image_path}"
+                                        width="60"
+                                        height="60"
+                                        class="rounded border"
+                                        style="object-fit:cover"
+                                    >
+                                `;
+                            }
+                            html += `
+                                <tr>
+                                    <td>${image}</td>
+                                    <td>${item.get_product?.product_name ?? '-'}</td>
+                                    <td>${item.get_size?.size_name ?? '-'}</td>
+                                    <td>${item.quantity}</td>
+                                    <td>${item.price}</td>
+                                    <td>${item.total_amount}</td>
+                                </tr>
+                            `;
 
-                        $('#viewModal').modal('show');
+
+                        });
+                        $('#product_table').html(html);
+                        $('#grand_total').text(data.grand_total);
+                        // Invoice Bill
+                        let invoiceUrl = "{{ route('order_list') }}" + "?id=" + data.id +
+                            "&get_invoice_bill=true";
+                        $('#invoiceBtn').attr('href', invoiceUrl);
+
+                        // OPEN OFFCANVAS
+                        let canvas = new bootstrap.Offcanvas(document.getElementById(
+                            'viewOrderCanvas'));
+                        canvas.show();
                     }
                 });
+
             });
 
-
-
+            $(document).on('click', '.exportBtn', function(e) {
+                e.preventDefault();
+                let type = $(this).data('type');
+                let order_no = $('#order_no').val();
+                let customer_name = $('#customer_name').val();
+                let payment_gateway = $('#payment_gateway').val();
+                let payment_status = $('#payment_status').val();
+                let delivery_status = $('#delivery_status').val();
+                let from_date = $('#from_date').val();
+                let to_date = $('#to_date').val();
+                let url = "{{ route('order.export') }}";
+                window.location.href =
+                    url +
+                    '?type=' + type +
+                    '&order_no=' + encodeURIComponent(order_no || '') +
+                    '&customer_name=' + encodeURIComponent(customer_name || '') +
+                    '&payment_gateway=' + encodeURIComponent(payment_gateway || '') +
+                    '&payment_status=' + encodeURIComponent(payment_status || '') +
+                    '&delivery_status=' + encodeURIComponent(delivery_status || '') +
+                    '&from_date=' + encodeURIComponent(from_date || '') +
+                    '&to_date=' + encodeURIComponent(to_date || '');
+            });
 
         });
     </script>

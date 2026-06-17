@@ -13,9 +13,9 @@
                     </div>
                 </div>
             </div>
-            {{-- <div class="card-footer d-flex justify-content-center bg-transparent">
-                <button class="btn  btn-primary"> <i class="fa-solid fa-filter"></i> Filter</button>
-            </div> --}}
+            <div class="card-footer d-flex justify-content-center bg-transparent">
+                <button class="btn  btn-primary" id="filterBtn"> <i class="fa-solid fa-filter"></i> Show Filter</button>
+            </div>
         </div>
 
         <div class="card mt-4">
@@ -31,11 +31,10 @@
                         </button>
                         <ul class="dropdown-menu">
                             <li>
-                                <a class="dropdown-item" href="{{ route('size.export', ['type' => 'excel']) }}">Excel
-                                </a>
+                               <a href="#" class="dropdown-item exportBtn" data-type="excel">Excel</a>
                             </li>
                             <li>
-                                <a class="dropdown-item" href="{{ route('size.export', ['type' => 'pdf']) }}"> PDF </a>
+                                 <a href="#" class="dropdown-item exportBtn" data-type="pdf">PDF</a>
                             </li>
                         </ul>
                     </div>
@@ -59,7 +58,8 @@
         <div class="modal fade" id="Addmodel" tabindex="-1" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
-                    <form action="{{ route('size_type') }}" method="POST" autocomplete="off" class="needs-validation" novalidate>
+                    <form action="{{ route('size_type') }}" method="POST" autocomplete="off" class="needs-validation"
+                        novalidate>
                         @csrf
                         <input type="hidden" name="size_list" value="true">
                         <div class="modal-header">
@@ -69,10 +69,11 @@
                         <div class="modal-body">
                             <div class="row g-3">
                                 <div class="col-6 form-field">
-                                    <label for="size_type" class="form-label">Size <span class="text-danger">*</span></label>
+                                    <label for="size_type" class="form-label">Size <span
+                                            class="text-danger">*</span></label>
                                     <input type="text" name="size_type" id="size_type" placeholder="size"
                                         class="form-control" required>
-                                         <small class="text-dangers"></small>
+                                    <small class="text-dangers"></small>
                                 </div>
                             </div>
                         </div>
@@ -88,7 +89,8 @@
         <div class="modal fade" id="editmodel" tabindex="-1" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
-                    <form action="{{ route('size_type') }}" method="POST" autocomplete="off" class="needs-validation" novalidate>
+                    <form action="{{ route('size_type') }}" method="POST" autocomplete="off" class="needs-validation"
+                        novalidate>
                         @csrf
                         <input type="hidden" name="id" id="edit_size_id">
                         <input type="hidden" name="edit_size_list" value="true">
@@ -100,10 +102,11 @@
                         <div class="modal-body">
                             <div class="row g-3">
                                 <div class="col-6 form-field">
-                                    <label for="size_type" class="form-label">Size <span class="text-danger">*</span></label>
+                                    <label for="size_type" class="form-label">Size <span
+                                            class="text-danger">*</span></label>
                                     <input type="text" name="size_type" id="edit_size_type" placeholder="size"
                                         class="form-control" required>
-                                         <small class="text-dangers"></small>
+                                    <small class="text-dangers"></small>
                                 </div>
                             </div>
                         </div>
@@ -211,7 +214,7 @@
                     }
                 ]
             });
-            $('#size_name').on('keyup', function() {
+            $('#filterBtn').click(function() {
                 table.draw();
             });
 
@@ -283,6 +286,18 @@
                     }
 
                 });
+            });
+
+             $(document).on('click', '.exportBtn', function(e) {
+                e.preventDefault();
+                let type = $(this).data('type');
+                let size_name = $('#size_name').val();
+                let url = "{{ route('size.export') }}";
+                window.location.href =
+                    url +
+                    '?type=' + type +
+                    '&size_name=' + size_name;
+
             });
         });
     </script>
