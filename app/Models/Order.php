@@ -11,8 +11,6 @@ class Order extends Model
         'order_no ',
         'order_date',
         'user_id',
-        'sub_total',
-        'discount_amount',
         'delivery_charge',
         'grand_total',
         'delivery_status'
@@ -22,4 +20,21 @@ class Order extends Model
     {
         return $this->hasMany(OrderItems::class,'order_id');
     }
+
+    public function get_user()
+    {
+        return $this->belongsTo(Registration::class,'user_id');
+    }
+
+    public function get_payment()
+    {
+        return $this->hasOne(Payment:: class, 'order_id');
+    }
+    
+    public function get_address()
+    {
+        return $this->hasOne(Address:: class, 'order_id');
+    }
+
+
 }
