@@ -2,10 +2,6 @@
 <html>
 <head>
     <title>Category List</title>
-    <style>
-        table { width: 100%; border-collapse: collapse; }
-        th, td { border: 1px solid black; padding: 8px; }
-    </style>
 </head>
 <body>
 
@@ -17,7 +13,6 @@
             <th>S.NO</th>
             <th>Name</th>
             <th>Description</th>
-            {{-- <th>Status</th> --}}
         </tr>
     </thead>
     <tbody>
@@ -26,7 +21,6 @@
             <td>{{ $key + 1 }}</td>
             <td>{{ $cat->name }}</td>
             <td>{{ $cat->description }}</td>
-            {{-- <td>{{ $cat->status }}</td> --}}
         </tr>
         @endforeach
     </tbody>

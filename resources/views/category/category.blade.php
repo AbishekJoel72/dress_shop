@@ -14,9 +14,10 @@
                     </div>
                 </div>
             </div>
-            {{-- <div class="card-footer d-flex justify-content-center bg-transparent">
-                <button class="btn  btn-primary"> <i class="fa-solid fa-filter"></i> Filter</button>
-            </div> --}}
+            <div class="card-footer d-flex justify-content-center bg-transparent">
+                <button class="btn  btn-primary" id="filterBtn"> <i class="fa-solid fa-filter"></i>
+                    Show Filter</button>
+            </div>
         </div>
 
         <div class="card mt-4">
@@ -32,11 +33,10 @@
                         </button>
                         <ul class="dropdown-menu">
                             <li>
-                                <a class="dropdown-item" href="{{ route('category.export', ['type' => 'excel']) }}">Excel
-                                </a>
+                                <a href="#" class="dropdown-item exportBtn" data-type="excel">Excel</a>
                             </li>
                             <li>
-                                <a class="dropdown-item" href="{{ route('category.export', ['type' => 'pdf']) }}"> PDF </a>
+                                <a href="#" class="dropdown-item exportBtn" data-type="pdf">PDF</a>
                             </li>
                         </ul>
                     </div>
@@ -106,7 +106,8 @@
                         <input type="hidden" name="edit_status" value="true">
                         <div class="modal-header">
                             <h5 class="modal-title">Edit Status</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
                             <div class="row g-3">
@@ -204,11 +205,13 @@
                         data: 'name',
                         name: 'name',
                         width: '20%',
+                        className: 'text-center'
                     },
                     {
                         data: 'description',
                         name: 'description',
                         width: '30%',
+                        className: 'text-center',
                         render: function(data, type, row) {
                             return data ? data : "-";
                         }
@@ -217,6 +220,7 @@
                         data: 'status',
                         name: 'status',
                         width: '30%',
+                        className: 'text-center',
                         render: function(data, type, row) {
 
                             if (data === 'active') {
@@ -237,7 +241,7 @@
                     }
                 ]
             });
-            $('#category_name').on('keyup', function() {
+            $('#filterBtn').on('click', function() {
                 table.draw();
             });
 
@@ -322,8 +326,18 @@
                 });
 
             });
-        });
 
-        
+            $(document).on('click', '.exportBtn', function(e) {
+                e.preventDefault();
+                let type = $(this).data('type');
+                let category_name = $('#category_name').val();
+                let url = "{{ route('category.export') }}";
+                window.location.href =
+                    url +
+                    '?type=' + type +
+                    '&category_name=' + category_name;
+
+            });
+        });
     </script>
 @endsection
