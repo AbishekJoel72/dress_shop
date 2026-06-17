@@ -14,12 +14,10 @@
                         <tr>
                             <th>S.NO</th>
                             <th>Date</th>
-                            <th>Order ID</th>
-                            <th>Product</th>
-                            <th>Category</th>
-                            <th>Amount</th>
-                            <th>Status</th>
-                            <th>Payment</th>
+                            <th>Order NO</th>
+                            <th>Delivery Charges</th>
+                            <th>Total amount</th>
+                            <th>Delivery Status</th>
                             <th>Action</th>
                         </tr>
                     </thead>
@@ -155,8 +153,8 @@
                         className: 'text-center'
                     },
                     {
-                        data: 'date',
-                        name: 'date',
+                        data: 'order_date',
+                        name: 'order_date',
                         render: function(data) {
                             if (!data) return "-";
                             let dateObj = new Date(data);
@@ -165,32 +163,29 @@
 
                     },
                     {
-                        data: 'order_id',
-                        name: 'order_id',
+                        data: 'order_no',
+                        name: 'order_no',
 
                     },
                     {
-                        data: 'get_product.product_name',
-                        name: 'get_product.product_name',
+                        data: 'delivery_charge',
+                        name: 'delivery_charge',
 
                     },
                     {
-                        data: 'get_product.get_category.name',
-                        name: 'get_product.get_category.name',
-
-                    },
-                    {
-                        data: 'total_amount',
-                        name: 'total_amount',
+                        data: 'grand_total',
+                        name: 'grand_total',
 
                     },
                     {
                         data: 'delivery_status',
                         name: 'delivery_status',
                         render: function(data, type, row) {
-                            if (data == 'pending') {
+                          if (data == 'pending') {
                                 return '<span class="badge bg-info">Pending</span>';
-                            } else if (data == 'shipped') {
+                            }else if(data == 'confirmed'){
+                                 return '<span class="badge bg-primary">Confirmed</span>';
+                            }else if (data == 'shipped') {
                                 return '<span class="badge bg-warning">Shipping</span>'
                             } else if (data == 'out_for_delivery') {
                                 return '<span class="badge bg-secondary">Out For Delivery</span>'
@@ -198,30 +193,6 @@
                                 return '<span class="badge bg-success"> Delivered </span>'
                             } else {
                                 return '<span class="badge bg-danger">Cancelled</span>';
-                            }
-                        }
-
-                    },
-                    {
-                        data: 'payment_gateway',
-                        name: 'payment_gateway',
-                        render: function(data,type, row) {
-                            if(data == 'gpay'){
-                                 return '<span  >G Pay</span>';
-                            }else if (data == 'phonepe') {
-                                return '<span >Phonepe</span>'
-                            }
-                            else if (data == 'paytm') {
-                                return '<span >Pay TM</span>'
-                            }
-                            else if (data == 'netbanking') {
-                                return '<span>Net Banking</span>'
-                            }
-                            else if (data == 'card') {
-                                return '<span >Card</span>'
-                            }
-                            else if (data == 'cash_on_delivery') {
-                                return '<span >Cash On Delivery</span>'
                             }
                         }
                     },
@@ -235,6 +206,9 @@
                     }
                 ]
             });
+
+
+
 
             $(document).on('click', '.ViewRow', function() {
                 let id = $(this).data('id');
@@ -257,7 +231,8 @@
                                 </div>
                             `);
                         } else {
-                            $('#product_images').html('<p class="text-muted">No Images Found</p>');
+                            $('#product_images').html(
+                                '<p class="text-muted">No Images Found</p>');
                         }
                         $('#price').text(data.get_product?.price ?? "-");
                         $('#size_id').text(data.get_size?.size_name ?? "-");

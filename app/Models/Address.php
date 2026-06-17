@@ -6,7 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Address extends Model
 {
-    protected $table = "address";
+    protected $table = 'address';
+
     protected $fillable = [
 
         'user_id',
@@ -15,6 +16,16 @@ class Address extends Model
         'address_line2',
         'state_id',
         'city_id',
-        'pincode'
+        'pincode',
     ];
+
+    public function get_state()
+    {
+        return $this->belongsTo(State::class, 'state_id');
+    }
+
+    public function get_city()
+    {
+        return $this->belongsTo(City::class, 'city_id');
+    }
 }
