@@ -46,22 +46,24 @@
                                 <div class="col-md-6">
                                     <label for="address" class="form-label fw-semibold">Address 1 <span
                                             class="text-danger small">*</span></label>
-                                    <textarea name="address" id="address" class="form-control" placeholder="Address 1" required style="height: 100px;"></textarea>
+                                    <textarea name="address" id="address" class="form-control" placeholder="Address 1" required style="height: 100px;">{{ $address->address_line1 ?? '' }}</textarea>
                                 </div>
                                 <div class="col-md-6">
                                     <label for="address2" class="form-label fw-semibold">Address 2 <span
                                             class="text-muted small">(Optional)</span></label>
                                     <textarea name="address2" id="address2" rows="3" maxlength="100" class="form-control" placeholder="Address 2"
-                                        style="height: 100px;"></textarea>
+                                        style="height: 100px;">{{ $address->address_line2 ?? '' }}</textarea>
                                 </div>
                             </div>
                             <div class="row mt-3">
                                 <div class="col-md-4">
                                     <label for="state_id" class="form-label fw-semibold">State</label>
                                     <select name="state_id" id="state_id" class="form-select select2" required>
-                                        <option value="">Select State</option>
+                                        <option value="" selected disabled>Select State</option>
                                         @foreach ($states as $state)
-                                            <option value="{{ $state->id }}">{{ $state->state_name }}</option>
+                                            <option value="{{ $state->id }}"
+                                                {{ isset($address) && $address->state_id == $state->id ? 'selected' : '' }}>
+                                                {{ $state->state_name }}</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -74,7 +76,7 @@
                                 <div class="col-md-4">
                                     <label for="pincode" class="form-label fw-semibold">Pin Code</label>
                                     <input type="text" name="pincode" id="pincode" class="form-control"
-                                        placeholder="Pin Code" required>
+                                        value="{{ $address->pincode ?? '' }}" placeholder="Pin Code" required>
                                 </div>
                             </div>
                         </div>
@@ -279,10 +281,17 @@
                     success: function(data) {
                         $('#city_id').empty();
                         $('#city_id').append('<option value="" selected disabled>Select City</option>');
+                        var selectedCity = '{{ $address->city_id ?? '' }}';
                         $.each(data, function(key, value) {
-                            $('#city_id').append('<option value="' + value.id + '">' + value
-                                .city_name + '</option>');
+                            var selected = '';
+                            if (selectedCity == value.id) {
+                                selected = 'selected';
+                            }
+                            $('#city_id').append('<option value="' + value.id +
+                                '" ' + selected + '>' + value.city_name +
+                                '</option>');
                         });
+                        $('#city_id').trigger('change');
                     }
                 });
             } else {
@@ -290,24 +299,23 @@
                 $('#city_id').append('<option value="" selected disabled>Select City</option>');
             }
         });
-
+        if ($('#state_id').val()) {
+            $('#state_id').trigger('change');
+        }
+        
         $(document).on("click", "#payment", function(e) {
             e.preventDefault();
-
-            let form = $('form')[0];
-
+            // let form = $('form')[0];
+            let form = document.getElementById('orderForm');
             if (!form.checkValidity()) {
                 form.reportValidity();
                 return;
             }
-
             var gateway = $("input[name='payment_gateway']:checked").val();
-
             if (!gateway) {
                 alert('Please select a payment method.');
                 return;
             }
-
             var address = $("#address").val();
             var address2 = $("#address2").val();
             var pincode = $("#pincode").val();
