@@ -41,8 +41,9 @@ Route::middleware([AdminMiddleware::class])->prefix('admin')->group(function () 
     Route::get('size.export', [SizeTypeController::class, "SizeTypeExport"])->name('size.export');
     Route::any('product', [ProductController::class, "Product"])->name('product');
     Route::any('update_products', [ProductController::class, "UpdateProduct"])->name('update_products');
-    Route::any('Products.export', [ProductController::class, "ProductExport"])->name('Products.export');
+    Route::any('products.export', [ProductController::class, "ProductExport"])->name('products.export');
     Route::any('order_list', [OrderController::class, "OrderList"])->name('order_list');
+    Route::any('order.export', [OrderController::class, "OrderExport"])->name('order.export');
     Route::any('payment_list', [PaymentController::class, "PaymentList"])->name('payment_list');
     Route::any('user_list_details', [RegistrationController::class, 'UserList'])->name('user_list_details');
     Route::any('favourites', [FeedbackController::class, "FavouritesList"])->name('favourites');
@@ -52,6 +53,7 @@ Route::middleware([AdminMiddleware::class])->prefix('admin')->group(function () 
 
 
 Route::middleware([UserMiddleware::class])->prefix('customer')->group(function () {
+    Route::any('update_user_profile', [RegistrationController::class, "UserProfileDetails"])->name('update_user_profile');
     Route::any('product_list', [ProductController::class, "ProductList"])->name('product_list');
     Route::any('add_to_cart', [CartController::class, "AddToCart"])->name('add_to_cart');
     Route::any('cart', [CartController::class, "Cart"])->name('cart');
