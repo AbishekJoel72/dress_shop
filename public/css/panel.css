@@ -507,6 +507,75 @@ h6 {
 }
 
 
+/* ------------------------------------------------- Button color size Adjustment --------------------------------------------
+  ----------------------------------------------------------------------------------------------------------
+  ----------------------------------------------------------------------------------------------------------------------*/
+
+.datepicker {
+    border-radius: 12px;
+    padding: 10px;
+    border: none;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    font-family: 'Poppins', sans-serif;
+}
+
+.datepicker .datepicker-switch {
+    font-weight: 600;
+    color: #333;
+}
+
+.datepicker .prev,
+.datepicker .next {
+    color: #e62a49;
+    font-size: 18px;
+}
+
+.datepicker table tr td,
+.datepicker table tr th {
+    text-align: center;
+    border-radius: 8px;
+    padding: 8px;
+}
+
+.datepicker table tr td:hover {
+    background: #f1f1f1;
+    cursor: pointer;
+}
+
+.datepicker table tr td.active,
+.datepicker table tr td.active:hover {
+    background: #9b87f2;
+    color: #fff;
+    border-radius: 8px;
+}
+
+.datepicker table tr td.today {
+    background: #ffe5ea;
+    border-radius: 8px;
+}
+
+.datepicker table tr td.disabled {
+    color: #ccc !important;
+    cursor: not-allowed;
+}
+
+.datepicker .month,
+.datepicker .year {
+    border-radius: 8px;
+    padding: 6px;
+}
+
+.datepicker .month:hover,
+.datepicker .year:hover {
+    background: #f1f1f1;
+}
+
+.datepicker .month.active,
+.datepicker .year.active {
+    background: #9b87f2;
+    color: #fff;
+}
+
 
 /* ------------------------------------------------- DataTable--------------------------------------------
   ----------------------------------------------------------------------------------------------------------
