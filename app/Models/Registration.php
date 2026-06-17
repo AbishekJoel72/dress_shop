@@ -8,6 +8,6 @@ class Registration extends Model
 {
     protected $table = "registration";
     protected  $fillable = [
-        'first_name', 'last_name' ,'phone', 'email', 'password', 'confirmation_password' , 'role'
+        'first_name', 'last_name' ,'phone_no', 'email', 'password', 'confirmation_password' , 'role'
     ];
 }
