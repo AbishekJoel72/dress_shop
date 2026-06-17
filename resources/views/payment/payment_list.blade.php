@@ -1,6 +1,62 @@
 @extends('layouts.admin.default')
 @section('content')
     <div class="container">
+
+        <div class="card mb-3">
+            <div class="card-header bg-transparent">
+                <h5 class="mb-0">Payment Filter</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-4">
+                        <label for="order_no">Order No</label>
+                        <input type="text" id="order_no" class="form-control" placeholder="Enter Order No">
+                    </div>
+                    <div class="col-md-4">
+                        <label for="customer_name">Customer Name</label>
+                        <input type="text" id="customer_name" class="form-control" placeholder="Enter Customer Name">
+                    </div>
+                    <div class="col-md-4">
+                        <label for="transaction_id">Transaction ID</label>
+                        <input type="text" id="transaction_id" class="form-control" placeholder="Enter Transaction ID">
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-md-4">
+                        <label for="payment_gateway">Payment Method</label>
+                        <select id="payment_gateway" class="form-select">
+                            <option value="">All payment method</option>
+                            <option value="gpay">Google Pay</option>
+                            <option value="phonepe">PhonePe</option>
+                            <option value="paytm">Paytm</option>
+                            <option value="cash_on_delivery">Cash On Delivery</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="payment_status">Payment Status</label>
+                        <select id="payment_status" class="form-select">
+                            <option value="">All payment status</option>
+                            <option value="success">Success</option>
+                            <option value="pending">Pending</option>
+                            <option value="failed">Failed</option>
+                            <option value="refunded">Refunded</option>
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <label for="from_date">From Date</label>
+                        <input type="text" id="from_date" class="form-control filter_date" placeholder="From Date">
+                    </div>
+                    <div class="col-md-2">
+                        <label for="from_date">To Date</label>
+                        <input type="text" id="to_date" class="form-control filter_date"  placeholder="End Date">
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer text-center bg-transparent">
+                <button class="btn btn-primary" id="filterBtn"> <i class="fa-solid fa-filter"></i> Show Filter </button>
+            </div>
+        </div>
+
         <div class="card">
             <div class="card-header bg-transparent d-flex justify-content-between align-items-center py-2">
                 <h5 class="mb-0">payment List</h5>
@@ -10,14 +66,14 @@
                     <thead>
                         <tr>
                             <th>S.NO</th>
-                            <th>Date</th>
-                            <th>Product</th>
-                            <th>Order ID</th>
+                            <th>Payment Date</th>
+                            <th>Order No</th>
+                            <th>Customer Name</th>
                             <th>Transaction ID</th>
-                            <th>payment Gateway</th>
+                            <th>Payment Method</th>
                             <th>Amount</th>
-                            <th>Currency</th> 
-                            {{-- <th>Action</th> --}}         
+                            <th>Currency</th>
+                            <th>Payment</th>
                         </tr>
                     </thead>
                     <tbody></tbody>
@@ -31,10 +87,29 @@
     @include('layouts.datatable')
     <script>
         $(document).ready(function() {
-            $('#datatable').DataTable({
+            $('.filter_date').datepicker({
+                format: 'dd-mm-yyyy',
+                autoclose: true,
+                todayHighlight: true,
+                endDate: new Date()
+            });
+
+
+            var table = $('#datatable').DataTable({
                 processing: true,
                 serverSide: true,
-                ajax: "{{ route('payment_list') }}",
+                ajax: {
+                    url: "{{ route('payment_list') }}",
+                    data: function(d) {
+                        d.order_no = $('#order_no').val();
+                        d.customer_name = $('#customer_name').val();
+                        d.transaction_id = $('#transaction_id').val();
+                        d.payment_gateway = $('#payment_gateway').val();
+                        d.payment_status = $('#payment_status').val();
+                        d.from_date = $('#from_date').val();
+                        d.to_date = $('#to_date').val();
+                    }
+                },
                 columns: [{
                         data: 'DT_RowIndex',
                         name: 'DT_RowIndex',
@@ -47,59 +122,77 @@
                         data: 'paid_at',
                         name: 'paid_at',
                         render: function(data) {
-                            if (!data) return "-";
-                            let dateObj = new Date(data);
-                            return dateObj.toLocaleDateString('en-GB');
+                            if (!data) {
+                                return '-';
+                            }
+                            let date = new Date(data);
+                            let day = String(date.getDate()).padStart(2, '0');
+                            let month = String(date.getMonth() + 1).padStart(2, '0');
+                            let year = date.getFullYear();
+                            return `${day}-${month}-${year}`;
                         }
                     },
                     {
-                        data: 'get_order.get_product.product_name',
-                        name: 'get_order.get_product.product_name',
+                        data: 'get_order.order_no',
+                        name: 'get_order.order_no',
                     },
                     {
-                        data: 'get_order.order_id',
-                        name: 'get_order.order_id',
+                        data: 'customer_name',
+                        name: 'customer_name',
                     },
                     {
                         data: 'transaction_id',
                         name: 'transaction_id',
+                        render: function(data) {
+                            return data ?? '-';
+                        }
                     },
                     {
                         data: 'payment_gateway',
                         name: 'payment_gateway',
-                         render: function(data, type, row) {
+                        render: function(data, type, row) {
                             if (data == 'gpay') {
-                                return '<span  >G Pay</span>';
+                                return '<span>Google Pay</span>';
                             } else if (data == 'phonepe') {
-                                return '<span >Phonepe</span>'
+                                return '<span>Phone Pe</span>'
                             } else if (data == 'paytm') {
-                                return '<span >Pay TM</span>'
-                            } else if (data == 'netbanking') {
-                                return '<span>Net Banking</span>'
-                            } else if (data == 'card') {
-                                return '<span >Card</span>'
-                            } else if (data == 'cash_on_delivery') {
-                                return '<span >Cash On Delivery</span>'
+                                return '<span>PAYTM</span>'
+                            } else {
+                                return '<span>Cash On Delivery</span>'
                             }
                         }
                     },
                     {
-                        data: 'get_order.total_amount',
-                        name: 'get_order.total_amount',
+                        data: 'amount',
+                        name: 'amount',
+                        render: function(data) {
+                            return '₹ ' + data;
+                        }
                     },
                     {
                         data: 'currency',
                         name: 'currency',
                     },
-                    // {
-                    //     data: 'action',
-                    //     name: 'action',
-                    //     orderable: false,
-                    //     searchable: false,
-                    //     width: '5%',
-                    //     className: 'text-center'
-                    // }
+                    {
+                        data: 'payment_status',
+                        name: 'payment_status',
+                        render: function(data) {
+                            if (data == 'success') {
+                                return '<span class="badge bg-success">Success</span>';
+                            } else if (data == 'pending') {
+                                return '<span class="badge bg-warning">Pending</span>';
+                            } else if (data == 'failed') {
+                                return '<span class="badge bg-danger">Failed</span>';
+                            } else {
+
+                                return '<span class="badge bg-secondary">Refunded</span>';
+                            }
+                        }
+                    }
                 ]
+            });
+            $('#filterBtn').click(function() {
+                table.draw();
             });
         });
     </script>
