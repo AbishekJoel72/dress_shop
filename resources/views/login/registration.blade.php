@@ -9,6 +9,7 @@
         margin: 0;
         padding: 0;
     }
+
     .container {
         margin: 6px auto;
         max-width: 1000px;
@@ -17,22 +18,26 @@
         padding: 10px 40px;
         border-radius: 0px;
     }
+
     h3 {
         font-weight: 600;
         text-align: center;
         margin-bottom: 30px;
     }
+
     .row {
         display: flex;
         gap: 25px;
         margin-bottom: 25px;
     }
+
     .col {
         flex: 1;
         display: flex;
         flex-direction: column;
         position: relative;
     }
+
     label {
         font-weight: 500;
         font-size: 14px;
@@ -40,6 +45,7 @@
         color: #333;
         padding-left: 2px;
     }
+
     .form-control,
     .form-select {
         border: none;
@@ -51,25 +57,31 @@
         background: transparent;
         transition: all 0.3s ease;
     }
+
     .form-control:focus {
         border-bottom: 2px solid #e62a49;
         box-shadow: none;
         outline: none;
     }
+
     .form-control:hover {
         border-bottom: 2px solid #e62a49;
     }
+
     .form-check-input:checked {
         background-color: #e62a49;
         border-color: #e62a49;
     }
+
     .form-control:focus+label {
         color: #e62a49;
     }
+
     ::placeholder {
         font-size: 13px;
         color: #aaa;
     }
+
     button {
         width: 100%;
         padding: 12px;
@@ -80,14 +92,17 @@
         cursor: pointer;
         background: linear-gradient(145deg, #e62a49, #b11e36);
     }
+
     .login {
         text-decoration: none;
         color: #0092ca
     }
+
     .login:hover {
         text-decoration: none;
         color: #e62a49
     }
+
     .error {
         color: red;
         font-size: 12px;
@@ -95,9 +110,11 @@
         margin-top: 2px;
         line-height: 14px;
     }
+
     .input-error {
         border-bottom: 2px solid red !important;
     }
+
     .input-icon {
         position: absolute;
         right: 10px;
@@ -106,9 +123,11 @@
         font-size: 16px;
         cursor: pointer;
     }
+
     .input-icon:hover {
         color: #e62a49;
     }
+
     .datepicker {
         border-radius: 12px;
         padding: 10px;
@@ -116,39 +135,47 @@
         box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
         font-family: 'Poppins', sans-serif;
     }
+
     .datepicker .datepicker-switch {
         font-weight: 600;
         color: #333;
     }
+
     .datepicker .prev,
     .datepicker .next {
         color: #e62a49;
         font-size: 18px;
     }
+
     .datepicker table tr td,
     .datepicker table tr th {
         text-align: center;
         border-radius: 8px;
         padding: 8px;
     }
+
     .datepicker table tr td:hover {
         background: #f1f1f1;
         cursor: pointer;
     }
+
     .datepicker table tr td.active,
     .datepicker table tr td.active:hover {
         background: #9b87f2;
         color: #fff;
         border-radius: 8px;
     }
+
     .datepicker table tr td.today {
         background: #ffe5ea;
         border-radius: 8px;
     }
+
     .datepicker table tr td.disabled {
         color: #ccc !important;
         cursor: not-allowed;
     }
+
     .datepicker .month,
     .datepicker .year {
         border-radius: 8px;
@@ -159,6 +186,7 @@
     .datepicker .year:hover {
         background: #f1f1f1;
     }
+
     .datepicker .month.active,
     .datepicker .year.active {
         background: #9b87f2;
@@ -169,14 +197,17 @@
         .row {
             display: block;
         }
+
         .col {
             width: 100%;
         }
+
         .container {
             padding: 18px;
         }
     }
 </style>
+
 <body>
     <div class="container">
         <form action="{{ route('registration') }}" method="POST" autocomplete="off">
@@ -256,14 +287,15 @@
                             class="text-danger">*</span></label>
                     <input type="password" name="confirmation_password" id="confirmation_password"
                         placeholder="Confirmation Password" required class="form-control pe-5">
-                    <i class="fa fa-eye-slash input-icon" id="togglePassword"></i>
+                    <i class="fa fa-eye-slash input-icon" id="toggleConfirmPassword"></i>
                     <small class="error" id="error_confirmation_password"></small>
                 </div>
             </div>
             <div class="col-12 mt-4">
                 <button type="submit">Create Account</button>
             </div>
-            <p class="mt-3 text-center">Already have an Account? <a href="{{ route('login') }}" class="login"> Sign In </a></p>
+            <p class="mt-3 text-center">Already have an Account? <a href="{{ route('login') }}" class="login"> Sign
+                    In </a></p>
         </form>
     </div>
     <script>
@@ -281,26 +313,6 @@
                 calculateAge(dob);
             });
 
-            function isValidName(name) {
-                return /^[A-Za-z ]+$/.test(name);
-            }
-
-            function setError(id, message) {
-                let errorEl = document.getElementById("error_" + id);
-                if (errorEl) errorEl.innerText = message;
-                document.getElementById(id).classList.add("input-error");
-            }
-
-            function clearError(id) {
-                let errorEl = document.getElementById("error_" + id);
-                if (errorEl) errorEl.innerText = "";
-                document.getElementById(id).classList.remove("input-error");
-            }
-
-            document.querySelectorAll("input, select").forEach(input => {
-                input.addEventListener("input", validateField);
-                input.addEventListener("change", validateField);
-            });
 
             function calculateAge(dob) {
                 let parts = dob.split("-");
@@ -317,81 +329,10 @@
                 $('#age').val(age);
             }
 
-            function validateField() {
-                let id = this.id;
-                let value = this.value.trim();
-                clearError(id);
-                if (id === "first_name") {
-                    if (value.trim() === "") {
-                        setError(id, "First name is required");
-                    } else if (!isValidName(value)) {
-                        setError(id, "Only letters allowed");
-                    }
-                }
-                if (id === "last_name") {
-                    if (value !== "" && !isValidName(value)) {
-                        setError(id, "Only letters allowed");
-                    }
-                }
-                if (id === "date_of_birth") {
-                    if (value === "") {
-                        setError(id, "Select DOB");
-                    } else {
-                        calculateAge(value);
-                    }
-                }
-                if (id === "age") {
-                    if (value === "" || !/^\d+$/.test(value) || value <= 0 || value > 120) {
-                        setError(id, "Enter valid age");
-                    }
-                }
-                if (id === "phone") {
-                    if (!/^\d{10}$/.test(value)) {
-                        setError(id, "Enter valid 10 digit number");
-                    }
-                }
-                if (id === "email") {
-                    if (!/^\S+@\S+\.\S+$/.test(value)) {
-                        setError(id, "Invalid email");
-                    }
-                }
-                if (id === "password") {
-                    if (value.length < 6) {
-                        setError(id, "Minimum 6 characters");
-                    }
-                }
-                if (id === "confirmation_password") {
-                    let pwd = document.getElementById("password").value;
-                    if (value !== pwd) {
-                        setError(id, "Passwords do not match");
-                    }
-                }
-            }
-
-            document.querySelector("form").addEventListener("submit", function(e) {
-                let valid = true;
-                let fields = ["first_name", "last_name", "date_of_birth", "age", "phone", "email", "password", "confirmation_password"];
-                fields.forEach(id => {
-                    let el = document.getElementById(id);
-                    if (el) {
-                        el.dispatchEvent(new Event("input"));
-                        if (el.classList.contains("input-error")) {
-                            valid = false;
-                        }
-                    }
-                });
-                let gender = document.querySelector('input[name="gender"]:checked');
-                if (!gender) {
-                    alert("Select gender");
-                    valid = false;
-                }
-                if (!valid) {
-                    e.preventDefault();
-                }
-            });
 
             document.getElementById("togglePassword").addEventListener("click", function() {
                 let pwd = document.getElementById("password");
+
                 if (pwd.type === "password") {
                     pwd.type = "text";
                     this.classList.remove("fa-eye-slash");
@@ -401,9 +342,23 @@
                     this.classList.remove("fa-eye");
                     this.classList.add("fa-eye-slash");
                 }
+            });
 
+            document.getElementById("toggleConfirmPassword").addEventListener("click", function() {
+                let confirm = document.getElementById("confirmation_password");
+
+                if (confirm.type === "password") {
+                    confirm.type = "text";
+                    this.classList.remove("fa-eye-slash");
+                    this.classList.add("fa-eye");
+                } else {
+                    confirm.type = "password";
+                    this.classList.remove("fa-eye");
+                    this.classList.add("fa-eye-slash");
+                }
             });
         });
     </script>
 </body>
+
 </html>
