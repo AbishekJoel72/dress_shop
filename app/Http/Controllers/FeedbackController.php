@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\FavouriteExport;
 use App\Models\Favourites;
 use App\Models\Feedback;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
 use Yajra\DataTables\Facades\DataTables;
 
 class FeedbackController extends Controller
@@ -16,6 +19,7 @@ class FeedbackController extends Controller
             if ($request->get_view_image) {
                 $id = $request->id;
                 $favourite = Favourites::with(['get_product', 'get_product.get_product_images'])->where('id', $id)->first();
+
                 return response()->json($favourite);
             }
 
@@ -30,14 +34,16 @@ class FeedbackController extends Controller
 
             if ($request->email) {
                 $query->whereHas('get_user',
-                    function ($q) use ($request) { $q->where('email','LIKE','%'.$request->email.'%');}
+                    function ($q) use ($request) {
+                        $q->where('email', 'LIKE', '%'.$request->email.'%');
+                    }
                 );
 
             }
             if ($request->phone_no) {
                 $query->whereHas('get_user',
                     function ($q) use ($request) {
-                        $q->where('phone_no','LIKE','%'.$request->phone_no.'%');
+                        $q->where('phone_no', 'LIKE', '%'.$request->phone_no.'%');
                     }
                 );
             }
@@ -45,7 +51,7 @@ class FeedbackController extends Controller
             if ($request->product_name) {
                 $query->whereHas('get_product',
                     function ($q) use ($request) {
-                        $q->where('product_name','LIKE','%'.$request->product_name.'%');
+                        $q->where('product_name', 'LIKE', '%'.$request->product_name.'%');
                     }
                 );
             }
@@ -53,7 +59,7 @@ class FeedbackController extends Controller
             if ($request->product_name) {
                 $query->whereHas('get_product',
                     function ($q) use ($request) {
-                        $q->where( 'product_name','LIKE','%'.$request->product_name.'%' );
+                        $q->where('product_name', 'LIKE', '%'.$request->product_name.'%');
                     }
                 );
             }
@@ -61,19 +67,19 @@ class FeedbackController extends Controller
             if ($request->category_name) {
                 $query->whereHas('get_product.get_category',
                     function ($q) use ($request) {
-                        $q->where( 'name','LIKE','%'.$request->category_name.'%');
+                        $q->where('name', 'LIKE', '%'.$request->category_name.'%');
                     }
                 );
             }
 
             if ($request->from_date) {
-                $from = Carbon::createFromFormat('d-m-Y',$request->from_date)->format('Y-m-d');
-                $query->whereDate('created_at','>=', $from);
+                $from = Carbon::createFromFormat('d-m-Y', $request->from_date)->format('Y-m-d');
+                $query->whereDate('created_at', '>=', $from);
             }
 
             if ($request->to_date) {
                 $to = Carbon::createFromFormat('d-m-Y', $request->to_date)->format('Y-m-d');
-                $query->whereDate('created_at','<=',$to);
+                $query->whereDate('created_at', '<=', $to);
             }
 
             return DataTables::of($query)
@@ -97,6 +103,70 @@ class FeedbackController extends Controller
         }
 
         return view('feedback.favourites');
+    }
+
+    public function FavouritesExport(Request $request)
+    {
+        $query = Favourites::with([
+            'get_user',
+            'get_product',
+            'get_product.get_category',
+            'get_product.get_product_images',
+        ]);
+
+        if ($request->customer_name) {
+            $query->whereHas('get_user', function ($q) use ($request) {
+                $q->where( 'first_name','LIKE', '%'.$request->customer_name.'%');
+            });
+        }
+
+        if ($request->email) {
+            $query->whereHas('get_user', function ($q) use ($request) {
+                $q->where('email','LIKE','%'.$request->email.'%');
+            });
+        }
+
+        if ($request->phone_no) {
+            $query->whereHas('get_user', function ($q) use ($request) {
+                $q->where('phone_no','LIKE','%'.$request->phone_no.'%' );
+            });
+        }
+
+        if ($request->product_name) {
+            $query->whereHas('get_product', function ($q) use ($request) {
+                $q->where('product_name', 'LIKE', '%'.$request->product_name.'%');
+            });
+        }
+
+        if ($request->category_name) {
+            $query->whereHas('get_product.get_category',
+                function ($q) use ($request) {
+                    $q->where('name','LIKE','%'.$request->category_name.'%' );
+                }
+            );
+        }
+
+        if ($request->from_date) {
+            $from = Carbon::createFromFormat('d-m-Y',$request->from_date)->format('Y-m-d');
+            $query->whereDate('created_at', '>=', $from);
+        }
+
+        if ($request->to_date) {
+            $to = Carbon::createFromFormat('d-m-Y',$request->to_date)->format('Y-m-d');
+            $query->whereDate('created_at','<=', $to);
+        }
+
+        $favourites = $query->get();
+
+        if ($request->type == 'excel') {
+            return Excel::download(new FavouriteExport($favourites),'favourites.xlsx' );
+        }
+
+        if ($request->type == 'pdf') {
+            $pdf = Pdf::loadView('Export.pdf.favourites_pdf',['favourites' => $favourites]);
+            return $pdf->download('favourites.pdf');
+
+        }
     }
 
     public function Feedback(Request $request)

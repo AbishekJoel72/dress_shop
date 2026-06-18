@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\UserExport;
 use App\Models\Registration;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Maatwebsite\Excel\Facades\Excel;
 use Yajra\DataTables\Facades\DataTables;
 
 class RegistrationController extends Controller
@@ -122,8 +125,10 @@ class RegistrationController extends Controller
             }
         } else {
             session()->flash('error', 'Email not found!');
+
             return redirect()->back();
         }
+
         return view('login.password_reset', ['user' => $user]);
     }
 
@@ -131,13 +136,14 @@ class RegistrationController extends Controller
     {
         $request->session()->flush();
         session()->flash('success', 'Logged Out Successfully!');
+
         return redirect()->route('home_page');
     }
 
     public function UserList(Request $request)
     {
         if ($request->ajax()) {
-            $data = Registration::select(['id','first_name','last_name','email','phone_no','created_at',])->where('role', 'user');
+            $data = Registration::select(['id', 'first_name', 'last_name', 'email', 'phone_no', 'created_at'])->where('role', 'user');
 
             if ($request->customer_name) {
                 $data->where(function ($q) use ($request) {
@@ -155,12 +161,12 @@ class RegistrationController extends Controller
             }
 
             if ($request->from_date) {
-                $from = Carbon::createFromFormat('d-m-Y',$request->from_date)->format('Y-m-d');
+                $from = Carbon::createFromFormat('d-m-Y', $request->from_date)->format('Y-m-d');
                 $data->whereDate('created_at', '>=', $from);
             }
 
             if ($request->to_date) {
-                $to = Carbon::createFromFormat('d-m-Y',$request->to_date)->format('Y-m-d');
+                $to = Carbon::createFromFormat('d-m-Y', $request->to_date)->format('Y-m-d');
                 $data->whereDate('created_at', '<=', $to);
             }
 
@@ -177,9 +183,9 @@ class RegistrationController extends Controller
                 })
                 ->make(true);
         }
+
         return view('login.user_list');
     }
-
 
     public function UserProfileDetails(Request $request)
     {
@@ -209,6 +215,43 @@ class RegistrationController extends Controller
                     'message' => 'Profile Updated Successfully',
                 ]);
             }
+        }
+    }
+
+    public function UserExport(Request $request)
+    {
+        $query = Registration::where('role', 'user');
+        if ($request->customer_name) {
+            $query->where('first_name','LIKE','%'.$request->customer_name.'%');
+        }
+
+        if ($request->email) {
+            $query->where('email','LIKE','%'.$request->email.'%');
+        }
+
+        if ($request->phone_no) {
+            $query->where('phone_no','LIKE', '%'.$request->phone_no.'%');
+        }
+
+        if ($request->from_date) {
+            $from = Carbon::createFromFormat('d-m-Y',$request->from_date)->format('Y-m-d');
+            $query->whereDate('created_at','>=',$from);
+        }
+
+        if ($request->to_date) {
+            $to = Carbon::createFromFormat('d-m-Y',$request->to_date)->format('Y-m-d');
+            $query->whereDate('created_at', '<=', $to);
+        }
+
+        $users = $query->get();
+        if ($request->type == 'excel') {
+            return Excel::download(new UserExport($users),'customer_list.xlsx');
+        }
+
+
+        if ($request->type == 'pdf') {
+            $pdf = Pdf::loadView('Export.pdf.customer_pdf',['users' => $users]);
+            return $pdf->download('customer_list.pdf');
         }
     }
 }

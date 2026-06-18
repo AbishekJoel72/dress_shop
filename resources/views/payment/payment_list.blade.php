@@ -48,7 +48,7 @@
                     </div>
                     <div class="col-md-2">
                         <label for="from_date">To Date</label>
-                        <input type="text" id="to_date" class="form-control filter_date"  placeholder="End Date">
+                        <input type="text" id="to_date" class="form-control filter_date" placeholder="End Date">
                     </div>
                 </div>
             </div>
@@ -60,6 +60,13 @@
         <div class="card">
             <div class="card-header bg-transparent d-flex justify-content-between align-items-center py-2">
                 <h5 class="mb-0">payment List</h5>
+                <div class="dropdown">
+                    <button class="btn btn-sm btn-warning" type="button" data-bs-toggle="dropdown">Download</button>
+                    <ul class="dropdown-menu">
+                        <li><a href="#" class="dropdown-item exportBtn" data-type="excel">Excel</a> </li>
+                        <li><a href="#" class="dropdown-item exportBtn" data-type="pdf"> PDF</a></li>
+                    </ul>
+                </div>
             </div>
             <div class="card-body">
                 <table id="datatable" class="table table-bordered">
@@ -194,6 +201,37 @@
             $('#filterBtn').click(function() {
                 table.draw();
             });
+
+
+        });
+        $(document).on('click', '.exportBtn', function(e) {
+
+            e.preventDefault();
+
+            let type = $(this).data('type');
+
+            let order_no = $('#order_no').val();
+            let customer_name = $('#customer_name').val();
+            let transaction_id = $('#transaction_id').val();
+
+            let payment_gateway = $('#payment_gateway').val();
+            let payment_status = $('#payment_status').val();
+
+            let from_date = $('#from_date').val();
+            let to_date = $('#to_date').val();
+
+            let url = "{{ route('payment.export') }}";
+
+            window.location.href =
+                url +
+                '?type=' + type +
+                '&order_no=' + encodeURIComponent(order_no || '') +
+                '&customer_name=' + encodeURIComponent(customer_name || '') +
+                '&transaction_id=' + encodeURIComponent(transaction_id || '') +
+                '&payment_gateway=' + encodeURIComponent(payment_gateway || '') +
+                '&payment_status=' + encodeURIComponent(payment_status || '') +
+                '&from_date=' + encodeURIComponent(from_date || '') +
+                '&to_date=' + encodeURIComponent(to_date || '');
         });
     </script>
 @endsection
