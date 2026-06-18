@@ -45,8 +45,11 @@ Route::middleware([AdminMiddleware::class])->prefix('admin')->group(function () 
     Route::any('order_list', [OrderController::class, "OrderList"])->name('order_list');
     Route::any('order.export', [OrderController::class, "OrderExport"])->name('order.export');
     Route::any('payment_list', [PaymentController::class, "PaymentList"])->name('payment_list');
+    Route::any('payment.export', [PaymentController::class, "PaymentExport"])->name('payment.export');
     Route::any('user_list_details', [RegistrationController::class, 'UserList'])->name('user_list_details');
+    Route::any('user.export', [RegistrationController::class, 'UserExport'])->name('user.export');
     Route::any('favourites', [FeedbackController::class, "FavouritesList"])->name('favourites');
+    Route::any('favourites.export', [FeedbackController::class, "FavouritesExport"])->name('favourites.export');
     Route::any('feedback_list', [FeedbackController::class, "FeedbackList"])->name('feedback_list');
     Route::any('contact_list', [ContactController::class, "ContactList"])->name('contact_list');
 });
