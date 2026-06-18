@@ -201,7 +201,6 @@ class ProductController extends Controller
         }
 
         if ($request->type == 'pdf') {
-            // dd($request->all());
             $pdf = Pdf::loadView('Export.pdf.product_pdf', ['product' => $products]);
             return $pdf->download('products.pdf');
         }

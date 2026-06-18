@@ -42,6 +42,15 @@
         <div class="card">
             <div class="card-header bg-transparent d-flex justify-content-between align-items-center py-2">
                 <h5 class="mb-0">List Customer</h5>
+                <div class="dropdown">
+                    <button class="btn btn-warning btn-sm" type="button" data-bs-toggle="dropdown">
+                        Download
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li><a href="#" class="dropdown-item exportBtn" data-type="excel"> Excel</a> </li>
+                        <li><a href="#" class="dropdown-item exportBtn" data-type="pdf">PDF </a> </li>
+                    </ul>
+                </div>
             </div>
             <div class="card-body">
                 <table id="datatable" class="table table-bordered">
@@ -72,7 +81,7 @@
                 endDate: new Date()
             });
 
-            
+
             var table = $('#datatable').DataTable({
                 processing: true,
                 serverSide: true,
@@ -132,6 +141,25 @@
             $('#filterBtn').click(function() {
                 table.draw();
             });
+        });
+        
+        $(document).on('click', '.exportBtn', function(e) {
+            e.preventDefault();
+            let type = $(this).data('type');
+            let customer_name = $('#customer_name').val();
+            let email = $('#email').val();
+            let phone_no = $('#phone_no').val();
+            let from_date = $('#from_date').val();
+            let to_date = $('#to_date').val();
+            let url = "{{ route('user.export') }}";
+            window.location.href =
+                url +
+                '?type=' + type +
+                '&customer_name=' + encodeURIComponent(customer_name || '') +
+                 '&email=' + encodeURIComponent(email || '') +
+                '&phone_no=' + encodeURIComponent(phone_no || '') +
+                '&from_date=' + encodeURIComponent(from_date || '') +
+                '&to_date=' + encodeURIComponent(to_date || '');
         });
     </script>
 @endsection
