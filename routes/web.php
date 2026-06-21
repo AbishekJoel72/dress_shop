@@ -36,9 +36,9 @@ Route::middleware([AdminMiddleware::class])->prefix('admin')->group(function () 
     Route::any('dashboard', [DashboardController::class, "Dashboard"])->name('dashboard');
     Route::any('configuration', [ConfigurationController::class, "Configuration"])->name('configuration');
     Route::any('categories', [CategoryController::class, "Categories"])->name('categories');
-    Route::get('category.export', [CategoryController::class, 'CategoryExport'])->name('category.export');
+    Route::any('category.export', [CategoryController::class, 'CategoryExport'])->name('category.export');
     Route::any('size_type', [SizeTypeController::class, "SizeType"])->name('size_type');
-    Route::get('size.export', [SizeTypeController::class, "SizeTypeExport"])->name('size.export');
+    Route::any('size.export', [SizeTypeController::class, "SizeTypeExport"])->name('size.export');
     Route::any('product', [ProductController::class, "Product"])->name('product');
     Route::any('update_products', [ProductController::class, "UpdateProduct"])->name('update_products');
     Route::any('products.export', [ProductController::class, "ProductExport"])->name('products.export');
@@ -52,6 +52,7 @@ Route::middleware([AdminMiddleware::class])->prefix('admin')->group(function () 
     Route::any('favourites.export', [FeedbackController::class, "FavouritesExport"])->name('favourites.export');
     Route::any('feedback_list', [FeedbackController::class, "FeedbackList"])->name('feedback_list');
     Route::any('contact_list', [ContactController::class, "ContactList"])->name('contact_list');
+    Route::any('contact.export', [ContactController::class, "ContactExport"])->name('contact.export');
 });
 
 
