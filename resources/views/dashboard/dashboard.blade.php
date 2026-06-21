@@ -60,7 +60,7 @@
                         </div>
                     </div>
                     <div class="col-4">
-                        <div class="card text-bg-warning mb-3" style="height:130px">
+                        <div class="card text-bg-dark mb-3" style="height:130px">
                             <div class="card-header bg-transparent text-center">
                                 <h6>Order</h6>
                             </div>
@@ -68,12 +68,12 @@
                                 <div class="row text-center">
                                     <div class="col-6 d-flex flex-column align-items-center">
                                         <label for="total">Total</label>
-                                        <a href="{{ route('order_list') }}" class="text-dark"
+                                        <a href="{{ route('order_list') }}" class="text-light"
                                             id="total">{{ $total_orders }}</a>
                                     </div>
                                     <div class="col-6 d-flex flex-column align-items-center">
                                         <label for="today">Today</label>
-                                        <a href="{{ route('order_list') }}" class="text-dark"
+                                        <a href="{{ route('order_list') }}" class="text-light"
                                             id="today">{{ $today_orders }}</a>
                                     </div>
                                 </div>
@@ -93,19 +93,20 @@
                             </div>
                         </div>
                     </div>
-                      <div class="col-2">
-                        <div class="card text-bg-warning mb-3" style="height:130px">
+                    <div class="col-2">
+                        <div class="card text-bg-light mb-3" style="height:130px">
                             <div class="card-header bg-transparent text-center">
                                 <h6>Return</h6>
                             </div>
-                            <div class="card-body d-flex flex-column justify-content-between align-items-center text-center">
+                            <div
+                                class="card-body d-flex flex-column justify-content-between align-items-center text-center">
                                 <label for="category">Count</label>
-                                <a href="#" class="text-dark" id="category">0</a>
+                                <a href="#" class="text-dark" id="category">{{ $returns }}</a>
                             </div>
                         </div>
                     </div>
                     <div class="col-2">
-                        <div class="card text-bg-dark mb-3" style="height:130px">
+                        <div class="card text-bg-secondary mb-3" style="height:130px">
                             <div class="card-header bg-transparent text-center">
                                 <h6>User</h6>
                             </div>
@@ -118,20 +119,20 @@
                         </div>
                     </div>
                     <div class="col-2">
-                        <div class="card text-bg-primary mb-3" style="height:130px">
+                        <div class="card text-bg-info mb-3" style="height:130px">
                             <div class="card-header bg-transparent text-center">
                                 <h6>Favourites</h6>
                             </div>
                             <div
                                 class="card-body d-flex flex-column justify-content-between align-items-center text-center">
                                 <label for="category">Count</label>
-                                <a href="{{ route('favourites') }}" class="text-light"
+                                <a href="{{ route('favourites') }}" class="text-dark"
                                     id="category">{{ $favourites }}</a>
                             </div>
                         </div>
                     </div>
 
-                     <div class="col-2">
+                    <div class="col-2">
                         <div class="card text-bg-success mb-3" style="height:130px">
                             <div class="card-header bg-transparent text-center">
                                 <h6>Feedback</h6>
@@ -157,79 +158,98 @@
                             </div>
                         </div>
                     </div>
+                    <div class="col-2">
+                        <div class="card text-bg-success  mb-3" style="height:130px">
+                            <div class="card-header bg-transparent text-center">
+                                <h6>Revenue</h6>
+                            </div>
+                            <div
+                                class="card-body d-flex flex-column justify-content-between align-items-center text-center">
+                                <label for="contact">Payment success </label>
+                                <a href="{{ route('payment_list') }}" class="text-light"
+                                    id="contact">{{ number_format($revenue) }}</a>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="col-2">
+                        <div class="card text-bg-warning  mb-3" style="height:130px">
+                            <div class="card-header bg-transparent text-center">
+                                <h6>Pending</h6>
+                            </div>
+                            <div
+                                class="card-body d-flex flex-column justify-content-between align-items-center text-center">
+                                <label for="contact">Count</label>
+                                <a href="{{ route('order_list') }}" class="text-dark"
+                                    id="contact">{{ $pending_orders }}</a>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="col-2">
+                        <div class="card text-bg-success  mb-3" style="height:130px">
+                            <div class="card-header bg-transparent text-center">
+                                <h6>Delivered</h6>
+                            </div>
+                            <div
+                                class="card-body d-flex flex-column justify-content-between align-items-center text-center">
+                                <label for="contact">Count</label>
+                                <a href="{{ route('order_list') }}" class="text-light"
+                                    id="contact">{{ $delivered_orders }}</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-2">
+                        <div class="card text-bg-danger  mb-3" style="height:130px">
+                            <div class="card-header bg-transparent text-center">
+                                <h6>Cancelled</h6>
+                            </div>
+                            <div
+                                class="card-body d-flex flex-column justify-content-between align-items-center text-center">
+                                <label for="contact">Count</label>
+                                <a href="{{ route('order_list') }}" class="text-light"
+                                    id="contact">{{ $cancelled_orders }}</a>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="col-2">
+                        <div class="card text-bg-warning  mb-3" style="height:130px">
+                            <div class="card-header bg-transparent text-center">
+                                <h6>Low Stock</h6>
+                            </div>
+                            <div
+                                class="card-body d-flex flex-column justify-content-between align-items-center text-center">
+                                <label for="contact">Count</label>
+                                <a href="{{ route('payment_list') }}" class="text-dark"
+                                    id="contact">{{ $low_stock }}</a>
+                            </div>
+
+                        </div>
+
+                    </div>
+                    <div class="col-2">
+                        <div class="card text-bg-dark  mb-3" style="height:130px">
+                            <div class="card-header bg-transparent text-center">
+                                <h6>Out Of Stock</h6>
+                            </div>
+                            <div
+                                class="card-body d-flex flex-column justify-content-between align-items-center text-center">
+                                <label for="contact">Count</label>
+                                <a href="{{ route('payment_list') }}" class="text-light"
+                                    id="contact">{{ $out_stock }}</a>
+                            </div>
+
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-
-
-        {{-- <div class="row mt-3">
-            <div class="col-6">
-                <div class="card">
-                    <div class="card-header bg-transparent">
-                        <h5>Product</h5>
-                    </div>
-                    <div class="card-body">
-                        @if ($men_products + $women_products > 0)
-                            <canvas id="productPie" style="max-height:300px;"></canvas>
-                        @else
-                            <p>Product empty</p>
-                        @endif
-                    </div>
-                </div>
-            </div>
-            <div class="col-12">
-                <div class="card">
-                    <div class="card-header bg-transparent">
-                        <h5>Order</h5>
-                    </div>
-                    <div class="card-body">
-                        @if ($total_orders > 0)
-                            <canvas id="orderPie" style="max-height:300px;"></canvas>
-                        @else
-                            <p>Order empty</p>
-                        @endif
-                    </div>
-                </div>
-            </div>
-        </div> --}}
     </div>
     @include('layouts.footer')
 @endsection
 @section('script')
-    {{-- <script>
-        @if ($men_products + $women_products > 0)
-            const ctx = document.getElementById('productPie').getContext('2d');
-            new Chart(ctx, {
-                type: 'pie',
-                data: {
-                    labels: ['Men', 'Women'],
-                    datasets: [{
-                        data: [{{ $men_products }}, {{ $women_products }}],
-                        backgroundColor: ['#36A2EB', '#FF6384']
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false
-                }
-            });
-        @endif
-        @if ($total_orders > 0)
-            const ctxOrder = document.getElementById('orderPie').getContext('2d');
-            new Chart(ctxOrder, {
-                type: 'pie',
-                data: {
-                    labels: ['Total Orders'],
-                    datasets: [{
-                        data: [{{ $total_orders }}],
-                        backgroundColor: ['#4CAF50']
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false
-                }
-            });
-        @endif
-    </script> --}}
+    <script>
+
+    </script>
 @endsection
