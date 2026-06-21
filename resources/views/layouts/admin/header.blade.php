@@ -6,9 +6,11 @@
             use App\Models\Configuration;
             $config = Configuration::first();
         @endphp
-        @if (!empty($config->logo))
-            <img src="{{ asset($config->logo) }}" width="170" height="100"
-                style="border:1px solid #000;border-radius:0px;" alt="Company Logo" class="img-thumbnail">
+        @if (!empty($config) && !empty($config->logo))
+            <img src="{{ asset($config->logo) }}" width="170" height="100" class="img-thumbnail"
+                style="border:1px solid #000; border-radius:0px;" alt="Company Logo">
+        @else
+            <p class="text-danger">Image not found</p>
         @endif
     </div>
     <nav class="ms-auto bg-light text-primary p-3">

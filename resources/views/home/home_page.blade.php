@@ -14,7 +14,7 @@
         @if (!empty($config->logo))
             <img src="{{ asset($config->logo) }}" height="60" alt="Company Logo">
         @else
-            <h5 class="mb-0 text-white fw-bold">Trendora</h5>
+            <h5 class="mb-0 text-white fw-bold">Image Not Found</h5>
         @endif
         <span class="menu-toggle" onclick="toggleMenu(this)">
             <i class="fa-solid fa-bars"></i>
@@ -171,6 +171,11 @@
                         <p><strong>Address:</strong> {{ $config->address }}</p>
                         <p><strong>Email:</strong> {{ $config->email }}</p>
                         <p><strong>Phone:</strong> {{ $config->phone }}</p>
+                    @else
+                        <p><strong>Company:</strong> Not Available</p>
+                        <p><strong>Address:</strong> Not Available</p>
+                        <p><strong>Email:</strong> Not Available</p>
+                        <p><strong>Phone:</strong> Not Available</p>
                     @endif
                     <iframe class="map"
                         src="https://www.google.com/maps?q={{ urlencode($config->address ?? 'India') }}&output=embed"
@@ -280,6 +285,10 @@
                     <p><i class="fa-solid fa-location-dot"></i> {{ $config->address }}</p>
                     <p><i class="fa-solid fa-envelope"></i> {{ $config->email }}</p>
                     <p><i class="fa-solid fa-phone"></i> {{ $config->phone }}</p>
+                @else
+                    <p><i class="fa-solid fa-location-dot"></i> Address not available</p>
+                    <p><i class="fa-solid fa-envelope"></i> Email not available</p>
+                    <p><i class="fa-solid fa-phone"></i> Phone not available</p>
                 @endif
                 <p><i class="fa-solid fa-clock"></i> Mon – Sat : 10am – 9pm</p>
                 <p><i class="fa-solid fa-clock"></i> Sun : 11am – 6pm</p>
@@ -397,4 +406,5 @@
         });
     });
 </script>
+
 </html>
