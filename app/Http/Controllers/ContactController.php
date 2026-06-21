@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\ContactExport;
 use App\Models\Contact;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
 use Yajra\DataTables\DataTables;
 
 class ContactController extends Controller
@@ -64,7 +67,7 @@ class ContactController extends Controller
             }
 
             if ($request->to_date) {
-                $to = Carbon::createFromFormat('d-m-Y',$request->to_date)->format('Y-m-d');
+                $to = Carbon::createFromFormat('d-m-Y', $request->to_date)->format('Y-m-d');
                 $data->whereDate('created_at', '<=', $to);
             }
 
@@ -74,5 +77,39 @@ class ContactController extends Controller
         }
 
         return view('contact.contact_list');
+    }
+
+    public function ContactExport(Request $request)
+    {
+        $contacts = Contact::query();
+        if ($request->name) {
+            $contacts->where('name','like','%'.$request->name.'%');
+        }
+
+        if ($request->email) {
+            $contacts->where('email','like','%'.$request->email.'%');
+        }
+
+        if ($request->phone) {
+            $contacts->where('phone','like','%'.$request->phone.'%');
+        }
+
+        if ($request->from_date) {
+            $contacts->whereDate('created_at','>=',Carbon::createFromFormat('d-m-Y',$request->from_date )->format('Y-m-d'));
+        }
+
+        if ($request->to_date) {
+            $contacts->whereDate('created_at','<=',Carbon::createFromFormat('d-m-Y', $request->to_date)->format('Y-m-d'));
+        }
+
+        $contacts = $contacts->get();
+        if ($request->type == 'excel') {
+             return Excel::download(new ContactExport($contacts),'contact_list.xlsx');
+        }
+
+        if ($request->type == 'pdf') {
+            $pdf = Pdf::loadView( 'Export.pdf.contact_pdf', compact('contacts'));
+            return $pdf->download('contact_list.pdf');
+        }
     }
 }
