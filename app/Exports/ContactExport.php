@@ -8,38 +8,38 @@ use Maatwebsite\Excel\Concerns\WithEvents;
 use Maatwebsite\Excel\Events\AfterSheet;
 use PhpOffice\PhpSpreadsheet\Style\Border;
 
-class FavouriteExport implements FromView, WithEvents
+class ContactExport implements FromView, WithEvents
 {
-    protected $favourites;
+    protected $contacts;
 
-    public function __construct($favourites)
+    public function __construct($contacts)
     {
-        $this->favourites = $favourites;
+        $this->contacts = $contacts;
     }
 
-    public function view(): View
+        public function view(): View
     {
-        return view('Export.excel.favourites_excel', ['favourites' => $this->favourites]);
+        return view('Export.excel.contact_excel',['contacts' => $this->contacts]);
     }
 
-    public function registerEvents(): array
+       public function registerEvents(): array
     {
         return [
             AfterSheet::class => function ($event) {
                 $startRow = 2;
-                $lastRow = count($this->favourites) + $startRow;
+                $lastRow = count($this->contacts) + $startRow;
                 $event->sheet
-                    ->getStyle('A2:I'.$lastRow)
+                    ->getStyle('A2:F'.$lastRow)
                     ->getBorders()
                     ->getAllBorders()
                     ->setBorderStyle(
                         Border::BORDER_THIN
                     );
                 $event->sheet
-                    ->getStyle('A2:I2')
+                    ->getStyle('A2:F2')
                     ->getFont()
                     ->setBold(true);
-                foreach (range('A', 'I') as $column) {
+                foreach (range('A', 'F') as $column) {
                     $event->sheet
                         ->getDelegate()
                         ->getColumnDimension($column)

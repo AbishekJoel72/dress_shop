@@ -3,11 +3,9 @@
             use App\Models\Configuration;
             $config = Configuration::first();
         @endphp
-        @if (empty($config))
-            <p>Configuration now define</p>
+        @if (!empty($config))
+            <h6>© {{ date('Y') }} {{ $config->company_name }}-{{ $config->tag_line }}. All Rights Reserved.</h6>
         @else
-        <h6 >© {{ date('Y') }} {{ $config->company_name }}-{{ $config->tag_line }}. All Rights Reserved.</h6>
+            <p class="text-danger">Configuration now define</p>
         @endif
     </footer>
-
-

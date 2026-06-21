@@ -74,10 +74,10 @@
         use App\Models\CartList;
         $cartCount = CartList::where('user_id', session('user_id'))->count();
     @endphp
-    @if (empty($config->logo))
-        <h5 class="mb-0">My Company</h5>
-    @else
+    @if (!empty($config->logo))
         <img src="{{ asset($config->logo) }}" width="190" height="100" alt="Company Logo" class="img-thumbnail">
+    @else
+        <p class="mb-0">Image Not Define</p>
     @endif
 
 

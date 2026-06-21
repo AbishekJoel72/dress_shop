@@ -184,16 +184,45 @@ class OrderController extends Controller
                 ]);
                 if ($validation) {
                     $id = $request->id;
-                    Order::where('id', $id)->update([
-                        'delivery_status' => $request->delivery_status,
-                    ]);
-                    if ($request->delivery_status == 'delivered') {
-                        Payment::where('order_id', $id)->where('payment_gateway', 'cash_on_delivery')->update([
-                            'transaction_id' => 'TXN'.time(),
-                            'payment_status' => 'success',
-                            'paid_at' => now(),
-                        ]);
+                    $order = Order::with('get_orderitems')->where('id', $id)->first();
+                    if ($request->delivery_status == 'delivered' && $order->delivery_status != 'delivered') {
+                        Payment::where('order_id', $id)
+                            ->where('payment_gateway', 'cash_on_delivery')
+                            ->update([
+                                'transaction_id' => 'TXN'.time(),
+                                'payment_status' => 'success',
+                                'paid_at' => now(),
+                            ]);
+
+                        foreach ($order->get_orderitems as $item) {
+                            $product = Product::find($item->product_id);
+                            if ($product) {
+                                $newStock = $product->stock - $item->quantity;
+                                $product->stock = max(0, $newStock);
+                                $product->save();
+                            }
+                        }
                     }
+                    $order->update(['delivery_status' => $request->delivery_status]);
+
+                    
+                    // Order::where('id', $id)->update([
+                    //     'delivery_status' => $request->delivery_status,
+                    // ]);
+                    // if ($request->delivery_status == 'delivered') {
+                    //     Payment::where('order_id', $id)->where('payment_gateway', 'cash_on_delivery')->update([
+                    //         'transaction_id' => 'TXN'.time(),
+                    //         'payment_status' => 'success',
+                    //         'paid_at' => now(),
+                    //     ]);
+
+                    //     $order = Order::find($id);
+                    //     $product = Product::find($order->product_id);
+                    //     if ($product) {
+                    //         $product->stock = $product->stock - $order->quantity;
+                    //         $product->save();
+                    //     }
+                    // }
                     session()->flash('success', 'Status Updated Successfully');
 
                     return redirect()->route('order_list');
@@ -210,8 +239,9 @@ class OrderController extends Controller
                 'get_orderitems.get_product.get_product_images',
                 'get_orderitems.get_size',
                 'get_payment',
-            ])->where('id',$id)->first();
+            ])->where('id', $id)->first();
             $pdf = Pdf::loadView('Export.pdf.order_invoice_bill', ['order' => $order]);
+
             return $pdf->download('Invoice_'.$order->order_no.'.pdf');
         }
 
