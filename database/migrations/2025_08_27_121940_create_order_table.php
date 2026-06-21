@@ -18,7 +18,7 @@ return new class extends Migration
             $table->unsignedBigInteger('user_id');
             $table->decimal('delivery_charge', 10, 2)->default(0);
             $table->decimal('grand_total', 10, 2);
-            $table->enum('delivery_status', ['pending','confirmed', 'shipped', 'out_for_delivery', 'delivered', 'cancelled'])->default('pending');
+            $table->enum('delivery_status', ['pending','confirmed', 'shipped', 'out_for_delivery', 'delivered','returned' ,'cancelled'])->default('pending');
             $table->timestamps();
             $table->foreign('user_id')->references('id')->on('registration')->onDelete('no action');
 

@@ -30,7 +30,7 @@ class Order extends Model
     {
         return $this->hasOne(Payment:: class, 'order_id');
     }
-    
+
     public function get_address()
     {
         return $this->hasOne(Address:: class, 'order_id');
