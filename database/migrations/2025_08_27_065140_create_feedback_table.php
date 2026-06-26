@@ -11,13 +11,16 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('feedback', function (Blueprint $table) {
+        Schema::create('product_feedback', function (Blueprint $table) {
             $table->bigIncrements('id');
+            $table->unsignedBigInteger('order_id');
+            $table->unsignedBigInteger('product_id');
             $table->unsignedBigInteger('user_id');
             $table->string('rating');
-            $table->text('comment');
-            $table->string('subject');
+            $table->text('feedback');
             $table->timestamps();
+            $table->foreign('order_id')->references('id')->on('orders')->onDelete('no action');
+            $table->foreign('product_id')->references('id')->on('products')->onDelete('no action');
             $table->foreign('user_id')->references('id')->on('registration')->onDelete('no action');
         });
     }

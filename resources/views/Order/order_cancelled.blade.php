@@ -1,25 +1,24 @@
 @extends('layouts.admin.default')
 @section('content')
     <div class="container">
-
         <div class="card mb-3">
-            <div class="card-header bg-transparent">
-                <h5 class="mb-0">Order Filter</h5>
+           <div class="card-header bg-transparent ">
+                <h5 class="mb-0">Filter</h5>
             </div>
             <div class="card-body">
                 <div class="row">
-                    <div class="col-md-4">
+                    <div class="col-md-4 mb-3">
                         <label for="order_no">Order No</label>
-                        <input type="text" id="order_no" class="form-control" placeholder="Enter Order No">
+                        <input type="text" id="order_no" class="form-control" placeholder="Order No">
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-md-4 mb-3">
                         <label for="customer_name">Customer Name</label>
-                        <input type="text" id="customer_name" class="form-control" placeholder="Enter Customer Name">
+                        <input type="text" id="customer_name" class="form-control" placeholder="Customer Name">
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-md-4 mb-3">
                         <label for="payment_gateway">Payment Method</label>
                         <select id="payment_gateway" class="form-select">
-                            <option value="">Select payment method</option>
+                            <option value="">Payment Methods</option>
                             <option value="gpay">Google Pay</option>
                             <option value="phonepe">PhonePe</option>
                             <option value="paytm">Paytm</option>
@@ -27,39 +26,27 @@
                         </select>
                     </div>
 
-                </div>
-                <div class="row mt-3">
-                    <div class="col-md-4">
+                    <div class="col-md-4 mb-3">
                         <label for="payment_status">Payment Status</label>
                         <select id="payment_status" class="form-select">
-                            <option value="">select payment status</option>
+                            <option value="">Payment Status</option>
                             <option value="pending">Pending</option>
                             <option value="success">Success</option>
-                            {{-- <option value="failed">Failed</option>
-                            <option value="refunded">Refunded</option> --}}
+                            <option value="refunded">Refunded</option>
                         </select>
                     </div>
-                    <div class="col-md-4">
-                        <label for="delivery_status">Delivery Status</label>
-                        <select id="delivery_status" class="form-select">
-                            <option value="">Select Delivery Status</option>
-                            <option value="pending">Pending</option>
-                            <option value="confirmed">Confirmed</option>
-                            <option value="shipped">Shipped</option>
-                            <option value="out_for_delivery">Out For Delivery</option>
-                            <option value="delivered">Delivered</option>
-                            {{-- <option value="cancelled">Cancelled</option> --}}
-                        </select>
-                    </div>
-                    <div class="col-md-2">
+
+                    <div class="col-md-4 mb-3">
                         <label for="from_date">From Date</label>
                         <input type="text" id="from_date" class="form-control filter_date" placeholder="From Date">
                     </div>
-                    <div class="col-md-2">
+
+                    <div class="col-md-4 mb-3">
                         <label for="to_date">To Date</label>
                         <input type="text" id="to_date" class="form-control filter_date" placeholder="To Date">
                     </div>
                 </div>
+
             </div>
             <div class="card-footer d-flex justify-content-center bg-transparent">
                 <button class="btn  btn-primary" id="filterBtn"> <i class="fa-solid fa-filter"></i>
@@ -104,88 +91,15 @@
 
         </div>
 
-        <div class="modal fade" id="viewStateModal" tabindex="-1" aria-hidden="true">
-            <div class="modal-dialog modal-lg">
-                <div class="modal-content">
-                    <form action="{{ route('order_list') }}" method="POST">
-                        @csrf
-                        <input type="hidden" name="id" id="edit_id">
-                        <input type="hidden" name="edit_status" value="true">
-
-                        <div class="modal-header">
-                            <h5 class="modal-title"> Delivery Status</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body">
-                            <div class="row ">
-                                <div class="col-md-4 mb-2">
-                                    <div class="form-check">
-                                        <input type="radio" name="delivery_status" id="pending" value="pending"
-                                            class="form-check-input" required>
-                                        <label for="pending">Pending</label>
-                                    </div>
-                                </div>
-                                <div class="col-md-4 mb-2">
-                                    <div class="form-check">
-                                        <input type="radio" name="delivery_status" id="confirmed" value="confirmed"
-                                            class="form-check-input" required>
-                                        <label for="confirmed">Confirmed</label>
-                                    </div>
-                                </div>
-                                <div class="col-md-4 mb-2">
-                                    <div class="form-check">
-                                        <input type="radio" name="delivery_status" id="shipped" value="shipped"
-                                            class="form-check-input" required>
-                                        <label for="shipped">Shipping</label>
-                                    </div>
-                                </div>
-                                <div class="col-md-4 mb-2">
-                                    <div class="form-check">
-                                        <input type="radio" name="delivery_status" id="out_for_delivery"
-                                            value="out_for_delivery" class="form-check-input" required>
-                                        <label for="out_for_delivery">Out For Delivery</label>
-                                    </div>
-                                </div>
-                                <div class="col-md-4 mb-2">
-                                    <div class="form-check">
-                                        <input type="radio" name="delivery_status" id="delivered" value="delivered"
-                                            class="form-check-input" required>
-                                        <label for="delivered">Delivery</label>
-                                    </div>
-                                </div>
-                                {{-- <div class="col-md-4 mb-2">
-                                    <div class="form-check">
-                                        <input type="radio" name="delivery_status" id="cancelled" value="cancelled"
-                                            class="form-check-input" required>
-                                        <label for="cancelled">Cancelled</label>
-                                    </div>
-
-                                </div> --}}
-
-                            </div>
-
-                        </div>
-                        <div class="modal-footer d-flex justify-content-center">
-                            <button type="submit" class="btn btn-primary"> <i class="fa-solid fa-pen">
-                                </i> Update</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-
         <div class="offcanvas offcanvas-end" tabindex="-1" id="viewOrderCanvas" style="width: 600px">
             <div class="offcanvas-header">
                 <h5>Order Details</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
             </div>
-
             <div class="offcanvas-body">
                 <a href="javascript:void(0)" id="invoiceBtn" class="btn btn-danger" style="border: 0">
                     Download Invoice
                 </a>
-
-
                 <!-- Customer Details -->
                 <div class="card mb-3 mt-3">
                     <div class="card-header">
@@ -198,13 +112,11 @@
                         <p><b>Phone :</b> <span id="customer_phone"></span></p>
                     </div>
                 </div>
-
                 <!-- Address -->
                 <div class="card mb-3">
                     <div class="card-header">
                         <strong>Delivery Address</strong>
                     </div>
-
                     <div class="card-body">
                         <p><b>Address :</b> <span id="address_line"></span></p>
                         <p><b>State :</b> <span id="state"></span></p>
@@ -212,7 +124,6 @@
                         <p><b>Pincode :</b> <span id="pincode"></span></p>
                     </div>
                 </div>
-
                 <!-- Products -->
                 <div class="card">
                     <div class="card-header">
@@ -246,12 +157,35 @@
             </div>
         </div>
 
+        <div class="modal fade" id="refundModal" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Refund Payment</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <input type="hidden" id="refund_order_id">
+                        <p class="text-center">
+                            Are you sure you want to refund this payment?
+                        </p>
+                    </div>
+                    <div class="modal-footer justify-content-center">
+                        <button type="button" class="btn btn-success" id="confirmRefundBtn">
+                            Refund Complete
+                        </button>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
     </div>
     @include('layouts.footer')
 @endsection
 @section('script')
     @include('layouts.datatable')
-    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script>
         $(document).ready(function() {
 
@@ -266,13 +200,12 @@
                 processing: true,
                 serverSide: true,
                 ajax: {
-                    url: "{{ route('order_list') }}",
+                    url: "{{ route('order_cancelled') }}",
                     data: function(d) {
                         d.order_no = $('#order_no').val();
                         d.customer_name = $('#customer_name').val();
-                        d.payment_gateway = $('#payment_gateway').val();
                         d.payment_status = $('#payment_status').val();
-                        d.delivery_status = $('#delivery_status').val();
+                        d.payment_gateway = $('#payment_gateway').val();
                         d.from_date = $('#from_date').val();
                         d.to_date = $('#to_date').val();
                     }
@@ -381,45 +314,10 @@
                 table.draw();
             });
 
-
-            $(document).on('click', '.EditStatusRow', function() {
-                let id = $(this).data('id');
-                $.ajax({
-                    url: "{{ route('order_list') }}",
-                    method: "GET",
-                    dataType: "json",
-                    data: {
-                        id: id,
-                        get_status: true,
-                    },
-                    success: function(data) {
-                        $('#edit_id').val(data.id);
-                        if (data.delivery_status == 'pending') {
-                            $('#pending').prop('checked', true);
-                        } else if (data.delivery_status == 'confirmed') {
-                            $('#confirmed').prop('checked', true)
-                        } else if (data.delivery_status == 'shipped') {
-                            $('#shipped').prop('checked', true);
-                        } else if (data.delivery_status == 'out_for_delivery') {
-                            $('#out_for_delivery').prop('checked', true);
-                        } else if (data.delivery_status == 'delivered') {
-                            $('#delivered').prop('checked', true);
-                        } else if (data.delivery_status == 'cancelled') {
-                            $('#cancelled').prop('checked', true);
-                        }
-
-
-
-                        $('#viewStateModal').modal('show');
-                    }
-                })
-            });
-
-
             $(document).on('click', '.ViewRow', function() {
                 let id = $(this).data('id');
                 $.ajax({
-                    url: "{{ route('order_list') }}",
+                    url: "{{ route('order_cancelled') }}",
                     type: "GET",
                     data: {
                         id: id,
@@ -484,6 +382,36 @@
 
             });
 
+            $(document).on('click', '.RefundRow, #confirmRefundBtn', function() {
+                if ($(this).hasClass('RefundRow')) {
+                    $('#refund_order_id').val($(this).data('id'));
+                    $('#refundModal').modal('show');
+                    return;
+                }
+
+                $.ajax({
+                    url: "{{ route('order_cancelled') }}",
+                    type: "POST",
+                    data: {
+                        refund_payment: true,
+                        id: $('#refund_order_id').val(),
+                        _token: "{{ csrf_token() }}"
+                    },
+
+                    success: function(res) {
+                        $('#refundModal').modal('hide');
+                        $('#modalMessage').text(res.message);
+                        let modal = new bootstrap.Modal(
+                            document.getElementById('sessionModal')
+                        );
+                        modal.show();
+                        $('#datatable').DataTable().ajax.reload();
+                    }
+                });
+            });
+
+
+
             $(document).on('click', '.exportBtn', function(e) {
                 e.preventDefault();
                 let type = $(this).data('type');
@@ -491,10 +419,9 @@
                 let customer_name = $('#customer_name').val();
                 let payment_gateway = $('#payment_gateway').val();
                 let payment_status = $('#payment_status').val();
-                let delivery_status = $('#delivery_status').val();
                 let from_date = $('#from_date').val();
                 let to_date = $('#to_date').val();
-                let url = "{{ route('order.export') }}";
+                let url = "{{ route('order_cancelled.export') }}";
                 window.location.href =
                     url +
                     '?type=' + type +
@@ -502,9 +429,9 @@
                     '&customer_name=' + encodeURIComponent(customer_name || '') +
                     '&payment_gateway=' + encodeURIComponent(payment_gateway || '') +
                     '&payment_status=' + encodeURIComponent(payment_status || '') +
-                    '&delivery_status=' + encodeURIComponent(delivery_status || '') +
                     '&from_date=' + encodeURIComponent(from_date || '') +
                     '&to_date=' + encodeURIComponent(to_date || '');
+
             });
 
         });

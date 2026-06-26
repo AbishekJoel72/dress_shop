@@ -2,6 +2,7 @@
 <html>
 <head>
     <title>Category List</title>
+    
 </head>
 <body>
 
@@ -13,6 +14,7 @@
             <th>S.NO</th>
             <th>Name</th>
             <th>Description</th>
+            {{-- <th>Status</th> --}}
         </tr>
     </thead>
     <tbody>
@@ -21,6 +23,7 @@
             <td>{{ $key + 1 }}</td>
             <td>{{ $cat->name }}</td>
             <td>{{ $cat->description }}</td>
+            {{-- <td>{{ $cat->status }}</td> --}}
         </tr>
         @endforeach
     </tbody>

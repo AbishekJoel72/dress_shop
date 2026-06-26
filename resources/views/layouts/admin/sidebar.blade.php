@@ -41,9 +41,20 @@
                 <span class="sidebar-text">Order</span></a>
         </li>
         <li>
+            <a href="{{ route('order_cancelled') }}">
+               <i class="fa-solid fa-ban me-2"></i>
+                <span class="sidebar-text">Order Cancelled</span></a>
+        </li>
+        <li>
             <a href="{{ route('payment_list') }}">
                 <i class="fa-solid fa-indian-rupee-sign me-2"></i>
                 <span class="sidebar-text">Payment</span></a>
+        </li>
+
+        <li>
+            <a href="{{ route('payment_refund') }}">
+               <i class="fa-solid fa-circle-dollar-to-slot"></i>
+                <span class="sidebar-text">Payment Refund</span></a>
         </li>
       <li>
             <a href="{{ route('favourites') }}">

@@ -2,12 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\CancelledOrderExport;
 use App\Exports\OrderExport;
 use App\Models\Address;
 use App\Models\City;
+use App\Models\Feedback;
 use App\Models\Order;
 use App\Models\OrderItems;
 use App\Models\Payment;
+use App\Models\PaymentRefund;
 use App\Models\Product;
 use App\Models\Sizetype;
 use App\Models\State;
@@ -120,11 +123,30 @@ class OrderController extends Controller
 
         $user = session('user_id');
         if ($request->ajax()) {
+            if ($request->give_feedback) {
+                Feedback::create([
+                    'order_id' => $request->id,
+                    'product_id' => $request->product_id,
+                    'user_id' => session('user_id'),
+                    'rating' => $request->rating,
+                    'feedback' => $request->feedback,
+                ]);
+
+                return response()->json([
+                    'status' => true,
+                    'message' => 'Feedback submitted successfully',
+                ]);
+            }
+
             if ($request->get_view_item) {
                 $id = $request->id;
-                $order = Order::with('get_product', 'get_product.get_category', 'get_state', 'get_size', 'get_cities')
-                    ->where('id', $id)
-                    ->first();
+                $order = Order::with([
+                    'get_orderitems.get_product.get_category',
+                    'get_orderitems.get_product.get_product_images',
+                    'get_orderitems.get_size',
+                    'get_address.get_state',
+                    'get_address.get_city',
+                ])->where('id', $id)->first();
 
                 return response()->json($order);
             }
@@ -140,34 +162,107 @@ class OrderController extends Controller
 
                 return response()->json($order);
             }
+
             if ($request->delete_order) {
                 $id = $request->id;
-                Payment::where('order_id', $id)->delete();
-                $order = Order::where('id', $id)->delete();
+                $order = Order::where('id', $id)->first();
 
-                return response()->json($order);
+                if (! $order) {
+                    return response()->json(['status' => false, 'message' => 'Order not found']);
+                }
+
+                if (in_array($order->delivery_status, ['shipped', 'out_for_delivery', 'delivered', 'returned'])) {
+                    return response()->json(['status' => false, 'message' => 'Cannot be cancel the order.']);
+                }
+
+                $order->update(['delivery_status' => 'cancelled']);
+
+                return response()->json(['status' => true, 'message' => 'Order Cancelled successfully']);
             }
-            $data = Order::where('user_id', $user)
-                ->get();
+
+            $data = Order::with(['get_orderitems', 'get_payment', 'get_feedback'])->where('user_id', $user)
+            ->whereNot('delivery_status', 'cancelled')->get();
 
             return DataTables::of($data)
                 ->addIndexColumn()
+                ->addColumn('items_count', function ($row) {
+                    return $row->get_orderitems->count();
+                })
+                ->addColumn('payment_gateway', function ($row) {
+                    return $row->get_payment->payment_gateway ?? '-';
+                })
+                ->addColumn('payment_status', function ($row) {
+                    return $row->get_payment->payment_status ?? '-';
+                })
+                ->addColumn('feedback_btn', function ($row) {
+                    if ($row->delivery_status == 'delivered' && ! $row->get_feedback) {
+                        return '<a href="javascript:void(0)"
+                            class="feedbackRow btn btn-sm btn-primary"
+                            data-id="'.$row->id.'">
+                            Feedback
+                            </a>';
+                    }
+
+                    return '<div class="text-center">-</div>';
+                })
+                ->addColumn('return_btn', function ($row) {
+                    if ($row->delivery_status == 'delivered') {
+                        return '<a href="javascript:void(0)"
+                            class="returnRow btn btn-sm btn-warning"
+                            data-id="'.$row->id.'">
+                            Return
+                            </a>';
+                    }
+
+                    return '<div class="text-center">-</div>';
+                })
+                ->addColumn('cancel_btn', function ($row) {
+                    if (in_array($row->delivery_status, ['pending', 'confirmed'])) {
+                        return '<a href="javascript:void(0)"
+                            class="deleteRow btn btn-sm btn-danger"
+                            data-id="'.$row->id.'">
+                            Cancel
+                            </a>';
+                    }
+
+                    return '<div class="text-center">-</div>';
+                })
+
                 ->addColumn('action', function ($row) {
                     $actions = '
                         <div class="dropdown">
-                            <a href="#" class="text-dark" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <a href="#" class="text-dark" data-bs-toggle="dropdown">
                                 <i class="fas fa-ellipsis-v"></i>
                             </a>
                             <ul class="dropdown-menu">
                                 <li>
-                                    <a href="javascript:void(0)" class="ViewRow dropdown-item" data-id="'.$row->id.'">View</a>
-                                </li>
+                                    <a href="javascript:void(0)" class="ViewRow dropdown-item"
+                                        data-id="'.$row->id.'"> View Items
+                                    </a>
+                                </li>';
+                    if ($row->get_payment && $row->get_payment->payment_status == 'success') {
+                        $actions .= '
+                            <li>
+                                <a href="javascript:void(0)"
+                                class="PaymentRow dropdown-item"
+                                data-id="'.$row->id.'">
+                                Payment Details
+                                </a>
+                            </li>';
+                    }
+
+                    $actions .= '
                             </ul>
                         </div>';
 
                     return $actions;
                 })
-                ->rawColumns(['action'])
+                ->rawColumns([
+                    'action',
+                    'feedback_btn',
+                    'return_btn',
+                    'cancel_btn',
+                ])
                 ->make(true);
         }
 
@@ -204,25 +299,6 @@ class OrderController extends Controller
                         }
                     }
                     $order->update(['delivery_status' => $request->delivery_status]);
-
-                    
-                    // Order::where('id', $id)->update([
-                    //     'delivery_status' => $request->delivery_status,
-                    // ]);
-                    // if ($request->delivery_status == 'delivered') {
-                    //     Payment::where('order_id', $id)->where('payment_gateway', 'cash_on_delivery')->update([
-                    //         'transaction_id' => 'TXN'.time(),
-                    //         'payment_status' => 'success',
-                    //         'paid_at' => now(),
-                    //     ]);
-
-                    //     $order = Order::find($id);
-                    //     $product = Product::find($order->product_id);
-                    //     if ($product) {
-                    //         $product->stock = $product->stock - $order->quantity;
-                    //         $product->save();
-                    //     }
-                    // }
                     session()->flash('success', 'Status Updated Successfully');
 
                     return redirect()->route('order_list');
@@ -264,7 +340,7 @@ class OrderController extends Controller
                 return response()->json($order);
             }
 
-            $query = Order::with('get_user', 'get_payment');
+            $query = Order::with('get_user', 'get_payment')->where('delivery_status', '!=', 'cancelled');
             if ($request->order_no) {
                 $query->where('order_no', 'LIKE', '%'.$request->order_no.'%');
             }
@@ -380,6 +456,178 @@ class OrderController extends Controller
             $pdf = Pdf::loadView('Export.pdf.order_pdf', ['orders' => $orders]);
 
             return $pdf->download('orders.pdf');
+
+        }
+    }
+
+    public function OrderCancelled(Request $request)
+    {
+
+        if ($request->ajax()) {
+            if ($request->get_view_item) {
+                $id = $request->id;
+                $order = Order::with(['get_user', 'get_payment', 'get_address.get_state', 'get_address.get_city',
+                    'get_orderitems.get_product',
+                    'get_orderitems.get_product.get_product_images',
+                    'get_orderitems.get_size',
+                ])->where('id', $id)->first();
+
+                return response()->json($order);
+            }
+
+            if ($request->refund_payment) {
+                $id = $request->id;
+                $order = Order::with('get_payment')->where('id', $id)->first();
+                if (! $order || ! $order->get_payment) {
+                    return response()->json(['status' => false, 'message' => 'Order not found']);
+                }
+                $payment = $order->get_payment;
+                PaymentRefund::create([
+                    'payment_id' => $payment->id,
+                    'refund_transaction_id' => 'REF'.time(),
+                    'refund_amount' => $payment->amount,
+                    'refund_date' => now(),
+                ]);
+
+                $payment->update([
+                    'payment_status' => 'refunded',
+                ]);
+
+                return response()->json(['status' => true, 'message' => 'Payment refunded successfully']);
+            }
+
+            $query = Order::with(['get_user', 'get_payment'])->where('delivery_status', 'cancelled');
+            if ($request->order_no) {
+                $query->where('order_no', 'LIKE', '%'.$request->order_no.'%');
+            }
+
+            if ($request->customer_name) {
+                $query->whereHas('get_user', function ($q) use ($request) {
+                    $q->where('first_name', 'LIKE', '%'.$request->customer_name.'%')
+                        ->orWhere('last_name', 'LIKE', '%'.$request->customer_name.'%');
+                });
+            }
+
+            if ($request->payment_gateway) {
+                $query->whereHas('get_payment', function ($q) use ($request) {
+                    $q->where('payment_gateway', $request->payment_gateway);
+                });
+            }
+
+            if ($request->payment_status) {
+                $query->whereHas('get_payment', function ($q) use ($request) {
+                    $q->where('payment_status', $request->payment_status);
+                });
+            }
+
+            if ($request->from_date) {
+                $from = Carbon::createFromFormat('d-m-Y', $request->from_date)->format('Y-m-d');
+                $query->whereDate('order_date', '>=', $from);
+
+            }
+
+            if ($request->to_date) {
+                $to = Carbon::createFromFormat('d-m-Y', $request->to_date)->format('Y-m-d');
+                $query->whereDate('order_date', '<=', $to);
+            }
+
+            return DataTables::of($query)
+                ->addIndexColumn()
+                ->addColumn('customer_name', function ($row) {
+                    return ($row->get_user->first_name ?? '').' '.($row->get_user->last_name ?? '');
+                })
+                ->addColumn('action', function ($row) {
+
+                    $actions = '
+                        <div class="dropdown">
+                            <a href="#" class="text-dark" data-bs-toggle="dropdown">
+                                <i class="fas fa-ellipsis-v"></i>
+                            </a>
+                            <ul class="dropdown-menu">
+
+                                <li>
+                                    <a href="javascript:void(0)"
+                                    class="ViewRow dropdown-item"
+                                    data-id="'.$row->id.'">
+                                    View
+                                    </a>
+                                </li>';
+
+                    if (
+                        $row->get_payment &&
+                        in_array($row->get_payment->payment_gateway, ['gpay', 'phonepe', 'paytm']) &&
+                        $row->get_payment->payment_status == 'success'
+                    ) {
+
+                        $actions .= '
+                        <li>
+                            <a href="javascript:void(0)"
+                            class="RefundRow dropdown-item"
+                            data-id="'.$row->id.'">
+                            Process Refund
+                            </a>
+                        </li>';
+                    }
+
+                    $actions .= '</ul></div>';
+
+                    return $actions;
+                })
+                ->rawColumns(['action'])
+                ->make(true);
+        }
+
+        return view('Order.order_cancelled');
+    }
+
+    public function OrderCancelledExport(Request $request)
+    {
+        $query = Order::with(['get_user', 'get_payment'])->where('delivery_status', 'cancelled');
+        if ($request->order_no) {
+            $query->where('order_no', 'LIKE', '%'.$request->order_no.'%');
+
+        }
+
+        if ($request->customer_name) {
+            $query->whereHas('get_user', function ($q) use ($request) {
+                $q->where('first_name', 'LIKE', '%'.$request->customer_name.'%')
+                    ->orWhere('last_name', 'LIKE', '%'.$request->customer_name.'%');
+            });
+
+        }
+
+        if ($request->payment_gateway) {
+            $query->whereHas('get_payment', function ($q) use ($request) {
+                $q->where('payment_gateway', $request->payment_gateway);
+            });
+
+        }
+
+        if ($request->payment_status) {
+            $query->whereHas('get_payment', function ($q) use ($request) {
+                $q->where('payment_status', $request->payment_status);
+            });
+        }
+
+        if ($request->from_date) {
+            $from = Carbon::createFromFormat('d-m-Y', $request->from_date)->format('Y-m-d');
+            $query->whereDate('order_date', '>=', $from);
+        }
+
+        if ($request->to_date) {
+            $to = Carbon::createFromFormat('d-m-Y', $request->to_date)->format('Y-m-d');
+            $query->whereDate('order_date', '<=', $to);
+        }
+
+        $orders = $query->get();
+        if ($request->type == 'excel') {
+            return Excel::download(new CancelledOrderExport($orders), 'cancelled_orders.xlsx');
+        }
+
+        if ($request->type == 'pdf') {
+            $pdf = Pdf::loadView('Export.pdf.cancelled_order_pdf', ['orders' => $orders]);
+
+            return $pdf->download('cancelled_orders.pdf');
 
         }
     }

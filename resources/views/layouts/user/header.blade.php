@@ -73,6 +73,8 @@
         $config = Configuration::first();
         use App\Models\CartList;
         $cartCount = CartList::where('user_id', session('user_id'))->count();
+        use App\Models\Order;
+        $myorder = Order::where('user_id', session('user_id'))->count();
     @endphp
     @if (!empty($config->logo))
         <img src="{{ asset($config->logo) }}" width="190" height="100" alt="Company Logo" class="img-thumbnail">
@@ -97,21 +99,23 @@
                 <sup class="badge bg-danger rounded-circle">{{ $cartCount }}</sup>
             </a>
         </li>
+        @if ($myorder >0 )
         <li class="nav-item">
             <a href="{{ route('order_placed') }}" class="nav-link text-light">
-                <i class="fa-solid fa-box"></i> Order
+                <i class="fa-solid fa-box"></i> My Order
             </a>
         </li>
-        <li class="nav-item">
+        @endif
+        {{-- <li class="nav-item">
             <a href="#" class="nav-link text-light">
                 <i class="fa-solid fa-rotate-left"></i> Return
             </a>
-        </li>
-        <li class="nav-item">
+        </li> --}}
+        {{-- <li class="nav-item">
             <a href="{{ route('feedback') }}" class="nav-link text-light">
                 <i class="fa-solid fa-comment-dots"></i> Feedback
             </a>
-        </li>
+        </li> --}}
         {{-- <li class="nav-item">
             <a href="{{ route('contact') }}" class="nav-link text-light ">
                 <i class="fa-solid fa-envelope"></i> Contact

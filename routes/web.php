@@ -44,8 +44,11 @@ Route::middleware([AdminMiddleware::class])->prefix('admin')->group(function () 
     Route::any('products.export', [ProductController::class, "ProductExport"])->name('products.export');
     Route::any('order_list', [OrderController::class, "OrderList"])->name('order_list');
     Route::any('order.export', [OrderController::class, "OrderExport"])->name('order.export');
+    Route::any('order_cancelled', [OrderController::class, "OrderCancelled"])->name('order_cancelled');
+    Route::any('order_cancelled.export', [OrderController::class, "OrderCancelledExport"])->name('order_cancelled.export');
     Route::any('payment_list', [PaymentController::class, "PaymentList"])->name('payment_list');
     Route::any('payment.export', [PaymentController::class, "PaymentExport"])->name('payment.export');
+    Route::any('payment_refund', [PaymentController::class, "PaymentRefund"])->name('payment_refund');
     Route::any('user_list_details', [RegistrationController::class, 'UserList'])->name('user_list_details');
     Route::any('user.export', [RegistrationController::class, 'UserExport'])->name('user.export');
     Route::any('favourites', [FeedbackController::class, "FavouritesList"])->name('favourites');

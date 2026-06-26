@@ -129,16 +129,22 @@ class CategoryController extends Controller
 
     public function CategoryExport(Request $request)
     {
+         $type = $request->type;
         $query = Category::query();
-        if ($request->category_name) {
-            $query->where('name', 'LIKE',  '%'.$request->category_name.'%');
+        if ($request->filled('category_name')) {
+            $query->where('name', 'like', '%'.$request->category_name.'%');
         }
+
         $categories = $query->get();
         if ($request->type == 'excel') {
-            return Excel::download(new CategoryExport($categories), 'categories.xlsx');
+
+            return Excel::download(new CategoryExport($categories),'categories.xlsx');
         }
-        if ($request->type == 'pdf') {
-            $pdf = Pdf::loadView('Export.pdf.category_pdf',['categories' => $categories,]);
+
+        if ($type == 'pdf') {
+            $categories = Category::get();
+            $pdf = Pdf::loadView('Export.pdf.category_pdf', ['categories' => $categories]);
+
             return $pdf->download('categories.pdf');
         }
 

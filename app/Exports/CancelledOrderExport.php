@@ -8,40 +8,38 @@ use Maatwebsite\Excel\Concerns\WithEvents;
 use Maatwebsite\Excel\Events\AfterSheet;
 use PhpOffice\PhpSpreadsheet\Style\Border;
 
-class CategoryExport implements FromView,WithEvents
+class CancelledOrderExport implements FromView, WithEvents
 {
-     protected $categories;
-         public function __construct($categories)
+
+     protected $orders;
+    public function __construct($orders)
     {
-        $this->categories = $categories;
+        $this->orders = $orders;
     }
 
     public function view(): View
     {
-        return view('Export.excel.category_excel', ['categories' => $this->categories]);
+        return view('Export.excel.cancelled_order_excel', ['orders' => $this->orders]);
     }
 
-        public function registerEvents(): array
+    public function registerEvents(): array
     {
         return [
             AfterSheet::class => function ($event) {
                 $startRow = 2;
-                $lastRow = count($this->categories) + $startRow;
+                $lastRow = count($this->orders) + $startRow;
                 $event->sheet
-                    ->getStyle('A2:C'.$lastRow)
+                    ->getStyle('A2:H'.$lastRow)
                     ->getBorders()
                     ->getAllBorders()
                     ->setBorderStyle(
                         Border::BORDER_THIN
                     );
-
                 $event->sheet
-                    ->getStyle('A2:C2')
+                    ->getStyle('A2:H2')
                     ->getFont()
                     ->setBold(true);
-
-
-                foreach (range('A', 'C') as $column) {
+                foreach (range('A', 'H') as $column) {
                     $event->sheet
                         ->getDelegate()
                         ->getColumnDimension($column)
