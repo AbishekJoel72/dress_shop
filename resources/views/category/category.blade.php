@@ -222,11 +222,13 @@
                         data: 'name',
                         name: 'name',
                         width: '20%',
+                        className: 'text-center'
                     },
                     {
                         data: 'description',
                         name: 'description',
                         width: '30%',
+                        className: 'text-center',
                         render: function(data, type, row) {
                             return data ? data : "-";
                         }
@@ -235,6 +237,7 @@
                         data: 'status',
                         name: 'status',
                         width: '30%',
+                        className: 'text-center',
                         render: function(data, type, row) {
 
                             if (data === 'active') {

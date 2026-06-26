@@ -147,5 +147,6 @@ class CategoryController extends Controller
 
             return $pdf->download('categories.pdf');
         }
+
     }
 }
