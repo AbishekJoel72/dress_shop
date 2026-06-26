@@ -24,7 +24,7 @@ class SizeTypeExport implements FromView,WithEvents
         return view('Export.excel.size_type_excel', ['size_types' => $this->size_types]);
     }
 
-        public function registerEvents(): array
+    public function registerEvents(): array
     {
         return [
             AfterSheet::class => function ($event) {

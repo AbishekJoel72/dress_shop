@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Exports\PaymentExport;
 use App\Models\Payment;
+use App\Models\PaymentRefund;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -15,7 +16,7 @@ class PaymentController extends Controller
     public function PaymentList(Request $request)
     {
         if ($request->ajax()) {
-            $query = Payment::with(['get_order', 'get_order.get_user']);
+            $query = Payment::with(['get_order', 'get_order.get_user'])->whereNot('payment_status', 'refunded');
             if ($request->order_no) {
                 $query->whereHas('get_order',
                     function ($q) use ($request) {
@@ -67,7 +68,7 @@ class PaymentController extends Controller
 
     public function PaymentExport(Request $request)
     {
-        $query = Payment::with(['get_order','get_order.get_user',]);
+        $query = Payment::with(['get_order', 'get_order.get_user']);
 
         if ($request->order_no) {
             $query->whereHas('get_order', function ($q) use ($request) {
@@ -105,13 +106,80 @@ class PaymentController extends Controller
 
         $payments = $query->get();
         if ($request->type == 'excel') {
-            return Excel::download(new PaymentExport($payments),'payment_list.xlsx');
+            return Excel::download(new PaymentExport($payments), 'payment_list.xlsx');
         }
-
 
         if ($request->type == 'pdf') {
-            $pdf = Pdf::loadView('Export.pdf.payment_pdf',['payments' => $payments]);
+            $pdf = Pdf::loadView('Export.pdf.payment_pdf', ['payments' => $payments]);
+
             return $pdf->download('payment_list.pdf');
         }
+    }
+
+    public function PaymentRefund(Request $request)
+    {
+        if ($request->ajax()) {
+
+            $query = PaymentRefund::with([
+                'get_payment.get_order.get_user',
+            ]);
+
+            if ($request->from_date) {
+                $query->whereDate('refund_date', '>=', $request->from_date);
+            }
+
+            if ($request->to_date) {
+                $query->whereDate('refund_date', '<=', $request->to_date);
+            }
+
+            if ($request->payment_method) {
+                $query->whereHas('get_payment', function ($q) use ($request) {
+                    $q->where('payment_gateway', $request->payment_method);
+                });
+            }
+
+            if ($request->order_no) {
+                $query->whereHas('get_payment.get_order', function ($q) use ($request) {
+                    $q->where('order_no', 'like', '%'.$request->order_no.'%');
+                });
+            }
+
+            if ($request->customer_name) {
+                $query->whereHas('get_payment.get_order.get_user', function ($q) use ($request) {
+                    $q->whereRaw("CONCAT(first_name,' ',last_name) LIKE ?", ['%'.$request->customer_name.'%']);
+                });
+            }
+
+            $query = $query->get();
+
+            return DataTables::of($query)
+                ->addIndexColumn()
+
+                ->addColumn('customer_name', function ($row) {
+                    return ($row->get_payment->get_order->get_user->first_name ?? '').' '.
+                           ($row->get_payment->get_order->get_user->last_name ?? '');
+                })
+
+                ->addColumn('order_no', function ($row) {
+                    return $row->get_payment->get_order->order_no ?? '-';
+                })
+
+                ->addColumn('payment_method', function ($row) {
+                    return $row->get_payment->payment_gateway ?? '-';
+                })
+
+                ->addColumn('transaction_id', function ($row) {
+                    return $row->get_payment->transaction_id ?? '-';
+                })
+
+                ->addColumn('status', function ($row) {
+                    return '<span class="badge bg-success">Refunded</span>';
+                })
+
+                ->rawColumns(['status'])
+                ->make(true);
+        }
+
+        return view('payment.payment_refund');
     }
 }

@@ -7,16 +7,27 @@
             </div>
             <div class="card-body">
                 <div class="row">
-                    <div class="col-4">
-                        <label for="category_name">Category Name</label>
-                        <input type="text" name="category_name" id="category_name" placeholder="Category Name"
-                            class="form-control">
+                    <div class="col-md-4">
+                        <label for="category_name" class="form-label mb-2">
+                            Category Name
+                        </label>
+
+                        <input type="text" name="category_name" id="category_name" class="form-control"
+                            placeholder="Enter Category Name" autocomplete="off">
                     </div>
                 </div>
             </div>
-            {{-- <div class="card-footer d-flex justify-content-center bg-transparent">
-                <button class="btn  btn-primary"> <i class="fa-solid fa-filter"></i> Filter</button>
-            </div> --}}
+            <div class="card-footer d-flex justify-content-center gap-2 bg-transparent">
+
+                <button type="button" class="btn btn-primary" id="filterBtn">
+                    <i class="fa-solid fa-filter"></i> Show Filter
+                </button>
+
+                <button type="reset" class="btn btn-secondary" id="resetBtn">
+                    <i class="fa-solid fa-rotate-right"></i> Reset
+                </button>
+
+            </div>
         </div>
 
         <div class="card mt-4">
@@ -30,13 +41,17 @@
                         <button class="btn btn-sm btn-warning" type="button" data-bs-toggle="dropdown">
                             Download
                         </button>
+
                         <ul class="dropdown-menu">
                             <li>
-                                <a class="dropdown-item" href="{{ route('category.export', ['type' => 'excel']) }}">Excel
+                                <a href="#" class="dropdown-item exportBtn" data-type="excel">
+                                    Excel
                                 </a>
                             </li>
                             <li>
-                                <a class="dropdown-item" href="{{ route('category.export', ['type' => 'pdf']) }}"> PDF </a>
+                                <a href="#" class="dropdown-item exportBtn" data-type="pdf">
+                                    PDF
+                                </a>
                             </li>
                         </ul>
                     </div>
@@ -77,20 +92,60 @@
                                             class="text-danger">*</span></label>
                                     <input type="text" name="name" id="name" placeholder="Category"
                                         class="form-control" required>
-                                    {{-- <div class="invalid-feedback">Field is required</div> --}}
-                                    <small class="text-dangers"></small>
+                                    <small class="text-errors"></small>
                                 </div>
                                 <div class="col form-field">
                                     <label for="description" class="form-label">Description</label>
                                     <input type="text" name="description" id="description" class="form-control"
                                         placeholder="Description">
-                                    <small class="text-dangers"></small>
+                                    <small class="text-errors"></small>
                                 </div>
                             </div>
                         </div>
                         <div class="modal-footer d-flex justify-content-center">
                             <button type="submit" class="btn btn-primary"> <i class="fa-solid fa-floppy-disk">
                                 </i> Submit</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+
+
+        <div class="modal fade" id="editmodel" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <form action="{{ route('categories') }}" method="POST" autocomplete="off" class="needs-validation"
+                        novalidate>
+                        @csrf
+                        <input type="hidden" name="id" id="edit_id">
+                        <input type="hidden" name="edit_category" value="true">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Edit Category</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="row g-3">
+                                <div class="col form-field">
+                                    <label for="name" class="form-label">Category <span
+                                            class="text-danger">*</span></label>
+                                    <input type="text" name="name" id="edit_name" placeholder="Category"
+                                        class="form-control" required>
+                                    <small class="text-errors"></small>
+                                </div>
+                                <div class="col form-field">
+                                    <label for="description" class="form-label">Description</label>
+                                    <input type="text" name="description" id="edit_description" class="form-control"
+                                        placeholder="Description">
+                                    <small class="text-errors"></small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer d-flex justify-content-center">
+                            <button type="submit" class="btn btn-primary"> <i class="fa-solid fa-pen">
+                                </i> Update</button>
                         </div>
                     </form>
                 </div>
@@ -106,7 +161,8 @@
                         <input type="hidden" name="edit_status" value="true">
                         <div class="modal-header">
                             <h5 class="modal-title">Edit Status</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
                             <div class="row g-3">
@@ -138,44 +194,6 @@
             </div>
         </div>
 
-        <div class="modal fade" id="editmodel" tabindex="-1" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <form action="{{ route('categories') }}" method="POST" autocomplete="off" class="needs-validation"
-                        novalidate>
-                        @csrf
-                        <input type="hidden" name="id" id="edit_id">
-                        <input type="hidden" name="edit_category" value="true">
-                        <div class="modal-header">
-                            <h5 class="modal-title">Edit Category</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body">
-                            <div class="row g-3">
-                                <div class="col form-field">
-                                    <label for="name" class="form-label">Category <span
-                                            class="text-danger">*</span></label>
-                                    <input type="text" name="name" id="edit_name" placeholder="Category"
-                                        class="form-control" required>
-                                    <small class="text-dangers"></small>
-                                </div>
-                                <div class="col form-field">
-                                    <label for="description" class="form-label">Description</label>
-                                    <input type="text" name="description" id="edit_description" class="form-control"
-                                        placeholder="Description">
-                                    <small class="text-dangers"></small>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="modal-footer d-flex justify-content-center">
-                            <button type="submit" class="btn btn-primary"> <i class="fa-solid fa-pen">
-                                </i> Update</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
     </div>
     @include('layouts.footer')
 @endsection
@@ -237,93 +255,110 @@
                     }
                 ]
             });
-            $('#category_name').on('keyup', function() {
-                table.draw();
+
+            $('#filterBtn').click(function(e) {
+                e.preventDefault();
+                table.ajax.reload();
             });
 
-            $(document).on('click', '.editRow', function(e) {
-                let id = $(this).data('id');
-                $.ajax({
-                    url: "{{ route('categories') }}",
-                    method: "GET",
-                    dataType: "json",
-                    data: {
-                        id: id,
-                        get_category: true,
-                    },
-                    success: function(data) {
-                        $('#edit_id').val(data.id);
-                        $('#edit_name').val(data.name);
-                        $('#edit_description').val(data.description);
-                        $('#editmodel').modal("show");
-                    }
-                })
-            });
-
-
-            $(document).on('click', '.editStatusRow', function(e) {
-                let id = $(this).data('id');
-                showConfirm(messages.delete_confirm, function() {
-                    $.ajax({
-                        url: "{{ route('categories') }}",
-                        method: "GET",
-                        dataType: "json",
-                        data: {
-                            id: id,
-                            get_status: true,
-                        },
-                        success: function(data) {
-                            $('#edit_id').val(data.id);
-
-                            if (data.status === 'active') {
-                                $('#edit_status_active').prop('checked', true);
-                            } else {
-                                $('#edit_status_inactive').prop('checked', true);
-                            }
-                            $('#editstatusmodel').modal("show");
-                        }
-                    });
-                });
-            });
-
-
-            $(document).on('click', '.deleteRow', function() {
-                let id = $(this).data('id');
-                showConfirm(messages.delete_confirm, function() {
-                    $.ajax({
-                        url: "{{ route('categories') }}",
-                        type: "DELETE",
-                        data: {
-                            id: id,
-                            _token: "{{ csrf_token() }}",
-                            delete_cate: true,
-                        },
-                        success: function(data) {
-                            $('#modalMessage').text("Delete Successfully");
-                            var modal = new bootstrap.Modal(document
-                                .getElementById(
-                                    'sessionModal'));
-                            modal.show();
-                            $('#sessionModal').on('hidden.bs.modal',
-                                function() {
-                                    $('#datatable').DataTable().ajax
-                                        .reload();
-                                });
-                        },
-                        error: function() {
-                            $("#modalMessage").text(
-                                "Something went wrong!");
-                            var modal = new bootstrap.Modal(document
-                                .getElementById(
-                                    'sessionModal'));
-                            modal.show();
-                        }
-                    });
-                });
-
+            $('#resetBtn').click(function() {
+                $('#category_name').val('');
+                table.ajax.reload();
             });
         });
 
-        
+        $(document).on('click', '.editRow', function(e) {
+            let id = $(this).data('id');
+            $.ajax({
+                url: "{{ route('categories') }}",
+                method: "GET",
+                dataType: "json",
+                data: {
+                    id: id,
+                    get_category: true,
+                },
+                success: function(data) {
+                    $('#edit_id').val(data.id);
+                    $('#edit_name').val(data.name);
+                    $('#edit_description').val(data.description);
+                    $('#editmodel').modal("show");
+                }
+            })
+        });
+
+
+        $(document).on('click', '.editStatusRow', function(e) {
+            let id = $(this).data('id');
+            $.ajax({
+                url: "{{ route('categories') }}",
+                method: "GET",
+                dataType: "json",
+                data: {
+                    id: id,
+                    get_status: true,
+                },
+                success: function(data) {
+                    $('#edit_id').val(data.id);
+
+                    if (data.status === 'active') {
+                        $('#edit_status_active').prop('checked', true);
+                    } else {
+                        $('#edit_status_inactive').prop('checked', true);
+                    }
+                    $('#editstatusmodel').modal("show");
+                }
+            });
+
+        });
+
+
+        $(document).on('click', '.deleteRow', function() {
+            let id = $(this).data('id');
+            showConfirm(messages.delete_confirm, function() {
+                $.ajax({
+                    url: "{{ route('categories') }}",
+                    type: "DELETE",
+                    data: {
+                        id: id,
+                        _token: "{{ csrf_token() }}",
+                        delete_cate: true,
+                    },
+                    success: function(data) {
+                        $('#modalMessage').text("Delete Successfully");
+                        var modal = new bootstrap.Modal(document
+                            .getElementById(
+                                'sessionModal'));
+                        modal.show();
+                        $('#sessionModal').on('hidden.bs.modal',
+                            function() {
+                                $('#datatable').DataTable().ajax
+                                    .reload();
+                            });
+                    },
+                    error: function() {
+                        $("#modalMessage").text(
+                            "Something went wrong!");
+                        var modal = new bootstrap.Modal(document
+                            .getElementById(
+                                'sessionModal'));
+                        modal.show();
+                    }
+                });
+            });
+
+        });
+
+        $(document).on('click', '.exportBtn', function(e) {
+            e.preventDefault();
+            let type = $(this).data('type');
+            let category_name = $('#category_name').val();
+            let url = "{{ route('category.export') }}";
+
+            window.location.href =
+                url +
+                '?type=' + type +
+                '&category_name=' + encodeURIComponent(category_name);
+
+        });
     </script>
 @endsection

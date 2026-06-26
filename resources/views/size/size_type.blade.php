@@ -7,14 +7,20 @@
             </div>
             <div class="card-body">
                 <div class="row">
-                    <div class="col-4">
-                        <label for="size_name">Size Name</label>
-                        <input type="text" name="size_name" id="size_name" placeholder="Size Name" class="form-control">
+                    <div class="col-md-4">
+                        <label for="size_name" class="form-label mb-2">Size Name</label>
+                        <input type="text" name="size_name" id="size_name" placeholder="Enter Size Name"
+                            class="form-control" autocomplete="off">
                     </div>
                 </div>
             </div>
-            <div class="card-footer d-flex justify-content-center bg-transparent">
-                <button class="btn  btn-primary" id="filterBtn"> <i class="fa-solid fa-filter"></i> Show Filter</button>
+            <div class="card-footer d-flex justify-content-center gap-2 bg-transparent">
+
+                <button type="button" class="btn  btn-primary" id="filterBtn"> <i class="fa-solid fa-filter"></i> Show
+                    Filter</button>
+                <button type="reset" class="btn btn-secondary" id="resetBtn">
+                    <i class="fa-solid fa-rotate-right"></i> Reset
+                </button>
             </div>
         </div>
 
@@ -31,10 +37,10 @@
                         </button>
                         <ul class="dropdown-menu">
                             <li>
-                               <a href="#" class="dropdown-item exportBtn" data-type="excel">Excel</a>
+                                <a href="#" class="dropdown-item exportBtn" data-type="excel">Excel</a>
                             </li>
                             <li>
-                                 <a href="#" class="dropdown-item exportBtn" data-type="pdf">PDF</a>
+                                <a href="#" class="dropdown-item exportBtn" data-type="pdf">PDF</a>
                             </li>
                         </ul>
                     </div>
@@ -73,7 +79,7 @@
                                             class="text-danger">*</span></label>
                                     <input type="text" name="size_type" id="size_type" placeholder="size"
                                         class="form-control" required>
-                                    <small class="text-dangers"></small>
+                                    <small class="text-errors"></small>
                                 </div>
                             </div>
                         </div>
@@ -97,7 +103,8 @@
 
                         <div class="modal-header">
                             <h5 class="modal-title">Edit Size</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
                             <div class="row g-3">
@@ -106,7 +113,7 @@
                                             class="text-danger">*</span></label>
                                     <input type="text" name="size_type" id="edit_size_type" placeholder="size"
                                         class="form-control" required>
-                                    <small class="text-dangers"></small>
+                                    <small class="text-errors"></small>
                                 </div>
                             </div>
                         </div>
@@ -214,91 +221,99 @@
                     }
                 ]
             });
+
             $('#filterBtn').click(function() {
                 table.draw();
             });
 
-            $(document).on('click', '.editRow', function(e) {
-                let id = $(this).data('id');
-                $.ajax({
-                    url: "{{ route('size_type') }}",
-                    method: "GET",
-                    dataType: "json",
-                    data: {
-                        id: id,
-                        get_size: true,
-                    },
-                    success: function(data) {
-                        $('#edit_size_id').val(data.id);
-                        $('#edit_size_type').val(data.size_name);
-                        $('#editmodel').modal("show");
-                    }
-                })
+            $('#resetBtn').click(function() {
+                $('#size_name').val('');
+                table.ajax.reload();
             });
 
+        });
 
-            $(document).on('click', '.editStatusRow', function(e) {
-                let id = $(this).data('id');
-                $.ajax({
-                    url: "{{ route('size_type') }}",
-                    method: "GET",
-                    dataType: "json",
-                    data: {
-                        id: id,
-                        get_status: true,
-                    },
-                    success: function(data) {
-                        $('#edit_status_id').val(data.id);
-                        if (data.status === 'active') {
-                            $('#edit_status_active').prop('checked', true);
-                        } else {
-                            $('#edit_status_inactive').prop('checked', true);
-                        }
-                        $('#editstatusmodel').modal("show");
+        $(document).on('click', '.editRow', function(e) {
+            let id = $(this).data('id');
+            $.ajax({
+                url: "{{ route('size_type') }}",
+                method: "GET",
+                dataType: "json",
+                data: {
+                    id: id,
+                    get_size: true,
+                },
+                success: function(data) {
+                    $('#edit_size_id').val(data.id);
+                    $('#edit_size_type').val(data.size_name);
+                    $('#editmodel').modal("show");
+                }
+            })
+        });
+
+
+        $(document).on('click', '.editStatusRow', function(e) {
+            let id = $(this).data('id');
+            $.ajax({
+                url: "{{ route('size_type') }}",
+                method: "GET",
+                dataType: "json",
+                data: {
+                    id: id,
+                    get_status: true,
+                },
+                success: function(data) {
+                    $('#edit_status_id').val(data.id);
+                    if (data.status === 'active') {
+                        $('#edit_status_active').prop('checked', true);
+                    } else {
+                        $('#edit_status_inactive').prop('checked', true);
                     }
-                });
+                    $('#editstatusmodel').modal("show");
+                }
             });
+        });
 
-            $(document).on('click', '.deleteRow', function() {
-                let id = $(this).data('id');
-                $.ajax({
-                    url: "{{ route('size_type') }}",
-                    type: "DELETE",
-                    data: {
-                        id: id,
-                        _token: "{{ csrf_token() }}",
-                        delete_size: true,
-                    },
-                    success: function(data) {
-                        $('#modalMessage').text("Delete Successfully");
-                        var modal = new bootstrap.Modal(document.getElementById(
-                            'sessionModal'));
-                        modal.show();
-                        $('#sessionModal').on('hidden.bs.modal', function() {
-                            $('#datatable').DataTable().ajax.reload();
-                        });
-                    },
-                    error: function() {
-                        $("#modalMessage").text("Something went wrong!");
-                        var modal = new bootstrap.Modal(document.getElementById(
-                            'sessionModal'));
-                        modal.show();
-                    }
-
-                });
-            });
-
-             $(document).on('click', '.exportBtn', function(e) {
-                e.preventDefault();
-                let type = $(this).data('type');
-                let size_name = $('#size_name').val();
-                let url = "{{ route('size.export') }}";
-                window.location.href =
-                    url +
-                    '?type=' + type +
-                    '&size_name=' + size_name;
+        $(document).on('click', '.deleteRow', function() {
+            let id = $(this).data('id');
+            $.ajax({
+                url: "{{ route('size_type') }}",
+                type: "DELETE",
+                data: {
+                    id: id,
+                    _token: "{{ csrf_token() }}",
+                    delete_size: true,
+                },
+                success: function(data) {
+                    $('#modalMessage').text("Delete Successfully");
+                    var modal = new bootstrap.Modal(document.getElementById(
+                        'sessionModal'));
+                    modal.show();
+                    $('#sessionModal').on('hidden.bs.modal', function() {
+                        $('#datatable').DataTable().ajax.reload();
+                    });
+                },
+                error: function() {
+                    $("#modalMessage").text("Something went wrong!");
+                    var modal = new bootstrap.Modal(document.getElementById(
+                        'sessionModal'));
+                    modal.show();
+                }
 
             });
         });
+
+        $(document).on('click', '.exportBtn', function(e) {
+            e.preventDefault();
+            let type = $(this).data('type');
+            let size_name = $('#size_name').val();
+            let url = "{{ route('size.export') }}";
+            window.location.href =
+                url +
+                '?type=' + type +
+                '&size_name=' + size_name;
+
+        });
+
     </script>
 @endsection

@@ -21,4 +21,9 @@ class Payment extends Model
     {
         return $this->belongsTo(Order::class, 'order_id');
     }
+
+    public function get_payment_refund()
+    {
+        return $this->hasOne(Order::class, 'payment_id','id');
+    }
 }

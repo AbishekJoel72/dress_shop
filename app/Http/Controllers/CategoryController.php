@@ -13,57 +13,63 @@ class CategoryController extends Controller
 {
     public function Categories(Request $request)
     {
-        if ($request->method() == "POST") {
+        if ($request->method() == 'POST') {
             if ($request->category) {
                 try {
                     $validation = $request->validate([
-                        'name' => "required"
+                        'name' => 'required',
                     ]);
                     if ($validation) {
-                        $category = new Category();
+                        $category = new Category;
                         $category->name = $request->name;
                         $category->description = $request->description;
                         $category->save();
-                        session()->flash("success", "Category Added Successfully");
-                        return redirect()->route("categories");
+                        session()->flash('success', 'Category Added Successfully');
+
+                        return redirect()->route('categories');
                     }
                 } catch (\Throwable $th) {
-                    session()->flash("error", $th->getMessage());
+                    session()->flash('error', $th->getMessage());
+
                     return redirect()->back();
                 }
             }
             if ($request->edit_category) {
                 try {
                     $validation = $request->validate([
-                        'name' => "required"
+                        'name' => 'required',
                     ]);
                     if ($validation) {
                         Category::where('id', $request->id)->update([
                             'name' => $request->name,
                             'description' => $request->description,
                         ]);
-                        session()->flash("success", "Category Updated Successfully");
-                        return redirect()->route("categories");
+                        session()->flash('success', 'Category Updated Successfully');
+
+                        return redirect()->route('categories');
                     }
                 } catch (\Throwable $th) {
-                    session()->flash("error", $th->getMessage());
+                    session()->flash('error', $th->getMessage());
+
                     return redirect()->back();
                 }
             }
             if ($request->edit_status) {
                 try {
                     $validation = $request->validate([
-                        'status' => "required"
+                        'status' => 'required',
                     ]);
                     if ($validation) {
                         Category::where('id', $request->id)->update([
                             'status' => $request->status,
                         ]);
-                        session()->flash("success", "Status Updated Successfully");
-                        return redirect()->route("categories");
+                        session()->flash('success', 'Status Updated Successfully');
+
+                        return redirect()->route('categories');
                     }
                 } catch (\Throwable $th) {
-                    session()->flash("error", $th->getMessage());
+                    session()->flash('error', $th->getMessage());
+
                     return redirect()->back();
                 }
             }
@@ -71,23 +77,27 @@ class CategoryController extends Controller
         if ($request->ajax()) {
             if ($request->get_category) {
                 $id = $request->id;
-                $category = Category::where("id", $id)->first();
+                $category = Category::where('id', $id)->first();
+
                 return response()->json($category);
             }
             if ($request->get_status) {
                 $id = $request->id;
-                $category = Category::where("id", $id)->first();
+                $category = Category::where('id', $id)->first();
+
                 return response()->json($category);
             }
             if ($request->delete_cate) {
                 $id = $request->id;
-                $category = Category::where("id", $id)->delete();
+                $category = Category::where('id', $id)->delete();
+
                 return response()->json($category);
             }
             $query = Category::select(['id', 'name', 'description', 'status']);
             if ($request->category_name) {
-                 $query->where('name', 'LIKE', '%' . $request->category_name . '%');
+                $query->where('name', 'LIKE', '%'.$request->category_name.'%');
             }
+
             return DataTables::of($query)
                 ->addIndexColumn()
                 ->addColumn('action', function ($row) {
@@ -98,13 +108,13 @@ class CategoryController extends Controller
                     </a>
                     <ul class="dropdown-menu">
                         <li>
-                            <a href="javascript:void(0)"  class="editRow dropdown-item" data-id="' . $row->id . '">Edit</a>
+                            <a href="javascript:void(0)"  class="editRow dropdown-item" data-id="'.$row->id.'">Edit</a>
                         </li>
                         <li>
-                            <a href="javascript:void(0)"  class="editStatusRow dropdown-item" data-id="' . $row->id . '">Status</a>
+                            <a href="javascript:void(0)"  class="editStatusRow dropdown-item" data-id="'.$row->id.'">Status</a>
                         </li>
                         <li>
-                            <a href="javascript:void(0)" class="deleteRow dropdown-item text-danger" data-id="' . $row->id . '">Delete</a>
+                            <a href="javascript:void(0)" class="deleteRow dropdown-item text-danger" data-id="'.$row->id.'">Delete</a>
                         </li>
                     </ul>
                 </div>
@@ -113,18 +123,28 @@ class CategoryController extends Controller
                 ->rawColumns(['action'])
                 ->make(true);
         }
-        return view("category.category");
+
+        return view('category.category');
     }
 
     public function CategoryExport(Request $request)
     {
-        $type = $request->type;
-        if ($type == 'excel') {
-            return Excel::download(new CategoryExport, 'categories.xlsx');
+         $type = $request->type;
+        $query = Category::query();
+        if ($request->filled('category_name')) {
+            $query->where('name', 'like', '%'.$request->category_name.'%');
         }
+
+        $categories = $query->get();
+        if ($request->type == 'excel') {
+
+            return Excel::download(new CategoryExport($categories),'categories.xlsx');
+        }
+
         if ($type == 'pdf') {
             $categories = Category::get();
-            $pdf = Pdf::loadView('category.category_pdf', ['categories' => $categories]);
+            $pdf = Pdf::loadView('Export.pdf.category_pdf', ['categories' => $categories]);
+
             return $pdf->download('categories.pdf');
         }
     }
