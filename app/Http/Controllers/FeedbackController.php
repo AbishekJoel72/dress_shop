@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Exports\FavouriteExport;
+use App\Exports\FeedbackExport;
 use App\Models\Favourites;
 use App\Models\Feedback;
 use Barryvdh\DomPDF\Facade\Pdf;
@@ -116,19 +117,19 @@ class FeedbackController extends Controller
 
         if ($request->customer_name) {
             $query->whereHas('get_user', function ($q) use ($request) {
-                $q->where( 'first_name','LIKE', '%'.$request->customer_name.'%');
+                $q->where('first_name', 'LIKE', '%'.$request->customer_name.'%');
             });
         }
 
         if ($request->email) {
             $query->whereHas('get_user', function ($q) use ($request) {
-                $q->where('email','LIKE','%'.$request->email.'%');
+                $q->where('email', 'LIKE', '%'.$request->email.'%');
             });
         }
 
         if ($request->phone_no) {
             $query->whereHas('get_user', function ($q) use ($request) {
-                $q->where('phone_no','LIKE','%'.$request->phone_no.'%' );
+                $q->where('phone_no', 'LIKE', '%'.$request->phone_no.'%');
             });
         }
 
@@ -141,29 +142,30 @@ class FeedbackController extends Controller
         if ($request->category_name) {
             $query->whereHas('get_product.get_category',
                 function ($q) use ($request) {
-                    $q->where('name','LIKE','%'.$request->category_name.'%' );
+                    $q->where('name', 'LIKE', '%'.$request->category_name.'%');
                 }
             );
         }
 
         if ($request->from_date) {
-            $from = Carbon::createFromFormat('d-m-Y',$request->from_date)->format('Y-m-d');
+            $from = Carbon::createFromFormat('d-m-Y', $request->from_date)->format('Y-m-d');
             $query->whereDate('created_at', '>=', $from);
         }
 
         if ($request->to_date) {
-            $to = Carbon::createFromFormat('d-m-Y',$request->to_date)->format('Y-m-d');
-            $query->whereDate('created_at','<=', $to);
+            $to = Carbon::createFromFormat('d-m-Y', $request->to_date)->format('Y-m-d');
+            $query->whereDate('created_at', '<=', $to);
         }
 
         $favourites = $query->get();
 
         if ($request->type == 'excel') {
-            return Excel::download(new FavouriteExport($favourites),'favourites.xlsx' );
+            return Excel::download(new FavouriteExport($favourites), 'favourites.xlsx');
         }
 
         if ($request->type == 'pdf') {
-            $pdf = Pdf::loadView('Export.pdf.favourites_pdf',['favourites' => $favourites]);
+            $pdf = Pdf::loadView('Export.pdf.favourites_pdf', ['favourites' => $favourites]);
+
             return $pdf->download('favourites.pdf');
 
         }
@@ -220,16 +222,161 @@ class FeedbackController extends Controller
     public function FeedbackList(Request $request)
     {
         if ($request->ajax()) {
-            $data = Feedback::with('get_register')->get();
+            if ($request->get_viewimage) {
 
-            return DataTables::of($data)
+                $feedback = Feedback::with([
+                    'get_product',
+                    'get_product.get_product_images',
+                ])->where('id', $request->id)->first();
+
+                return response()->json($feedback);
+            }
+
+            $query = Feedback::with([
+                'get_order',
+                'get_product',
+                'get_product.get_category',
+                'get_register',
+            ]);
+
+            if ($request->customer_name) {
+                $query->whereHas('get_register', function ($q) use ($request) {
+                    $q->where('first_name', 'LIKE', '%'.$request->customer_name.'%')
+                        ->orWhere('last_name', 'LIKE', '%'.$request->customer_name.'%');
+                });
+            }
+
+            if ($request->order_no) {
+                $query->whereHas('get_order', function ($q) use ($request) {
+                    $q->where('order_no', 'LIKE', '%'.$request->order_no.'%');
+                });
+            }
+
+            if ($request->product_name) {
+                $query->whereHas('get_product', function ($q) use ($request) {
+                    $q->where('product_name', 'LIKE', '%'.$request->product_name.'%');
+                });
+            }
+
+            if ($request->category_name) {
+                $query->whereHas('get_product.get_category', function ($q) use ($request) {
+                    $q->where('name', 'LIKE', '%'.$request->category_name.'%');
+                });
+            }
+
+            if ($request->rating) {
+                $query->where('rating', $request->rating);
+            }
+
+            if ($request->from_date) {
+                $from = Carbon::createFromFormat('d-m-Y', $request->from_date)->format('Y-m-d');
+                $query->whereDate('created_at', '>=', $from);
+            }
+
+            if ($request->to_date) {
+                $to = Carbon::createFromFormat('d-m-Y', $request->to_date)->format('Y-m-d');
+                $query->whereDate('created_at', '<=', $to);
+            }
+
+            return DataTables::of($query)
                 ->addIndexColumn()
-                ->addColumn('full_name', function ($row) {
-                    return $row->get_register->lastname ? $row->get_register->first_name.' '.$row->get_register->last_name : $row->get_register->first_name;
+
+                ->editColumn('created_at', function ($row) {
+                    return $row->created_at->format('d-m-Y');
                 })
+
+                ->addColumn('full_name', function ($row) {
+                    return trim(
+                        ($row->get_register->first_name ?? '').' '.
+                        ($row->get_register->last_name ?? '')
+                    );
+                })
+
+                ->addColumn('action', function ($row) {
+                    return '
+                <div class="dropdown">
+                    <a href="#" class="text-dark" data-bs-toggle="dropdown">
+                        <i class="fas fa-ellipsis-v"></i>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li>
+                            <a href="javascript:void(0)"
+                               class="ViewImage dropdown-item"
+                               data-id="'.$row->id.'">
+                                View Image
+                            </a>
+                        </li>
+                    </ul>
+                </div>';
+                })
+
+                ->rawColumns(['action'])
                 ->make(true);
         }
 
         return view('feedback.feedback_list');
+    }
+
+    public function FeedbackExport(Request $request)
+    {
+        $query = Feedback::with([
+            'get_order',
+            'get_product',
+            'get_product.get_category',
+            'get_register',
+        ]);
+
+        if ($request->customer_name) {
+            $query->whereHas('get_register', function ($q) use ($request) {
+                $q->where('first_name', 'LIKE', '%'.$request->customer_name.'%')
+                    ->orWhere('last_name', 'LIKE', '%'.$request->customer_name.'%');
+            });
+        }
+
+        if ($request->order_no) {
+            $query->whereHas('get_order', function ($q) use ($request) {
+                $q->where('order_no', 'LIKE', '%'.$request->order_no.'%');
+            });
+        }
+
+        if ($request->product_name) {
+            $query->whereHas('get_product', function ($q) use ($request) {
+                $q->where('product_name', 'LIKE', '%'.$request->product_name.'%');
+            });
+        }
+
+        if ($request->category_name) {
+            $query->whereHas('get_product.get_category', function ($q) use ($request) {
+                $q->where('name', 'LIKE', '%'.$request->category_name.'%');
+            });
+        }
+
+        if ($request->rating) {
+            $query->where('rating', $request->rating);
+        }
+
+        if ($request->from_date) {
+            $from = Carbon::createFromFormat('d-m-Y', $request->from_date)->format('Y-m-d');
+            $query->whereDate('created_at', '>=', $from);
+        }
+
+        if ($request->to_date) {
+            $to = Carbon::createFromFormat('d-m-Y', $request->to_date)->format('Y-m-d');
+            $query->whereDate('created_at', '<=', $to);
+        }
+
+        $feedbacks = $query->get();
+
+        if ($request->type == 'excel') {
+            return Excel::download(new FeedbackExport($feedbacks), 'feedback.xlsx');
+        }
+
+        if ($request->type == 'pdf') {
+            $pdf = Pdf::loadView('Export.pdf.feedback_pdf', [
+                'feedbacks' => $feedbacks,
+            ]);
+
+            return $pdf->download('feedback.pdf');
+        }
     }
 }

@@ -51,8 +51,15 @@
         </div>
 
         <div class="card mt-4">
-            <div class="card-header bg-transparent">
+            <div class="card-header bg-transparent d-flex justify-content-between align-items-center py-2">
                 <h5>Refund List</h5>
+                <div class="dropdown">
+                    <button class="btn btn-sm btn-warning" type="button" data-bs-toggle="dropdown">Download</button>
+                    <ul class="dropdown-menu">
+                        <li><a href="#" class="dropdown-item exportBtn" data-type="excel">Excel</a> </li>
+                        <li><a href="#" class="dropdown-item exportBtn" data-type="pdf"> PDF</a></li>
+                    </ul>
+                </div>
             </div>
             <div class="card-body">
                 <table id="datatable" class="table table-bordered">
@@ -176,6 +183,21 @@
                 $('#status').val('');
                 table.ajax.reload();
             });
+        });
+
+        $(document).on('click', '.exportBtn', function(e) {
+            e.preventDefault();
+            let type = $(this).data('type');
+            let url = "{{ route('payment_refund.export') }}";
+            window.location.href =
+                url +
+                '?type=' + type +
+                '&from_date=' + $('#from_date').val() +
+                '&to_date=' + $('#to_date').val() +
+                '&order_no=' + encodeURIComponent($('#order_no').val()) +
+                '&customer_name=' + encodeURIComponent($('#customer_name').val()) +
+                '&payment_method=' + $('#payment_method').val();
+
         });
     </script>
 @endsection

@@ -5,6 +5,11 @@
 <head>
     <title>order Cancelled List</title>
     <style>
+        body {
+            font-family: Arial;
+            font-size: 12px;
+        }
+
         table {
             width: 100%;
             border-collapse: collapse;
@@ -12,14 +17,19 @@
 
         th,
         td {
-            border: 1px solid black;
+            border: 1px solid #000;
             padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background: #f2f2f2;
         }
     </style>
 </head>
 
 <body>
-    <h3>Order  Cancelled List</h3>
+    <h3>Order Cancelled List</h3>
     <table>
         <thead>
             <tr>
@@ -83,11 +93,8 @@
                     </td>
                 </tr>
             @endforeach
-
         </tbody>
-
     </table>
-
 </body>
 
 </html>

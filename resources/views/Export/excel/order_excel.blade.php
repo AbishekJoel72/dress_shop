@@ -71,11 +71,8 @@
                     </td>
                 </tr>
             @endforeach
-
         </tbody>
-
     </table>
-
 </body>
 
 </html>

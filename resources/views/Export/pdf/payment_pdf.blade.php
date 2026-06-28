@@ -28,9 +28,7 @@
 </head>
 
 <body>
-
     <h3>Product List</h3>
-
     <table>
         <thead>
             <tr>
@@ -54,7 +52,7 @@
                     <td>{{ $p->get_order->order_no ?? '-' }}</td>
                     <td> {{ $p->get_order->get_user->first_name ?? '' }}
                         {{ $p->get_order->get_user->last_name ?? '' }}</td>
-                        
+
                     <td>{{ $p->transaction_id }}</td>
                     <td>
                         @if ($p->payment_gateway == 'gpay')
@@ -84,7 +82,6 @@
             @endforeach
         </tbody>
     </table>
-
 </body>
 
 </html>

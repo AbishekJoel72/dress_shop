@@ -1,10 +1,8 @@
 <!DOCTYPE html>
-
 <html>
 
 <head>
     <title>order Cancelled List</title>
-
 </head>
 
 <body>
@@ -72,11 +70,8 @@
                     </td>
                 </tr>
             @endforeach
-
         </tbody>
-
     </table>
-
 </body>
 
 </html>

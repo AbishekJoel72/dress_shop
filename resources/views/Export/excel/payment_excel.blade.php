@@ -6,9 +6,7 @@
 </head>
 
 <body>
-
     <h3>Payment List</h3>
-
     <table>
         <thead>
             <tr>
@@ -62,7 +60,6 @@
             @endforeach
         </tbody>
     </table>
-
 </body>
 
 </html>
