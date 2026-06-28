@@ -1,36 +1,35 @@
 @extends('layouts.admin.default')
 @section('content')
     <div class="container">
-        <div class="card mb-3">
+        <div class="card">
             <div class="card-header bg-transparent ">
-                <h5 class="mb-0">Filter</h5>
+                <h5>Payment Refund Filter</h5>
             </div>
-
             <div class="card-body">
                 <div class="row">
-
-                    <div class="col-md-3 ">
-                        <label for="from_date">From Date</label>
+                    <div class="col-md-4">
+                        <label for="from_date" class="form-label mb-1">From Date</label>
                         <input type="text" id="from_date" class="form-control filter_date" placeholder="From Date">
                     </div>
 
-                    <div class="col-md-3">
-                        <label for="to_date">To Date</label>
+                    <div class="col-md-4">
+                        <label for="to_date" class="form-label mb-1">To Date</label>
                         <input type="text" id="to_date" class="form-control filter_date" placeholder="To Date">
                     </div>
 
-                    <div class="col-md-3">
-                        <label>Order No</label>
+                    <div class="col-md-4">
+                        <label class="form-label mb-1">Order No</label>
                         <input type="text" class="form-control" id="order_no" placeholder="Enter Order No">
                     </div>
-
-                    <div class="col-md-3">
-                        <label>Customer Name</label>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-md-4">
+                        <label for="customer_name" class="form-label mb-1">Customer Name</label>
                         <input type="text" class="form-control" id="customer_name" placeholder="Enter Customer Name">
                     </div>
 
-                    <div class="col-md-3 mt-3">
-                        <label>Payment Method</label>
+                    <div class="col-md-4">
+                        <label for="payment_method" class="form-label mb-1">Payment Method</label>
                         <select class="form-control" id="payment_method">
                             <option value="">Select Payment Method</option>
                             <option value="gpay">Google Pay</option>
@@ -40,22 +39,23 @@
                     </div>
                 </div>
             </div>
-            <div class="card-footer d-flex justify-content-center bg-transparent">
-                <button class="btn  btn-primary" id="filterBtn"> <i class="fa-solid fa-filter"></i>
-                    Show Filter</button>
+            <div class="card-footer d-flex justify-content-center gap-2 bg-transparent">
+                <button type="button" class="btn btn-primary" id="filterBtn">
+                    <i class="fa-solid fa-filter"></i> Show Filter
+                </button>
+
+                <button type="reset" class="btn btn-secondary" id="resetBtn">
+                    <i class="fa-solid fa-rotate-right"></i> Reset
+                </button>
             </div>
         </div>
 
-        <div class="card">
-
+        <div class="card mt-4">
             <div class="card-header bg-transparent">
                 <h5>Refund List</h5>
             </div>
-
             <div class="card-body">
-
                 <table id="datatable" class="table table-bordered">
-
                     <thead>
                         <tr>
                             <th>S.NO</th>
@@ -69,11 +69,8 @@
                             <th>Status</th>
                         </tr>
                     </thead>
-
                 </table>
-
             </div>
-
         </div>
 
     </div>
@@ -83,6 +80,7 @@
     @include('layouts.datatable')
     <script>
         $(document).ready(function() {
+
             $('.filter_date').datepicker({
                 format: 'dd-mm-yyyy',
                 autoclose: true,
@@ -164,11 +162,20 @@
                     }
                 ]
             });
-            $('#filterBtn').click(function() {
+            $('#filterBtn').click(function(e) {
+                e.preventDefault();
                 table.ajax.reload();
             });
 
-
+            $('#resetBtn').click(function() {
+                $('#from_date').val('');
+                $('#to_date').val('');
+                $('#order_no').val('');
+                $('#customer_name').val('');
+                $('#payment_method').val('');
+                $('#status').val('');
+                table.ajax.reload();
+            });
         });
     </script>
 @endsection
