@@ -52,7 +52,7 @@
 
         <div class="card mt-4">
             <div class="card-header bg-transparent d-flex justify-content-between align-items-center py-2">
-                <h5 class="mb-0">Favourites product List</h5>
+                <h5>Favourites product List</h5>
                 <div class="dropdown">
                     <button class="btn btn-warning btn-sm" type="button" data-bs-toggle="dropdown">Download</button>
                     <ul class="dropdown-menu">

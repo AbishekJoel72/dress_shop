@@ -3,7 +3,7 @@
     <div class="container">
         <div class="card">
             <div class="card-header bg-transparent ">
-                <h5>Filter</h5>
+                <h5> Ordered Cancelled Items Filter</h5>
             </div>
             <div class="card-body">
                 <div class="row">
@@ -61,7 +61,7 @@
 
         <div class="card mt-4">
             <div class="card-header bg-transparent d-flex justify-content-between align-items-center py-2">
-                <h5 class="mb-0">Ordered List</h5>
+                <h5>Ordered Cancelled list</h5>
                 <div class="d-flex align-items-center gap-2 ms-auto">
                     <div class="dropdown">
                         <button class="btn btn-sm btn-warning" type="button" data-bs-toggle="dropdown"> Download</button>
@@ -337,15 +337,12 @@
                 },
                 success: function(data) {
                     // Customer
-                    $('#view_customer_name').text((data.get_user?.first_name ?? '') + ' ' +
-                        (data
-                            .get_user?.last_name ?? ''));
+                    $('#view_customer_name').text((data.get_user?.first_name ?? '') + ' ' +(data.get_user?.last_name ?? ''));
                     $('#customer_email').text(data.get_user?.email ?? '-');
                     $('#customer_phone').text(data.get_user?.phone_no ?? '-');
 
                     // Address
-                    $('#address_line').text((data.get_address?.address_line1 ?? '') + ' ' +
-                        (data.get_address?.address_line2 ?? ''));
+                    $('#address_line').text((data.get_address?.address_line1 ?? '') + ' ' +(data.get_address?.address_line2 ?? ''));
                     $('#city').text(data.get_address?.get_city?.city_name ?? '-');
                     $('#state').text(data.get_address?.get_state?.state_name ?? '-');
                     $('#pincode').text(data.get_address?.pincode ?? '-');

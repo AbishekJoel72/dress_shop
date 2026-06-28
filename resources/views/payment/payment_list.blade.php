@@ -64,7 +64,7 @@
 
         <div class="card mt-4">
             <div class="card-header bg-transparent d-flex justify-content-between align-items-center py-2">
-                <h5 class="mb-0">payment List</h5>
+                <h5>payment List</h5>
                 <div class="dropdown">
                     <button class="btn btn-sm btn-warning" type="button" data-bs-toggle="dropdown">Download</button>
                     <ul class="dropdown-menu">
@@ -99,6 +99,7 @@
     @include('layouts.datatable')
     <script>
         $(document).ready(function() {
+            
             $('.filter_date').datepicker({
                 format: 'dd-mm-yyyy',
                 autoclose: true,
