@@ -9,12 +9,12 @@
                 <div class="row">
                     <div class="col-md-4">
                         <label for="from_date" class="form-label mb-1">From Date</label>
-                        <input type="text" id="from_date" class="form-control filter_date" placeholder="From Date">
+                        <input type="text" id="from_date" class="form-control filter_date" placeholder="Select From Date">
                     </div>
 
                     <div class="col-md-4">
                         <label for="to_date" class="form-label mb-1">To Date</label>
-                        <input type="text" id="to_date" class="form-control filter_date" placeholder="To Date">
+                        <input type="text" id="to_date" class="form-control filter_date" placeholder="Select To Date">
                     </div>
 
                     <div class="col-md-4">
