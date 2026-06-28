@@ -1,31 +1,30 @@
 @extends('layouts.admin.default')
 @section('content')
     <div class="container">
-
-        <div class="card mb-3">
+        <div class="card ">
             <div class="card-header bg-transparent">
-                <h5 class="mb-0">Payment Filter</h5>
+                <h5>Payment Filter</h5>
             </div>
             <div class="card-body">
                 <div class="row">
-                    <div class="col-md-4">
-                        <label for="order_no">Order No</label>
+                    <div class="col-md-4" >
+                        <label for="order_no" class="form-label mb-1">Order No</label>
                         <input type="text" id="order_no" class="form-control" placeholder="Enter Order No">
                     </div>
                     <div class="col-md-4">
-                        <label for="customer_name">Customer Name</label>
+                        <label for="customer_name" class="form-label mb-1">Customer Name</label>
                         <input type="text" id="customer_name" class="form-control" placeholder="Enter Customer Name">
                     </div>
                     <div class="col-md-4">
-                        <label for="transaction_id">Transaction ID</label>
+                        <label for="transaction_id" class="form-label mb-1">Transaction ID</label>
                         <input type="text" id="transaction_id" class="form-control" placeholder="Enter Transaction ID">
                     </div>
                 </div>
                 <div class="row mt-3">
                     <div class="col-md-4">
-                        <label for="payment_gateway">Payment Method</label>
+                        <label for="payment_gateway" class="form-label mb-1">Payment Method</label>
                         <select id="payment_gateway" class="form-select">
-                            <option value="">All payment method</option>
+                            <option value="">Select Payment Method</option>
                             <option value="gpay">Google Pay</option>
                             <option value="phonepe">PhonePe</option>
                             <option value="paytm">Paytm</option>
@@ -33,9 +32,9 @@
                         </select>
                     </div>
                     <div class="col-md-4">
-                        <label for="payment_status">Payment Status</label>
+                        <label for="payment_status" class="form-label mb-1">Payment Status</label>
                         <select id="payment_status" class="form-select">
-                            <option value="">All payment status</option>
+                            <option value="">Select Payment Status</option>
                             <option value="success">Success</option>
                             <option value="pending">Pending</option>
                             <option value="failed">Failed</option>
@@ -43,23 +42,29 @@
                         </select>
                     </div>
                     <div class="col-md-2">
-                        <label for="from_date">From Date</label>
-                        <input type="text" id="from_date" class="form-control filter_date" placeholder="From Date">
+                        <label for="from_date" class="form-label mb-1">From Date</label>
+                        <input type="text" id="from_date" class="form-control filter_date" placeholder="Select From Date">
                     </div>
                     <div class="col-md-2">
-                        <label for="from_date">To Date</label>
-                        <input type="text" id="to_date" class="form-control filter_date" placeholder="End Date">
+                        <label for="from_date" class="form-label mb-1">To Date</label>
+                        <input type="text" id="to_date" class="form-control filter_date" placeholder="Select To Date">
                     </div>
                 </div>
             </div>
-            <div class="card-footer text-center bg-transparent">
-                <button class="btn btn-primary" id="filterBtn"> <i class="fa-solid fa-filter"></i> Show Filter </button>
+           <div class="card-footer d-flex justify-content-center gap-2 bg-transparent">
+                <button type="button" class="btn btn-primary" id="filterBtn">
+                    <i class="fa-solid fa-filter"></i> Show Filter
+                </button>
+
+                <button type="reset" class="btn btn-secondary" id="resetBtn">
+                    <i class="fa-solid fa-rotate-right"></i> Reset
+                </button>
             </div>
         </div>
 
-        <div class="card">
+        <div class="card mt-4">
             <div class="card-header bg-transparent d-flex justify-content-between align-items-center py-2">
-                <h5 class="mb-0">payment List</h5>
+                <h5>payment List</h5>
                 <div class="dropdown">
                     <button class="btn btn-sm btn-warning" type="button" data-bs-toggle="dropdown">Download</button>
                     <ul class="dropdown-menu">
@@ -94,6 +99,7 @@
     @include('layouts.datatable')
     <script>
         $(document).ready(function() {
+            
             $('.filter_date').datepicker({
                 format: 'dd-mm-yyyy',
                 autoclose: true,
@@ -198,8 +204,20 @@
                     }
                 ]
             });
-            $('#filterBtn').click(function() {
-                table.draw();
+           $('#filterBtn').click(function(e) {
+                e.preventDefault();
+                table.ajax.reload();
+            });
+
+            $('#resetBtn').click(function() {
+                $('#order_no').val('');
+                $('#customer_name').val('');
+                $('#transaction_id').val('');
+                $('#payment_gateway').val('');
+                $('#payment_status').val('');
+                $('#from_date').val('');
+                $('#to_date').val('');
+                table.ajax.reload();
             });
 
 

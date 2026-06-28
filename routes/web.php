@@ -49,11 +49,13 @@ Route::middleware([AdminMiddleware::class])->prefix('admin')->group(function () 
     Route::any('payment_list', [PaymentController::class, "PaymentList"])->name('payment_list');
     Route::any('payment.export', [PaymentController::class, "PaymentExport"])->name('payment.export');
     Route::any('payment_refund', [PaymentController::class, "PaymentRefund"])->name('payment_refund');
+    Route::any('payment_refund.export', [PaymentController::class, "PaymentRefundExport"])->name('payment_refund.export');
     Route::any('user_list_details', [RegistrationController::class, 'UserList'])->name('user_list_details');
     Route::any('user.export', [RegistrationController::class, 'UserExport'])->name('user.export');
     Route::any('favourites', [FeedbackController::class, "FavouritesList"])->name('favourites');
     Route::any('favourites.export', [FeedbackController::class, "FavouritesExport"])->name('favourites.export');
     Route::any('feedback_list', [FeedbackController::class, "FeedbackList"])->name('feedback_list');
+    Route::any('feedback.export', [FeedbackController::class, "FeedbackExport"])->name('feedback.export');
     Route::any('contact_list', [ContactController::class, "ContactList"])->name('contact_list');
     Route::any('contact.export', [ContactController::class, "ContactExport"])->name('contact.export');
 });

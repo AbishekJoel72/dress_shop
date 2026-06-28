@@ -50,12 +50,10 @@
                             <th>Payment Method</th>
                             <th>Payment Status</th>
                             <th>Delivery Status</th>
-
+                            <th>View Items</th>
+                            <th>Payment</th>
                             <th>Cancel Order</th>
                             <th>Feedback</th>
-                            <th>Return Product</th>
-
-                            <th>Action</th>
                         </tr>
                     </thead>
                     <tbody></tbody>
@@ -63,7 +61,7 @@
             </div>
         </div>
 
-        <div class="offcanvas offcanvas-end" tabindex="-1" id="viewCanvas">
+        <div class="offcanvas offcanvas-end" tabindex="-1" id="viewCanvas" style="width: 600px">
             <div class="offcanvas-header">
                 <h5>Order Details</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="offcanvas">
@@ -104,6 +102,7 @@
                             <th>Product</th>
                             <th>Size</th>
                             <th>Qty</th>
+                            <th>Action</th>
                         </tr>
                     </thead>
                     <tbody id="product_list"></tbody>
@@ -187,6 +186,40 @@
                     <div class="modal-footer justify-content-center">
                         <button type="button" id="saveFeedbackBtn" class="btn btn-primary">Submit</button>
                     </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="returnModal">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5>Return Product</h5>
+                        <button class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <input type="hidden" id="return_order_id">
+                        <input type="hidden" id="return_order_item_id">
+                        <div class="mb-3">
+                            <label>Reason</label>
+                            <select class="form-control" id="return_reason">
+                                <option value="">Select</option>
+                                <option value="damaged">Damaged</option>
+                                <option value="wrong_product"> Wrong Product</option>
+                                <option value="size_issue"> Size Issue</option>
+                                <option value="quality_issue">Quality Issue</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label>Remarks</label>
+                            <textarea class="form-control" id="remarks"></textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-primary" id="saveReturnBtn">Submit</button>
+                    </div>
+
                 </div>
             </div>
         </div>
@@ -294,6 +327,18 @@
                         }
                     },
                     {
+                        data: 'view_btn',
+                        name: 'view_btn',
+                        orderable: false,
+                        searchable: false
+                    },
+                    {
+                        data: 'payment_btn',
+                        name: 'payment_btn',
+                        orderable: false,
+                        searchable: false
+                    },
+                    {
                         data: 'cancel_btn',
                         name: 'cancel_btn',
                         orderable: false,
@@ -305,222 +350,262 @@
                         orderable: false,
                         searchable: false
                     },
-                    {
-                        data: 'return_btn',
-                        name: 'return_btn',
-                        orderable: false,
-                        searchable: false
-                    },
-                    {
-                        data: 'action',
-                        name: 'action',
-                        orderable: false,
-                        searchable: false,
-                        width: '5%',
-                        className: 'text-center'
-                    }
                 ]
             });
+        });
 
+        $(document).on('click', '.ViewRow', function() {
+            let id = $(this).data('id');
+            $.ajax({
+                url: "{{ route('order_placed') }}",
+                method: "GET",
+                data: {
+                    id: id,
+                    get_view_item: true,
+                },
+                success: function(data) {
+                    if (data.order_date) {
+                        let dateObj = new Date(data.order_date);
+                        let day = String(dateObj.getDate()).padStart(2, '0');
+                        let month = String(dateObj.getMonth() + 1).padStart(2, '0');
+                        let year = dateObj.getFullYear();
+                        $('#date').text(`${day}-${month}-${year}`);
+                    } else {
+                        $('#date').text('-');
+                    }
+                    $('#order_id').text(data.order_no ?? '-');
+                    $('#address').text(data.get_address?.address_line1 ?? '-');
+                    $('#state').text(data.get_address?.get_state?.state_name ?? '-');
+                    $('#city_id').text(data.get_address?.get_city?.city_name ?? '-');
+                    $('#pin_no').text(data.get_address?.pincode ?? '-');
+                    let html = '';
 
+                    data.get_orderitems.forEach(function(item) {
+                        let returnBtn = '-';
+                        if (data.delivery_status == 'delivered') {
+                            returnBtn = `
+                                <button class="btn btn-sm btn-warning returnRow"
+                                    data-order-id="${data.id}"
+                                    data-order-item-id="${item.id}">
+                                    Return
+                                </button>
+                            `;
+                        }
+                        html += `
+                            <tr>
+                                <td>
+                                    <img src="/${item.get_product?.get_product_images?.image_path}" width="60">
+                                </td>
+                                <td>
+                                    ${item.get_product?.product_name ?? '-'}
+                                </td>
+                                <td>
+                                    ${item.get_size?.size_name ?? '-'}
+                                </td>
+                                <td>
+                                    ${item.quantity}
+                                </td>
+                                <td>
+                                    ${returnBtn}
+                                </td>
+                            </tr>
+                        `;
+                    });
+                    $('#product_list').html(html);
+                    let offcanvas = new bootstrap.Offcanvas(
+                        document.getElementById('viewCanvas')
+                    );
+                    offcanvas.show();
+                }
 
+            });
+        });
 
-            $(document).on('click', '.ViewRow', function() {
-                let id = $(this).data('id');
-                $.ajax({
-                    url: "{{ route('order_placed') }}",
-                    method: "GET",
-                    data: {
-                        id: id,
-                        get_view_item: true,
-                    },
-                    success: function(data) {
-                        if (data.order_date) {
-                            let dateObj = new Date(data.order_date);
+        $(document).on('click', '.PaymentRow', function() {
+            let id = $(this).data('id');
+            $.ajax({
+                url: "{{ route('order_placed') }}",
+                method: "GET",
+                data: {
+                    id: id,
+                    get_payment_list: true,
+                },
+                success: function(data) {
+                    if (data.get_payment) {
+                        if (data.get_payment.paid_at) {
+                            let dateObj = new Date(data.get_payment.paid_at);
                             let day = String(dateObj.getDate()).padStart(2, '0');
                             let month = String(dateObj.getMonth() + 1).padStart(2, '0');
                             let year = dateObj.getFullYear();
-                            $('#date').text(`${day}-${month}-${year}`);
+                            let formattedDate = `${day}-${month}-${year}`;
+                            $('#paid_at').text(formattedDate);
                         } else {
-                            $('#date').text('-');
+                            $('#paid_at').text('-');
                         }
-                        $('#order_id').text(data.order_no ?? '-');
-                        $('#address').text(data.get_address?.address_line1 ?? '-');
-                        $('#state').text(data.get_address?.get_state?.state_name ?? '-');
-                        $('#city_id').text(data.get_address?.get_city?.city_name ?? '-');
-                        $('#pin_no').text(data.get_address?.pincode ?? '-');
-                        let html = '';
-                        data.get_orderitems.forEach(function(item) {
-                            html += `
-                                <tr>
-                                    <td>
-                                        <img src="/${item.get_product?.get_product_images?.image_path}" width="60">
-                                    </td>
-                                    <td>
-                                        ${item.get_product?.product_name ?? '-'}
-                                    </td>
-                                    <td>
-                                        ${item.get_size?.size_name ?? '-'}
-                                    </td>
-                                    <td>
-                                        ${item.quantity}
-                                    </td>
-                                </tr>
-                            `;
-                        });
-                        $('#product_list').html(html);
-                        let offcanvas = new bootstrap.Offcanvas(
-                            document.getElementById('viewCanvas')
+                        let gateway = data.get_payment?.payment_gateway;
+                        $('#payment_gateway').text(
+                            gateway == 'gpay' ? 'Google Pay' :
+                            gateway == 'phonepe' ? 'PhonePe' :
+                            gateway == 'paytm' ? 'PAYTM' :
+                            'Cash On Delivery'
                         );
-                        offcanvas.show();
+                        $('#transaction_id').text(data.get_payment.transaction_id ?? '-');
+                        $('#amount').text(data.get_payment.amount ?? '-');
+                        $('#currency').text(data.get_payment.currency ?? '-');
+                        $('#payment_status').text(data.get_payment.payment_status
+                            ?.toUpperCase() ?? '-');
                     }
+                    $('#PaymentModal').modal('show');
+                }
+            });
+        });
 
-                });
+
+        $(document).on('click', '.feedbackRow', function() {
+            let orderId = $(this).data('id');
+            $.ajax({
+                url: "{{ route('order_placed') }}",
+                type: "GET",
+                data: {
+                    id: orderId,
+                    get_view_item: true
+                },
+
+                success: function(data) {
+                    let productId = data.get_orderitems[0].product_id;
+                    $('#feedback_order_id').val(orderId);
+                    $('#feedback_product_id').val(productId);
+                    $('input[name="rating"]').prop('checked', false);
+                    $('#feedback').val('');
+                    $('#feedbackModal').modal('show');
+
+                }
+
             });
 
-            $(document).on('click', '.PaymentRow', function() {
-                let id = $(this).data('id');
+        });
+
+        $(document).on('click', '#saveFeedbackBtn', function() {
+            $.ajax({
+                url: "{{ route('order_placed') }}",
+                type: "POST",
+                data: {
+                    id: $('#feedback_order_id').val(),
+                    product_id: $('#feedback_product_id').val(),
+                    rating: $('input[name="rating"]:checked').val(),
+                    feedback: $('#feedback').val(),
+                    give_feedback: true,
+                    _token: "{{ csrf_token() }}"
+                },
+
+                success: function(res) {
+                    $('#feedbackModal').modal('hide');
+                    $('#modalMessage').text(res.message);
+                    let modal = new bootstrap.Modal(
+                        document.getElementById('sessionModal')
+                    );
+                    modal.show();
+
+                    $('#datatable').DataTable().ajax.reload();
+                }
+
+            });
+
+        });
+
+
+        $(document).on('click', '.deleteRow', function() {
+            let id = $(this).data('id');
+            showConfirm(messages.delete_confirm, function() {
                 $.ajax({
                     url: "{{ route('order_placed') }}",
-                    method: "GET",
+                    type: "DELETE",
                     data: {
                         id: id,
-                        get_payment_list: true,
-                    },
-                    success: function(data) {
-                        if (data.get_payment) {
-                            if (data.get_payment.paid_at) {
-                                let dateObj = new Date(data.get_payment.paid_at);
-                                let day = String(dateObj.getDate()).padStart(2, '0');
-                                let month = String(dateObj.getMonth() + 1).padStart(2, '0');
-                                let year = dateObj.getFullYear();
-                                let formattedDate = `${day}-${month}-${year}`;
-                                $('#paid_at').text(formattedDate);
-                            } else {
-                                $('#paid_at').text('-');
-                            }
-                            let gateway = data.get_payment?.payment_gateway;
-                            $('#payment_gateway').text(
-                                gateway == 'gpay' ? 'Google Pay' :
-                                gateway == 'phonepe' ? 'PhonePe' :
-                                gateway == 'paytm' ? 'PAYTM' :
-                                'Cash On Delivery'
-                            );
-                            $('#transaction_id').text(data.get_payment.transaction_id ?? '-');
-                            $('#amount').text(data.get_payment.amount ?? '-');
-                            $('#currency').text(data.get_payment.currency ?? '-');
-                            $('#payment_status').text(data.get_payment.payment_status
-                                ?.toUpperCase() ?? '-');
-                        }
-                        $('#PaymentModal').modal('show');
-                    }
-                });
-            });
-
-
-            $(document).on('click', '.feedbackRow', function() {
-                let orderId = $(this).data('id');
-                $.ajax({
-                    url: "{{ route('order_placed') }}",
-                    type: "GET",
-                    data: {
-                        id: orderId,
-                        get_view_item: true
-                    },
-
-                    success: function(data) {
-                        let productId = data.get_orderitems[0].product_id;
-                        $('#feedback_order_id').val(orderId);
-                        $('#feedback_product_id').val(productId);
-                        $('input[name="rating"]').prop('checked', false);
-                        $('#feedback').val('');
-                        $('#feedbackModal').modal('show');
-
-                    }
-
-                });
-
-            });
-
-            $(document).on('click', '#saveFeedbackBtn', function() {
-                $.ajax({
-                    url: "{{ route('order_placed') }}",
-                    type: "POST",
-                    data: {
-                        id: $('#feedback_order_id').val(),
-                        product_id: $('#feedback_product_id').val(),
-                        rating: $('input[name="rating"]:checked').val(),
-                        feedback: $('#feedback').val(),
-                        give_feedback: true,
+                        delete_order: true,
                         _token: "{{ csrf_token() }}"
                     },
-
                     success: function(res) {
-                        $('#feedbackModal').modal('hide');
-                        $('#modalMessage').text(res.message);
+                        if (res.status) {
+                            $('#modalMessage').text(res.message);
+                            $('#sessionModal .modal-content')
+                                .removeClass('border-danger')
+                                .addClass('border-success');
+                        } else {
+                            $('#modalMessage').text(res.message);
+                            $('#sessionModal .modal-content')
+                                .removeClass('border-success')
+                                .addClass('border-danger');
+                        }
+
+                        let modal = new bootstrap.Modal(
+                            document.getElementById('sessionModal')
+                        );
+
+                        modal.show();
+                        $('#sessionModal').on('hidden.bs.modal', function() {
+                            $('#datatable').DataTable().ajax.reload();
+                        });
+
+                    },
+                    error: function() {
+                        $('#modalMessage').text('Something went wrong');
+                        $('#sessionModal .modal-content')
+                            .removeClass('border-success')
+                            .addClass('border-danger');
                         let modal = new bootstrap.Modal(
                             document.getElementById('sessionModal')
                         );
                         modal.show();
-
-                        $('#datatable').DataTable().ajax.reload();
                     }
 
                 });
 
             });
 
+        });
 
-            $(document).on('click', '.deleteRow', function() {
-                let id = $(this).data('id');
-                showConfirm(messages.delete_confirm, function() {
-                    $.ajax({
-                        url: "{{ route('order_placed') }}",
-                        type: "DELETE",
-                        data: {
-                            id: id,
-                            delete_order: true,
-                            _token: "{{ csrf_token() }}"
-                        },
-                        success: function(res) {
-                            if (res.status) {
-                                $('#modalMessage').text(res.message);
-                                $('#sessionModal .modal-content')
-                                    .removeClass('border-danger')
-                                    .addClass('border-success');
-                            } else {
-                                $('#modalMessage').text(res.message);
-                                $('#sessionModal .modal-content')
-                                    .removeClass('border-success')
-                                    .addClass('border-danger');
-                            }
+        $(document).on('click', '.returnRow', function() {
 
-                            let modal = new bootstrap.Modal(
-                                document.getElementById('sessionModal')
-                            );
+            $('#return_order_id').val($(this).data('order-id'));
 
-                            modal.show();
-                            $('#sessionModal').on('hidden.bs.modal', function() {
-                                $('#datatable').DataTable().ajax.reload();
-                            });
+            $('#return_order_item_id').val($(this).data('order-item-id'));
 
-                        },
-                        error: function() {
-                            $('#modalMessage').text('Something went wrong');
-                            $('#sessionModal .modal-content')
-                                .removeClass('border-success')
-                                .addClass('border-danger');
-                            let modal = new bootstrap.Modal(
-                                document.getElementById('sessionModal')
-                            );
-                            modal.show();
-                        }
+            $('#return_reason').val('');
 
-                    });
+            $('#remarks').val('');
 
-                });
+            $('#returnModal').modal('show');
+
+        });
+
+        $(document).on('click', '#saveReturnBtn', function() {
+
+            $.ajax({
+
+                url: "{{ route('order_placed') }}",
+
+                type: "POST",
+
+                data: {
+                    order_id: $('#return_order_id').val(),
+                    order_item_id: $('#return_order_item_id').val(),
+                    reason: $('#return_reason').val(),
+                    remarks: $('#remarks').val(),
+                    save_return: true,
+                    _token: "{{ csrf_token() }}"
+                },
+
+                success: function(res) {
+
+                    $('#returnModal').modal('hide');
+
+                    $('#datatable').DataTable().ajax.reload();
+
+                }
 
             });
+
         });
     </script>
 @endsection

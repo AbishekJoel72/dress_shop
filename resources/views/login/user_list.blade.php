@@ -1,47 +1,51 @@
 @extends('layouts.admin.default')
 @section('content')
     <div class="container">
-        <div class="card mb-3">
+        <div class="card">
             <div class="card-header bg-transparent">
-                <h5 class="mb-0">Customer Filter</h5>
+                <h5>Customer Filter</h5>
             </div>
             <div class="card-body">
                 <div class="row">
                     <div class="col-md-4">
-                        <label for="customer_name">Customer Name</label>
+                        <label for="customer_name" class="form-label mb-1">Customer Name</label>
                         <input type="text" id="customer_name" class="form-control" placeholder="Enter Customer Name">
                     </div>
                     <div class="col-md-4">
-                        <label for="email">Email</label>
+                        <label for="email" class="form-label mb-1">Email</label>
                         <input type="text" id="email" class="form-control" placeholder="Enter Email">
                     </div>
                     <div class="col-md-4">
-                        <label for="phone_no">Phone No</label>
+                        <label for="phone_no" class="form-label mb-1">Phone Number</label>
                         <input type="text" id="phone_no" class="form-control" placeholder="Enter Phone Number">
                     </div>
-
                 </div>
                 <div class="row mt-3">
-                    <div class="col-md-6">
+                    <div class="col-md-6" class="form-label mb-1">
                         <label for="from_date">From Date</label>
                         <input type="text" id="from_date" class="form-control filter_date"
                             placeholder="Select From Date">
                     </div>
                     <div class="col-md-6">
-                        <label for="to_date">To Date</label>
+                        <label for="to_date" class="form-label mb-1">To Date</label>
                         <input type="text" id="to_date" class="form-control filter_date" placeholder="Select To Date">
                     </div>
                 </div>
             </div>
-            <div class="card-footer text-center bg-transparent">
-                <button class="btn btn-primary" id="filterBtn">
-                    <i class="fa-solid fa-filter"></i> Show Filter </button>
+            <div class="card-footer d-flex justify-content-center gap-2 bg-transparent">
+                <button type="button" class="btn btn-primary" id="filterBtn">
+                    <i class="fa-solid fa-filter"></i> Show Filter
+                </button>
+
+                <button type="reset" class="btn btn-secondary" id="resetBtn">
+                    <i class="fa-solid fa-rotate-right"></i> Reset
+                </button>
             </div>
         </div>
 
-        <div class="card">
+        <div class="card mt-4">
             <div class="card-header bg-transparent d-flex justify-content-between align-items-center py-2">
-                <h5 class="mb-0">List Customer</h5>
+                <h5>Customer List </h5>
                 <div class="dropdown">
                     <button class="btn btn-warning btn-sm" type="button" data-bs-toggle="dropdown">
                         Download
@@ -67,6 +71,7 @@
                 </table>
             </div>
         </div>
+
     </div>
     @include('layouts.footer')
 @endsection
@@ -74,13 +79,13 @@
     @include('layouts.datatable')
     <script>
         $(document).ready(function() {
+
             $('.filter_date').datepicker({
                 format: 'dd-mm-yyyy',
                 autoclose: true,
                 todayHighlight: true,
                 endDate: new Date()
             });
-
 
             var table = $('#datatable').DataTable({
                 processing: true,
@@ -135,14 +140,23 @@
                         width: '30%',
 
                     },
-
                 ]
             });
-            $('#filterBtn').click(function() {
-                table.draw();
+            $('#filterBtn').click(function(e) {
+                e.preventDefault();
+                table.ajax.reload();
+            });
+
+            $('#resetBtn').click(function() {
+                $('#customer_name').val('');
+                $('#email').val('');
+                $('#phone_no').val('');
+                $('#from_date').val('');
+                $('#to_date').val('');
+                table.ajax.reload();
             });
         });
-        
+
         $(document).on('click', '.exportBtn', function(e) {
             e.preventDefault();
             let type = $(this).data('type');
@@ -156,7 +170,7 @@
                 url +
                 '?type=' + type +
                 '&customer_name=' + encodeURIComponent(customer_name || '') +
-                 '&email=' + encodeURIComponent(email || '') +
+                '&email=' + encodeURIComponent(email || '') +
                 '&phone_no=' + encodeURIComponent(phone_no || '') +
                 '&from_date=' + encodeURIComponent(from_date || '') +
                 '&to_date=' + encodeURIComponent(to_date || '');

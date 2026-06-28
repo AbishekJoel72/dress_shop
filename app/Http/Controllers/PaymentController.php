@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Exports\PaymentExport;
+use App\Exports\PaymentRefundExport;
 use App\Models\Payment;
 use App\Models\PaymentRefund;
 use Barryvdh\DomPDF\Facade\Pdf;
@@ -181,5 +182,52 @@ class PaymentController extends Controller
         }
 
         return view('payment.payment_refund');
+    }
+
+    public function PaymentRefundExport(Request $request)
+    {
+        $query = PaymentRefund::with([
+            'get_payment.get_order.get_user',
+        ]);
+
+        if ($request->from_date) {
+            $from = Carbon::createFromFormat('d-m-Y', $request->from_date)->format('Y-m-d');
+            $query->whereDate('refund_date', '>=', $from);
+        }
+
+        if ($request->to_date) {
+            $to = Carbon::createFromFormat('d-m-Y', $request->to_date)->format('Y-m-d');
+            $query->whereDate('refund_date', '<=', $to);
+        }
+
+        if ($request->payment_method) {
+            $query->whereHas('get_payment', function ($q) use ($request) {
+                $q->where('payment_gateway', $request->payment_method);
+            });
+        }
+
+        if ($request->order_no) {
+            $query->whereHas('get_payment.get_order', function ($q) use ($request) {
+                $q->where('order_no', 'LIKE', '%'.$request->order_no.'%');
+            });
+        }
+
+        if ($request->customer_name) {
+            $query->whereHas('get_payment.get_order.get_user', function ($q) use ($request) {
+                $q->whereRaw("CONCAT(first_name,' ',last_name) LIKE ?", ['%'.$request->customer_name.'%']);
+            });
+        }
+
+        $refunds = $query->get();
+
+        if ($request->type == 'excel') {
+            return Excel::download(new PaymentRefundExport($refunds), 'payment_refund.xlsx');
+        }
+
+        if ($request->type == 'pdf') {
+            $pdf = Pdf::loadView('Export.pdf.payment_refund_pdf', compact('refunds'));
+
+            return $pdf->download('payment_refund.pdf');
+        }
     }
 }

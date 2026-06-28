@@ -1,65 +1,68 @@
 @extends('layouts.admin.default')
 @section('content')
     <div class="container">
-        <div class="card mb-3">
-           <div class="card-header bg-transparent ">
-                <h5 class="mb-0">Filter</h5>
+        <div class="card">
+            <div class="card-header bg-transparent ">
+                <h5> Ordered Cancelled Items Filter</h5>
             </div>
             <div class="card-body">
                 <div class="row">
-                    <div class="col-md-4 mb-3">
-                        <label for="order_no">Order No</label>
-                        <input type="text" id="order_no" class="form-control" placeholder="Order No">
+                    <div class="col-md-4">
+                        <label for="order_no" class="form-label mb-1">Order No</label>
+                        <input type="text" id="order_no" class="form-control" placeholder="Enter Order No">
                     </div>
-                    <div class="col-md-4 mb-3">
-                        <label for="customer_name">Customer Name</label>
-                        <input type="text" id="customer_name" class="form-control" placeholder="Customer Name">
+                    <div class="col-md-4">
+                        <label for="customer_name" class="form-label mb-1">Customer Name</label>
+                        <input type="text" id="customer_name" class="form-control" placeholder="Enter Customer Name">
                     </div>
-                    <div class="col-md-4 mb-3">
-                        <label for="payment_gateway">Payment Method</label>
+                    <div class="col-md-4">
+                        <label for="payment_gateway" class="form-label mb-1">Payment Method</label>
                         <select id="payment_gateway" class="form-select">
-                            <option value="">Payment Methods</option>
+                            <option value="">Select Payment Methods</option>
                             <option value="gpay">Google Pay</option>
                             <option value="phonepe">PhonePe</option>
                             <option value="paytm">Paytm</option>
                             <option value="cash_on_delivery">Cash On Delivery</option>
                         </select>
                     </div>
-
-                    <div class="col-md-4 mb-3">
-                        <label for="payment_status">Payment Status</label>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-md-4">
+                        <label for="payment_status" class="form-label mb-1">Payment Status</label>
                         <select id="payment_status" class="form-select">
-                            <option value="">Payment Status</option>
+                            <option value="">Select Payment Status</option>
                             <option value="pending">Pending</option>
                             <option value="success">Success</option>
                             <option value="refunded">Refunded</option>
                         </select>
                     </div>
-
-                    <div class="col-md-4 mb-3">
-                        <label for="from_date">From Date</label>
-                        <input type="text" id="from_date" class="form-control filter_date" placeholder="From Date">
+                    <div class="col-md-4">
+                        <label for="from_date" class="form-label mb-1">From Date</label>
+                        <input type="text" id="from_date" class="form-control filter_date"
+                            placeholder="Select From Date">
                     </div>
-
-                    <div class="col-md-4 mb-3">
-                        <label for="to_date">To Date</label>
-                        <input type="text" id="to_date" class="form-control filter_date" placeholder="To Date">
+                    <div class="col-md-4">
+                        <label for="to_date" class="form-label mb-1">To Date</label>
+                        <input type="text" id="to_date" class="form-control filter_date" placeholder="Select To Date">
                     </div>
                 </div>
-
             </div>
-            <div class="card-footer d-flex justify-content-center bg-transparent">
-                <button class="btn  btn-primary" id="filterBtn"> <i class="fa-solid fa-filter"></i>
-                    Show Filter</button>
+            <div class="card-footer d-flex justify-content-center gap-2 bg-transparent">
+                <button type="button" class="btn btn-primary" id="filterBtn">
+                    <i class="fa-solid fa-filter"></i> Show Filter
+                </button>
+
+                <button type="reset" class="btn btn-secondary" id="resetBtn">
+                    <i class="fa-solid fa-rotate-right"></i> Reset
+                </button>
             </div>
         </div>
 
 
-        <div class="card">
+        <div class="card mt-4">
             <div class="card-header bg-transparent d-flex justify-content-between align-items-center py-2">
-                <h5 class="mb-0">Ordered List</h5>
+                <h5>Ordered Cancelled list</h5>
                 <div class="d-flex align-items-center gap-2 ms-auto">
-
                     <div class="dropdown">
                         <button class="btn btn-sm btn-warning" type="button" data-bs-toggle="dropdown"> Download</button>
                         <ul class="dropdown-menu">
@@ -70,7 +73,6 @@
                 </div>
             </div>
             <div class="card-body">
-
                 <table id="datatable" class="table table-bordered">
                     <thead>
                         <tr>
@@ -88,9 +90,9 @@
                     <tbody></tbody>
                 </table>
             </div>
-
         </div>
 
+        <!-- Offcanvas Customer Details -->
         <div class="offcanvas offcanvas-end" tabindex="-1" id="viewOrderCanvas" style="width: 600px">
             <div class="offcanvas-header">
                 <h5>Order Details</h5>
@@ -100,8 +102,9 @@
                 <a href="javascript:void(0)" id="invoiceBtn" class="btn btn-danger" style="border: 0">
                     Download Invoice
                 </a>
+
                 <!-- Customer Details -->
-                <div class="card mb-3 mt-3">
+                <div class="card mt-3">
                     <div class="card-header">
                         <strong>Customer Details</strong>
                     </div>
@@ -112,8 +115,9 @@
                         <p><b>Phone :</b> <span id="customer_phone"></span></p>
                     </div>
                 </div>
+
                 <!-- Address -->
-                <div class="card mb-3">
+                <div class="card mt-3">
                     <div class="card-header">
                         <strong>Delivery Address</strong>
                     </div>
@@ -124,12 +128,12 @@
                         <p><b>Pincode :</b> <span id="pincode"></span></p>
                     </div>
                 </div>
+
                 <!-- Products -->
-                <div class="card">
+                <div class="card mt-3">
                     <div class="card-header">
                         <strong>Products</strong>
                     </div>
-
                     <div class="card-body">
                         <table class="table table-bordered">
                             <thead>
@@ -144,7 +148,6 @@
                             </thead>
                             <tbody id="product_table"></tbody>
                         </table>
-
                         <div class="text-end">
                             <strong>
                                 Grand Total :
@@ -153,7 +156,6 @@
                         </div>
                     </div>
                 </div>
-
             </div>
         </div>
 
@@ -174,9 +176,7 @@
                         <button type="button" class="btn btn-success" id="confirmRefundBtn">
                             Refund Complete
                         </button>
-
                     </div>
-
                 </div>
             </div>
         </div>
@@ -310,129 +310,134 @@
                     }
                 ]
             });
-            $('#filterBtn').click(function() {
-                table.draw();
-            });
-
-            $(document).on('click', '.ViewRow', function() {
-                let id = $(this).data('id');
-                $.ajax({
-                    url: "{{ route('order_cancelled') }}",
-                    type: "GET",
-                    data: {
-                        id: id,
-                        get_view_item: true
-                    },
-                    success: function(data) {
-                        // Customer
-                        $('#view_customer_name').text((data.get_user?.first_name ?? '') + ' ' +
-                            (data
-                                .get_user?.last_name ?? ''));
-                        $('#customer_email').text(data.get_user?.email ?? '-');
-                        $('#customer_phone').text(data.get_user?.phone_no ?? '-');
-
-                        // Address
-                        $('#address_line').text((data.get_address?.address_line1 ?? '') + ' ' +
-                            (data.get_address?.address_line2 ?? ''));
-                        $('#city').text(data.get_address?.get_city?.city_name ?? '-');
-                        $('#state').text(data.get_address?.get_state?.state_name ?? '-');
-                        $('#pincode').text(data.get_address?.pincode ?? '-');
-
-                        // Products
-                        let html = '';
-                        $.each(data.get_orderitems, function(index, item) {
-                            let image = '-';
-                            if (item.get_product?.get_product_images?.image_path) {
-                                image = `
-                                    <img
-                                        src="/${item.get_product.get_product_images.image_path}"
-                                        width="60"
-                                        height="60"
-                                        class="rounded border"
-                                        style="object-fit:cover"
-                                    >
-                                `;
-                            }
-                            html += `
-                                <tr>
-                                    <td>${image}</td>
-                                    <td>${item.get_product?.product_name ?? '-'}</td>
-                                    <td>${item.get_size?.size_name ?? '-'}</td>
-                                    <td>${item.quantity}</td>
-                                    <td>${item.price}</td>
-                                    <td>${item.total_amount}</td>
-                                </tr>
-                            `;
-
-
-                        });
-                        $('#product_table').html(html);
-                        $('#grand_total').text(data.grand_total);
-                        // Invoice Bill
-                        let invoiceUrl = "{{ route('order_list') }}" + "?id=" + data.id +
-                            "&get_invoice_bill=true";
-                        $('#invoiceBtn').attr('href', invoiceUrl);
-
-                        // OPEN OFFCANVAS
-                        let canvas = new bootstrap.Offcanvas(document.getElementById(
-                            'viewOrderCanvas'));
-                        canvas.show();
-                    }
-                });
-
-            });
-
-            $(document).on('click', '.RefundRow, #confirmRefundBtn', function() {
-                if ($(this).hasClass('RefundRow')) {
-                    $('#refund_order_id').val($(this).data('id'));
-                    $('#refundModal').modal('show');
-                    return;
-                }
-
-                $.ajax({
-                    url: "{{ route('order_cancelled') }}",
-                    type: "POST",
-                    data: {
-                        refund_payment: true,
-                        id: $('#refund_order_id').val(),
-                        _token: "{{ csrf_token() }}"
-                    },
-
-                    success: function(res) {
-                        $('#refundModal').modal('hide');
-                        $('#modalMessage').text(res.message);
-                        let modal = new bootstrap.Modal(
-                            document.getElementById('sessionModal')
-                        );
-                        modal.show();
-                        $('#datatable').DataTable().ajax.reload();
-                    }
-                });
-            });
-
-
-
-            $(document).on('click', '.exportBtn', function(e) {
+            $('#filterBtn').click(function(e) {
                 e.preventDefault();
-                let type = $(this).data('type');
-                let order_no = $('#order_no').val();
-                let customer_name = $('#customer_name').val();
-                let payment_gateway = $('#payment_gateway').val();
-                let payment_status = $('#payment_status').val();
-                let from_date = $('#from_date').val();
-                let to_date = $('#to_date').val();
-                let url = "{{ route('order_cancelled.export') }}";
-                window.location.href =
-                    url +
-                    '?type=' + type +
-                    '&order_no=' + encodeURIComponent(order_no || '') +
-                    '&customer_name=' + encodeURIComponent(customer_name || '') +
-                    '&payment_gateway=' + encodeURIComponent(payment_gateway || '') +
-                    '&payment_status=' + encodeURIComponent(payment_status || '') +
-                    '&from_date=' + encodeURIComponent(from_date || '') +
-                    '&to_date=' + encodeURIComponent(to_date || '');
-
+                table.ajax.reload();
             });
+
+            $('#resetBtn').click(function() {
+                $('#order_no').val('');
+                $('#customer_name').val('');
+                $('#payment_status').val('');
+                $('#payment_gateway').val('');
+                $('#from_date').val('');
+                $('#to_date').val('');
+                table.ajax.reload();
+            });
+        });
+
+        $(document).on('click', '.ViewRow', function() {
+            let id = $(this).data('id');
+            $.ajax({
+                url: "{{ route('order_cancelled') }}",
+                type: "GET",
+                data: {
+                    id: id,
+                    get_view_item: true
+                },
+                success: function(data) {
+                    // Customer
+                    $('#view_customer_name').text((data.get_user?.first_name ?? '') + ' ' +(data.get_user?.last_name ?? ''));
+                    $('#customer_email').text(data.get_user?.email ?? '-');
+                    $('#customer_phone').text(data.get_user?.phone_no ?? '-');
+
+                    // Address
+                    $('#address_line').text((data.get_address?.address_line1 ?? '') + ' ' +(data.get_address?.address_line2 ?? ''));
+                    $('#city').text(data.get_address?.get_city?.city_name ?? '-');
+                    $('#state').text(data.get_address?.get_state?.state_name ?? '-');
+                    $('#pincode').text(data.get_address?.pincode ?? '-');
+
+                    // Products
+                    let html = '';
+                    $.each(data.get_orderitems, function(index, item) {
+                        let image = '-';
+                        if (item.get_product?.get_product_images?.image_path) {
+                            image = `
+                                <img
+                                    src="/${item.get_product.get_product_images.image_path}"
+                                    width="60"
+                                    height="60"
+                                    class="rounded border"
+                                    style="object-fit:cover"
+                                >
+                            `;
+                        }
+                        html += `
+                            <tr>
+                                <td>${image}</td>
+                                <td>${item.get_product?.product_name ?? '-'}</td>
+                                <td>${item.get_size?.size_name ?? '-'}</td>
+                                <td>${item.quantity}</td>
+                                <td>${item.price}</td>
+                                <td>${item.total_amount}</td>
+                            </tr>
+                        `;
+
+
+                    });
+                    $('#product_table').html(html);
+                    $('#grand_total').text(data.grand_total);
+                    // Invoice Bill
+                    let invoiceUrl = "{{ route('order_list') }}" + "?id=" + data.id +
+                        "&get_invoice_bill=true";
+                    $('#invoiceBtn').attr('href', invoiceUrl);
+
+                    // OPEN OFFCANVAS
+                    let canvas = new bootstrap.Offcanvas(document.getElementById(
+                        'viewOrderCanvas'));
+                    canvas.show();
+                }
+            });
+
+        });
+
+        $(document).on('click', '.RefundRow, #confirmRefundBtn', function() {
+            if ($(this).hasClass('RefundRow')) {
+                $('#refund_order_id').val($(this).data('id'));
+                $('#refundModal').modal('show');
+                return;
+            }
+
+            $.ajax({
+                url: "{{ route('order_cancelled') }}",
+                type: "POST",
+                data: {
+                    refund_payment: true,
+                    id: $('#refund_order_id').val(),
+                    _token: "{{ csrf_token() }}"
+                },
+
+                success: function(res) {
+                    $('#refundModal').modal('hide');
+                    $('#modalMessage').text(res.message);
+                    let modal = new bootstrap.Modal(
+                        document.getElementById('sessionModal')
+                    );
+                    modal.show();
+                    $('#datatable').DataTable().ajax.reload();
+                }
+            });
+        });
+
+        $(document).on('click', '.exportBtn', function(e) {
+            e.preventDefault();
+            let type = $(this).data('type');
+            let order_no = $('#order_no').val();
+            let customer_name = $('#customer_name').val();
+            let payment_gateway = $('#payment_gateway').val();
+            let payment_status = $('#payment_status').val();
+            let from_date = $('#from_date').val();
+            let to_date = $('#to_date').val();
+            let url = "{{ route('order_cancelled.export') }}";
+            window.location.href =
+                url +
+                '?type=' + type +
+                '&order_no=' + encodeURIComponent(order_no || '') +
+                '&customer_name=' + encodeURIComponent(customer_name || '') +
+                '&payment_gateway=' + encodeURIComponent(payment_gateway || '') +
+                '&payment_status=' + encodeURIComponent(payment_status || '') +
+                '&from_date=' + encodeURIComponent(from_date || '') +
+                '&to_date=' + encodeURIComponent(to_date || '');
 
         });
     </script>

@@ -28,9 +28,7 @@
 </head>
 
 <body>
-
     <h3>Customer Contact List</h3>
-
     <table>
         <thead>
             <tr>
@@ -51,14 +49,10 @@
                     <td>{{ $contact->email }}</td>
                     <td>{{ $contact->phone }}</td>
                     <td>{{ $contact->message }}</td>
-
                 </tr>
             @endforeach
-
         </tbody>
-
     </table>
-
 </body>
 
 </html>
